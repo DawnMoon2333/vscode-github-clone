@@ -389,6 +389,8 @@ public class ToStringExample {
 }
 ```
 
+<br/>
+
 ### 数组的排序和二分法查找
 
 使用`Arrays`类中的`sort`方法对数组排序，如：  
@@ -429,6 +431,8 @@ public class BinarySearchExample {
 }
 ```
 
+<br/>
+
 ## 枚举
 
 java的枚举类型用于定义一组常量，如四季、一周的七天，如：  
@@ -462,6 +466,8 @@ public class EnumExample {
 
 ```
 
+<br/>
+
 # 第三章 运算符、表达式、语句
 
 ## 运算符和表达式
@@ -471,6 +477,8 @@ public class EnumExample {
 - 加减乘除 + - * /  
 - 取余 %   
 - 自增自减 ++ --，x++表示先使用x后自增，++x表示先自增后使用  
+
+<br/>
 
 ### 算数混合运算的精度
 
@@ -497,6 +505,8 @@ byte z = x + y;
 // 这个会报错，因为byte类型在参与计算时会先转为int，x+y得到的int结果不能自动转为byte类型，因为可能导致数据溢
 ```
 
+<br/>
+
 ### 关系运算符和关系表达式
 
 运算返回值为boolean型的true或false。  
@@ -510,6 +520,8 @@ byte z = x + y;
 | \== | 等于 |
 | != | 不等于 |
 
+<br/>
+
 ### 逻辑运算符和逻辑表达式
 
 | 运算符 | 含义 |
@@ -519,6 +531,8 @@ byte z = x + y;
 | ! | 非 |
 
 对“与”和“或”运算，存在“短路原则”，若根据前一个表达式的值已经可以判断出整个表达式的真假，则不再计算后边表达式的值。  
+
+<br/>
 
 ### 赋值运算符和赋值表达式
 
@@ -536,6 +550,8 @@ int m = 100;
 int n = 100;
 // 最好这么写，代码易读
 ```
+
+<br/>
 
 ### 位运算符
 
@@ -573,6 +589,8 @@ java的位运算用于对整数类型的位进行直接操作，性能高效，�
 > 0b 0001 1101
 > 右边3位被丢弃，左边补0
 
+<br/>
+
 ### instanceof 运算符
 
 `instanceof`用于判断对象是否是某个类的实例，用来检查对象是否是指定类或其子类、实现类的实例，返回值为boolean类型的true或false。  
@@ -585,6 +603,8 @@ object instanceof ClassName
 
 - 若 object 是 ClassName 类型或其子类、实现类的实例，则返回 true。
 - 若 object 不是 ClassName 类型，则返回 false。
+
+<br/>
 
 ### 运算符的优先级
 
@@ -607,6 +627,8 @@ object instanceof ClassName
 | 三元运算符 | ?: |
 | 赋值 | \= += -+ \*= /= |
 
+<br/>
+
 ## 语句概述
 
 java中的语句分为：  
@@ -624,6 +646,8 @@ java中的语句分为：
 - 控制语句（条件分支、开关、循环）  
 - package和import语句  
 
+<br/>
+
 ### 条件分支语句 if
 
 if - else if - else：  
@@ -639,6 +663,8 @@ else {
     语句
 }
 ```
+
+<br/>
 
 ### 开关语句 switch
 
@@ -695,6 +721,7 @@ a=blue, b=red, c=green
 a=blue, b=green, c=red
 ```
 
+<br/>
 
 ### 循环语句
 
@@ -723,6 +750,8 @@ for (int number : numbers) {
 ```
 for循环创建了一个int变量`number`，每次循环都会将数组`numbers`中的下一个元素赋值给`number`，直接体现了遍历的对象，简化了代码，有效防止数组越界，但是仅适用于顺序遍历的情况  
 
+<br/>
+
 #### while循环
 
 ```java
@@ -730,6 +759,8 @@ while (表达式){
     语句
 }
 ```
+
+<br/>
 
 #### do-while循环
 
@@ -741,9 +772,213 @@ do {
 
 先执行一次循环体内的程序，然后根据表达式的值决定是否重复执行  
 
+<br/>
+
 #### break、continue
 
 break直接跳出当前一层的循环，continue让当前循环直接进行下一次循环  
 
+<br/>
+
 # 第四章 类与对象
+
+## 类
+
+类，class，是java程序的基本要素。一个java程序由若干个类组成。  
+
+```java
+class 类名 {
+    类体
+}
+```
+
+类体的组成：  
+
+- 变量的声明：储存对象的属性  
+- 方法的定义：对类中的属性进行操作  
+
+### 类的变量
+
+类的变量分为两种：  
+
+- 成员变量：在变量声明部分声明的变量 ，在整个类中都有效  
+  - 用`static`修饰的成员变量称为类变量（静态变量）  
+  - 否则为实例变量  
+- 方法变量：在方法部分声明的变量，在整个方法中有效  
+
+> 静态变量是类级别的，只在类被第一次创建对象时初始化，对这个类的所有对象都可见且保持一致，在任意一个对象中修改静态变量都会同步到其他对象中，在程序终止时才被释放。适用于定义常量，如`MAX_VALUE`。  
+
+若方法中局部变量的名字与成员变量相同，则成员变量会被隐藏。若要引用成员变量需要加`this`关键字。  
+
+```java
+class Square {
+    // 变量声明->成员变量
+    double length;
+
+    // 方法定义
+    void EditLength {
+        length = scanner.nextDouble();
+    }
+
+    double CalcArea {
+        // 方法变量
+        double area = length*length;
+        return area;
+    }
+}
+```
+
+注意，声明类的成员变量时可以直接为其赋初值，但是不可以声明成员变量后再为其赋值，因为赋值操作只能出现在方法中，如：  
+```java
+class example {
+    int a = 1;
+    // 这样是可以的
+
+    int b;
+    b = 1;
+    // 这样不可以
+}
+```
+
+<br/>
+
+### 类的方法
+
+```java
+方法声明部分 {
+    方法体的内容
+}
+```
+
+基本的方法声明包括方法名和方法的返回类型，可以是任意java的数据类型或void（不返回数据）。  
+
+<br/>
+
+### 方法的重载 Overload
+
+java允许在一个类中定义多个方法，他们的方法名相同但是 **参数列表不同**，根据传入参数的不同执行不同的方法，称为 **重载**  
+
+重载的返回类型可以不同，但是不用于区分重载  
+
+```java
+class MathOperations {
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    // 重载的add方法，参数列表不同
+    double add(double a, double b) {
+        return a + b;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MathOperations math = new MathOperations();
+        System.out.println(math.add(5, 3));       
+        // 输出：8
+        System.out.println(math.add(5.5, 3.2));   
+        // 输出：8.7
+    }
+}
+```
+
+<br/>
+
+### 构造方法
+
+构造方法是创建对象时初始化对象的特殊方法，在创建对象时由`new`关键字自动调用。  
+构造方法可以用于设置对象的初始状态，执行必要的初始化操作。  
+构造方法在一个对象被创建时被调用，它 **与类同名**，没有返回类型，可以被重载。  
+
+```java
+class Person {
+    // 成员变量
+    String name;
+    int age;
+
+    // 无参构造方法
+    public Person() {
+        this.name = "Unknown";
+        this.age = 0;
+    }
+
+    // 有参构造方法
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    // 打印信息方法
+    void PrintInfo() {
+        System.out.println("Name: " + name + ", Age: " + age);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 使用无参构造方法创建对象
+        Person person1 = new Person();
+        // 使用new关键字时自动运行构造方法
+        person1.PrintInfo();  // 输出: Name: Unknown, Age: 0
+
+        // 使用有参构造方法创建对象
+        Person person2 = new Person("Alice", 30);
+        person2.PrintInfo();  // 输出: Name: Alice, Age: 30
+    }
+}
+
+```
+
+<br/>
+
+### 类方法和实例方法
+
+类方法是用`static`修饰的方法，有以下特性：  
+
+- 类方法是类级别的，属于类本身，而不是类的某个实例  
+- 可以直接通过`ClassName.ClassMethod`调用而不需要实例化  
+- 不能访问非静态的成员变量和实例方法，只能访问静态变量和静态方法  
+
+实例方法没有`static`修饰，有以下特性：  
+
+- 实例方法是属于对象的方法，需要通过创建类的实例来调用，如`ObjectName.InstanceMethods`  
+- 实例方法可以访问实例变量和实例方法，也可以访问类变量和类方法
+
+```java
+class Calculator {
+    // 类方法：不依赖于具体的对象
+    public static int add(int a, int b) {
+        return a + b;
+    }
+
+    // 实例方法：依赖于具体的对象
+    public int multiply(int a, int b) {
+        return a * b;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 调用类方法：直接通过类名调用，不需要创建对象
+        int sum = Calculator.add(5, 10);
+        System.out.println("Sum: " + sum);  // 输出: Sum: 15
+
+        // 创建Calculator对象
+        Calculator calculator = new Calculator();
+
+        // 调用实例方法：需要通过对象调用
+        int product = calculator.multiply(5, 10);
+        System.out.println("Product: " + product);  // 输出: Product: 50
+    }
+}
+```
+
+实例方法能对类变量和实例变量操作，但是类方法只能操作类变量  
+
+实例方法可以调用类中的其他方法，类方法只能调用类中的类方法  
+
+<br/>
+
+## 对象
 
