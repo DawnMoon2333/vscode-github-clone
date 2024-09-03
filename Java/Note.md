@@ -609,3 +609,141 @@ object instanceof ClassName
 
 ## 语句概述
 
+java中的语句分为：  
+
+- 方法调用语句 `System.out.println("hello");`  
+- 表达式语句 `x = 23 `  
+- 复合语句  
+```java
+{
+    x = 123;
+    System.out.println("%d", x);
+}
+```
+- 空语句（只有一个分号）  
+- 控制语句（条件分支、开关、循环）  
+- package和import语句  
+
+### 条件分支语句 if
+
+if - else if - else：  
+
+```java
+if (表达式) {
+    语句
+}
+else if (表达式){
+    语句
+}
+else {
+    语句
+}
+```
+
+### 开关语句 switch
+
+`switch`是单条件多分支的开关语句，语法如下：  
+
+```java
+switch (表达式) {
+    case 常量1: {
+        语句
+        break; // 可选
+    }
+    case 常量2: {
+        语句
+    }
+    ...
+    default: {
+        //可选
+        语句
+    }
+}
+```
+
+switch会先计算表达式的值，若其与某个case的常量值相等，则从这个case的语句开始依次执行，直到遇到break  
+
+switch语句适合与枚举类型搭配使用，如：  
+```java
+public class main {
+    // 定义枚举类型
+    enum color {
+        red, green, blue
+    }
+    public static void main(String[] args) {
+        for (color a: color.values()){
+            for (color b: color.values()){
+                for (color c: color.values()){
+                    if(a != b && a != c && b != c){
+                        // 输出所有可能的颜色组合
+                        System.out.println("a=" + a + ", b=" + b + ", c=" + c);
+                    }
+                }
+            }
+        }
+
+    }
+}
+```
+输出：  
+```
+a=red, b=green, c=blue
+a=red, b=blue, c=green
+a=green, b=red, c=blue
+a=green, b=blue, c=red
+a=blue, b=red, c=green
+a=blue, b=green, c=red
+```
+
+
+### 循环语句
+
+#### for循环
+
+```java
+for (初始化; 条件; 每次循环最后执行){
+    语句
+}
+```
+
+在JDK1.5中新增了“增强型for循环”或“for-each循环”，用于简化对数组或集合的遍历。语法如下：    
+```java
+for(声明循环变量: 数组名字){
+    语句
+}
+```
+
+比如：  
+```java
+int[] numbers = {1, 2, 3, 4, 5};
+
+for (int number : numbers) {
+    System.out.println(number);
+}
+```
+for循环创建了一个int变量`number`，每次循环都会将数组`numbers`中的下一个元素赋值给`number`，直接体现了遍历的对象，简化了代码，有效防止数组越界，但是仅适用于顺序遍历的情况  
+
+#### while循环
+
+```java
+while (表达式){
+    语句
+}
+```
+
+#### do-while循环
+
+```java
+do {
+    语句
+} while (表达式)
+```
+
+先执行一次循环体内的程序，然后根据表达式的值决定是否重复执行  
+
+#### break、continue
+
+break直接跳出当前一层的循环，continue让当前循环直接进行下一次循环  
+
+# 第四章 类与对象
+
