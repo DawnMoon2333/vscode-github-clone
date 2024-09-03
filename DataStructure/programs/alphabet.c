@@ -4,6 +4,7 @@
 #define MAX_SIZE 50  // 顺序表的最大容量
 
 typedef char DataType;  // 定义顺序表中元素的数据类型
+// 需要修改printSeqList()中的printf函数为对应的数据类型
 
 typedef struct SeqList {
     DataType data[MAX_SIZE];  // 存储顺序表元素的数组
@@ -15,6 +16,7 @@ void initSeqList(SeqList *list) {
     list->length = 0;
 }
 
+// 创建顺序表变量，完成初始化后返回指针
 SeqList createSeqList(){
     SeqList list;
     initSeqList(&list);
@@ -63,11 +65,11 @@ int main() {
         insertSeqList(&list, i, i + 97);
     }
 
-    printf("顺序表元素: ");
+    printf("顺序表元素: \n");
     printSeqList(&list);
 
     deleteSeqList(&list, 3);
-    printf("删除元素后顺序表: ");
+    printf("删除元素后顺序表: \n");
     printSeqList(&list);
 
     return 0;
