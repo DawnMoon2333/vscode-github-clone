@@ -1,3 +1,5 @@
+#define  _CRT_SECURE_NO_WARNINGS	//忽略vs要求使用scanf_s来替换scanf的警告
+#pragma warning(disable:4996)
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,19 +14,19 @@ typedef struct SeqList {
 } SeqList;
 
 // 初始化顺序表
-void initSeqList(SeqList *list) {
+void initSeqList(SeqList* list) {
     list->length = 0;
 }
 
 // 创建顺序表变量，完成初始化后返回指针
-SeqList createSeqList(){
+SeqList createSeqList() {
     SeqList list;
     initSeqList(&list);
     return list;
 }
 
 // 向顺序表中插入元素
-int insertSeqList(SeqList *list, int pos, DataType value) {
+int insertSeqList(SeqList* list, int pos, DataType value) {
     if (pos < 0 || pos > list->length || list->length == MAX_SIZE) {
         return 0;  // 插入位置非法或顺序表已满
     }
@@ -37,7 +39,7 @@ int insertSeqList(SeqList *list, int pos, DataType value) {
 }
 
 // 从顺序表中删除元素
-int deleteSeqList(SeqList *list, int pos) {
+int deleteSeqList(SeqList* list, int pos) {
     if (pos < 0 || pos >= list->length) {
         return 0;  // 删除位置非法
     }
@@ -49,7 +51,7 @@ int deleteSeqList(SeqList *list, int pos) {
 }
 
 // 打印顺序表
-void printSeqList(SeqList *list) {
+void printSeqList(SeqList* list) {
     for (int i = 0; i < list->length; i++) {
         printf("%c ", list->data[i]);
     }
@@ -61,7 +63,7 @@ int main() {
     SeqList list = createSeqList();
 
     // 插入字母表元素
-    for (int i = 0; i <= 25; i++){
+    for (int i = 0; i <= 25; i++) {
         insertSeqList(&list, i, i + 97);
     }
 
@@ -70,6 +72,19 @@ int main() {
 
     deleteSeqList(&list, 3);
     printf("删除元素后顺序表: \n");
+    printSeqList(&list);
+
+    printf("在哪插入：");
+    int pos;
+    scanf("%d", &pos);
+
+    // 清空输入缓冲区
+    while (getchar() != '\n');
+
+    printf("插入的内容是（一个字符）：");
+    char insert;
+    scanf("%c", &insert);
+    insertSeqList(&list, pos-1, insert);
     printSeqList(&list);
 
     return 0;

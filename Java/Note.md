@@ -203,7 +203,7 @@ System.out.println("这是第一部分"+
 
 示例：  
 ```java
-System.out.println("你输入的数字是%d", input_int);
+System.out.printf("你输入的数字是%d", input_int);
 ```
 
 <br/>
@@ -982,3 +982,215 @@ public class Main {
 
 ## 对象
 
+在java中，用`类`来声明变量，然后用`类`来给出这个类的一个实例，也就是创建一个对象  
+
+### 构造方法
+
+当程序创建对象时需要使用类的构造方法  
+
+若没有编写构造方法，则编译器会默认这个类只有一个构造方法，他没有参数，方法体中没有语句  
+
+### 创建对象
+
+创建对象前需要先声明对象：`类名 对象名;`  
+此时没有为这个对象分配空间  
+
+然后使用`new`运算符为对象分配变量，即创建对象：`对象名 = new 类名(参数)`   
+实例化对象后会为成员变量分配空间并赋初值，然后根据成员变量的地址计算出一个称为“引用”的值作为`new 类名(参数)`的运算结果，赋值给对象名  
+
+分配给对象的变量习惯性称为对象的实体  
+
+使用`类名 对象名 = new 类名(参数);`同时声明并创建变量：  
+
+```java
+class Person {
+    // 成员变量
+    String name;
+    int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Person person2 = new Person("Alice", 30);
+    }
+}
+```
+
+若两个对象有相同的引用，则二者有相同的实体，如：
+```java
+class Point {
+    int x, y;
+    Point (int x, int y){
+        this.x = x;
+        this.y = y;
+    }
+    void PrintPos(){
+        System.out.printf("x = %d, y = %d\n", this.x, this.y);
+    }
+}
+
+public class Main{
+    public static void main(String[] args){
+        Point p1 = new Point(1, 2);
+        Point p2 = new Point(3, 5);
+        p1.PrintPos();
+        p2.PrintPos();
+
+        p1 = p2;
+        // 此后对p1、p2任意一者的更改都会同步到对方身上，因为p1和p2都指向了同一个对象
+        p1.PrintPos();
+        p2.PrintPos();
+    }
+}
+```
+输出：  
+```
+x = 1, y = 2
+x = 3, y = 5
+x = 3, y = 5
+x = 3, y = 5
+```
+
+当程序发现内存中的某个实体不被任何一个对象引用，则会被自动释放内存，称为“垃圾收集机制”。比如上述程序中，p1指向的对象被p2覆盖，没有任何一个对象指向这个实体，那他就会被释放内存。     
+
+### 使用对象
+
+使用点运算符/引用运算符/访问运算符：`.`来访问对象的变量或方法  
+
+```java
+class example {
+    int num1;
+    double num2;
+
+    public example(int num1, double num2){
+        this.num1 = num1;
+        this.num2 = num2;
+    }
+
+    void print2(){
+        System.out.printf("num2 = %f\n", num2);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        example exam = new example(10, 3.14);
+        System.out.printf("num1 = %d\n", exam.num1);
+        exam.print2();
+    }
+}
+```
+输出：  
+```
+num1 = 10
+num2 = 3.140000
+```
+
+### 可变参数
+
+可变参数允许方法接收多个相同类型的参数而无需明确指定参数的数量，语法如下，其中`...`为省略号语法  
+```java
+public void methodName(Type... parameterName) {
+    // 方法体
+}
+```
+也可以明确前几个参数的类型和数量，最后输入不确定数量的参数，如：  
+```java
+public static int sum(double sum, double... numbers){
+    // 方法体
+} 
+```
+
+实例：  
+```java
+public class VarargsExample {
+    public static int sum(int... numbers) {
+        int total = 0;
+        for (int number : numbers) {
+            total += number;
+        }
+        return total;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(sum(1, 2, 3));       
+        // 输出：6
+        System.out.println(sum(10, 20));        
+        // 输出：30
+        System.out.println(sum(5, 5, 5, 5, 5)); 
+        // 输出：25
+    }
+}
+```
+
+编译器实际上为所有传入的输入创建了一个数组，也就是说可以使用数组的方式来访问这些参数，如：  
+```java
+public class Main {
+    // 定义一个接受可变参数的 sum 方法
+    public static int sum(int... numbers) {
+        int total = 0;
+        for (int i = 0; i < numbers.length; i++) {
+            total += numbers[i]; // 通过索引访问数组元素
+        }
+        return total;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(sum(1, 2, 3));       
+        // 输出：6
+        System.out.println(sum(10, 20));        
+        // 输出：30
+        System.out.println(sum(5, 5, 5, 5, 5)); 
+        // 输出：25
+    }
+}
+
+```
+
+## 对象的组合
+
+java中“对象的组合”允许一个类包含其他类的对象作为其成员变量，表示某个类是由其他类组成的，即一个对象拥有另一个对象的实例。  
+
+示例：  
+
+```java
+class Address {
+    private String city;
+
+    public Address(String city) {
+        this.city = city;
+    }
+
+    public String getCity() {
+        return city;
+    }
+}
+
+class Person {
+    private String name;
+    private Address address; // Person 包含 Address 对象
+
+    public Person(String name, Address address) {
+        this.name = name;
+        this.address = address;
+    }
+
+    public void printInfo() {
+        System.out.println("Name: " + name + ", City: " + address.getCity());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Address address = new Address("New York");
+        Person person = new Person("John", address);
+        person.printInfo();  // 输出：Name: John, City: New York
+    }
+}
+
+```
