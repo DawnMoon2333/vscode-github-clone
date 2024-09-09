@@ -226,7 +226,7 @@ java中的数组需要先声明后创建，也可在声明的同时创建。
 类型[] 数组名[];
 ```
 
-java采用“数组的数组”来声明多维数组，如数组[3][4]是由3个长度为4的数组组成。  
+java采用“数组的数组”来声明多维数组，如数组`[3][4]`是由3个长度为4的数组组成。  
 
 java在声明数组时不允许指定数组的大小，数组的大小只能在创建的时候指定。
 
@@ -261,7 +261,7 @@ int num[] = new int[5];
 
 数组在创建时可以直接为其赋初值，元素的数量可以代替指定的数组长度，但是 **java不允许在数组声明和初始化时混用指定大小和直接初始化列表** ，如：  
 ```java
-int num[] = new int[]{1,2,3};
+int[] num = new int[]{1,2,3};
 
 // 错误示范：
 // int num[] = new int[3]{1, 2, 3}; // 不能同时指定大小和初始化列表
@@ -275,7 +275,7 @@ int[] num = {1, 2, 3}; // 数组的长度是3
 
 也可以逐个为数组元素赋值，如：  
 ```java
-int num[] = new int[5];
+int[] num = new int[5];
 num[0] = 1;
 num[1] = 10;
 // 没赋值的部分为默认值0
@@ -1152,7 +1152,7 @@ public class Main {
 
 ```
 
-## 对象的组合
+### 对象的组合
 
 java中“对象的组合”允许一个类包含其他类的对象作为其成员变量，表示某个类是由其他类组成的，即一个对象拥有另一个对象的实例。  
 
@@ -1178,6 +1178,7 @@ class Person {
     public Person(String name, Address address) {
         this.name = name;
         this.address = address;
+        // 这里保存的是address对象的引用而不是副本，因此后续直接修改address对象时会同步到person中
     }
 
     public void printInfo() {
@@ -1192,5 +1193,98 @@ public class Main {
         person.printInfo();  // 输出：Name: John, City: New York
     }
 }
-
 ```
+
+## static 关键字
+static 关键字可以用来修饰变量（类变量-实例变量）和方法（类方法-实例方法），表示它们属于类而不是某个具体的对象实例。  
+
+实例方法可以调用实例变量和实例方法，也可以调用类变量和类方法，但是类方法只能调用类变量和类方法，不能调用实例变量和实例方法。  
+
+一个类的不同对象实例共享同一个类变量，使用相同的内存空间，直到程序结束运行才释放内存。  
+
+示例：  
+
+```java
+class MyClass {
+    private static int count = 0; // 静态变量，属于类而不是对象实例
+
+    public MyClass() {
+        count++; // 每次创建对象时，count 变量加 1
+    }
+
+    public static int getCount() {
+        return count; // 静态方法，可以通过类名直接调用
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 创建 MyClass 的两个实例
+        MyClass obj1 = new MyClass();
+        MyClass obj2 = new MyClass();
+        MyClass obj3 = new MyClass();
+
+        // 输出 MyClass 的实例数量
+        System.out.println("MyClass 的实例数量: " + MyClass.getCount());
+    }
+}
+```
+
+## this 关键字
+
+`this`关键字在构造方法和实例方法中用于引用当前对象的实例变量和方法，但是静态方法中不能使用`this`。  
+
+在构造方法中，用于区分构造方法的参数名与实例变量名：  
+
+```java
+public class Person {
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+```
+
+在实例方法中，用于区分局部变量和实例变量：  
+
+```java
+public class Person {
+    private String name;
+
+    public void setName(String name) {
+        this.name = name;  
+        // this.name 是实例变量，name 是方法参数
+    }
+
+    public void printName() {
+        System.out.println(this.name); 
+        // 通过 this 访问实例变量
+    }
+}
+```
+
+在构造方法中，调用当前类的其他构造方法，即重载：  
+
+```java
+public class Person {
+    private String name;
+    private int age;
+
+    public Person() {
+        this("Unknown", 0);  // 调用带有参数的构造方法
+    }
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+```
+
+## 包 package
+
+## 访问权限
+
