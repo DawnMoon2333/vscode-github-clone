@@ -1286,5 +1286,221 @@ public class Person {
 
 ## 包 package
 
+`package`是用于组织类、接口和其他包的命名空间机制，类似于文件夹，通过包的层次结构来管理大量的类，避免类名冲突，有效减少类名冲突，并提供访问控制。  
+
+包的命名规则（通常情况下）：  
+
+- 全部小写，如：`com.example.myapp`  
+- 以公司或组织的反向网址开头，如：公司网址为`myapp.example.com`，包名为`com.example.myapp`  
+- 以项目或模块的名称结尾，如：`com.example.myapp.core`  
+
+包和文件系统的目录结构是一一对应的。包的层次结构在文件系统中以文件夹形式体现  
+```java
+package com.example.utils;
+
+public class Utility {
+    类体
+}
+```
+这个包对应的文件系统结构可能是：
+```java
+src/
+ └── com/
+     └── example/
+         └── utils/
+             └── Utility.java
+```
+
+
+
+### 声明包
+
+在java源文件中，`package`声明位于除注释外的第一行，一个源文件只能有一个`package`声明，如：  
+
+```java
+package com.example.myapp; // 声明当前文件为 com.example.myapp 包
+
+public class Person { 
+    // Person 类属于 com.example.myapp 包，其全限定名为 com.example.myapp.Person
+    private String name;
+    private int age;
+    
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+    
+    public void displayInfo() {
+        System.out.println("Name: " + name + ", Age: " + age);
+    }
+}
+
+```
+
+### 导入包
+
+使用`import`来导入其他包中的类、接口、枚举等。`import`通常位于`package`声明之后，类声明之前。  
+
+使用`import 包名.类名`导入某个包的某个类，也可以使用`import 包名.*`来导入该包下的所有类。  
+
+导入包的类之后，可以直接使用类名创建对象，如：  
+
+```java
+import com.example.myapp.Person;
+
+public class Main {
+    public static void main(String[] args) {
+        Person person = new Person("Alice", 25);
+        person.displayInfo();
+    }
+}
+```
+
+但是不可以导入两个不同包中同名的类，比如 java.util.Date 和 com.example.package1.Date，只能import其中一个Date，然后使用全限定名来创建另一个Date的实例，如：  
+
+```java
+import java.util.Date;
+
+public class Main {
+    public static void main(String[] args) {
+        Date date1 = new Date();
+        com.example.package1.Date date2 = new com.example.package1.Date();
+    }
+}
+```
+
 ## 访问权限
 
+Java中常用的访问权限有四种：`public`、`protected`、`default`（默认）和`private`。
+
+- `public`：可以被任何其他类访问。  
+- `protected`：可以被同一包中的类以及不同包中的子类访问。  
+- `default`（默认）：可以被同一包中的类访问，不能被不同包中的类访问。  
+- `private`：只能被定义它的类访问。  
+
+
+| 访问修饰符   | 同一个类内 | 同一个包内 | 子类（不同包） | 其他包中的类 |
+| :-: | :-: | :-: | :-: | :-: |
+| `public`     | √          | √          | √              | √            |
+| `protected`  | √          | √          | √              | ×            |
+| `default`    | √          | √          | ×              | ×            |
+| `private`    | √          | ×          | ×              | ×            |
+
+### 公有 public
+
+公有变量和公有方法可以被任何其他类访问。  
+
+```java
+public class Person {
+    public String name;  // 公有变量
+    public int age;      // 公有变量
+
+    // 构造函数，用于初始化 name 和 age
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    // 公共方法，可以从外部类调用
+    public void displayInfo() {
+        System.out.println("Name: " + name + ", Age: " + age);
+    }
+}
+```
+
+### 被保护 protected
+
+被保护的变量和方法可以被同一个包中的类访问，也可以被不同包中的子类继承和访问，但不能被其他包中的非子类访问。  
+
+```java
+public class Person {
+    protected String name;  // 被保护的变量
+    protected int age;      // 被保护的变量
+
+    // 构造函数，用于初始化 name 和 age
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    // 被保护的方法，可以在同包和子类中调用
+    protected void displayInfo() {
+        System.out.println("Name: " + name + ", Age: " + age);
+    }
+}
+
+class Employee extends Person {
+    public Employee(String name, int age) {
+        super(name, age);
+    }
+
+    // 可以在子类中调用被保护的方法
+    public void showEmployeeInfo() {
+        displayInfo();
+    }
+}
+```
+
+### 默认 default
+
+默认（default）访问权限通常也称为包级访问权限，仅限于同一个包内的类和接口使用，不能被其他包中的类或子类访问。  
+
+```java
+public class Person {
+    String name;  // 默认访问权限的变量
+    int age;      // 默认访问权限的变量
+
+    // 构造函数，用于初始化 name 和 age
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    // 默认访问权限的方法，仅限于同一包内的类调用
+    void displayInfo() {
+        System.out.println("Name: " + name + ", Age: " + age);
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        Person person = new Person("Alice", 30);
+        // 同一个包内可以访问默认权限的方法
+        person.displayInfo();
+    }
+}
+```
+
+### 私有 private
+
+私有变量和私有方法只能在定义它们的类中访问，不能从其他类访问。  
+
+```java
+public class Person {
+    private String name;  // 私有变量
+    private int age;      // 私有变量
+
+    // 构造函数，用于初始化 name 和 age
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    // 私有方法，只能在本类内部调用
+    private void displayInfo() {
+        System.out.println("Name: " + name + ", Age: " + age);
+    }
+
+    // 公共方法，可以从外部类调用，它调用了私有方法
+    public void showInfo() {
+        displayInfo();  // 内部调用私有方法
+    }
+}
+
+```
+
+在Person类中，`name`和`age`是私有变量，只能被Person类中的方法访问。`displayInfo()`是私有方法，只能被Person类中的方法访问。`showInfo()`是公共方法，可以从外部类调用，它调用了私有方法`displayInfo()`，私有方法`displayInfo()`又调用了私有变量`name`和`age`。  
+
+## 基本数据类型的类封装
+
+Java中基本数据类型有8种：byte、short、int、long、float、double、char、boolean。这些基本数据类型没有方法，不能直接调用方法。为了方便操作基本数据类型，Java提供了对应的类封装，这些类封装了基本数据类型，并提供了相应的方法。   
