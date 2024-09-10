@@ -1504,3 +1504,179 @@ public class Person {
 ## 基本数据类型的类封装
 
 Java中基本数据类型有8种：byte、short、int、long、float、double、char、boolean。这些基本数据类型没有方法，不能直接调用方法。为了方便操作基本数据类型，Java提供了对应的类封装，这些类封装了基本数据类型，并提供了相应的方法。   
+
+有时候需要把数据存入某个地方，而它只接收“对象”，不接收简单的数据，比如Java中的一些集合类（如`ArrayList`），它们只能存放对象，不能直接存放int、char这种数据，所以需要把int装到Integer这种类封装中。  
+
+java有“自动装箱和拆箱”的特性，使得基本数据类型和类封装之间可以自动完成转化，如：  
+```java
+int num1 = 10;           
+Integer obj = num1;      
+// 自动装箱，将 int 类型转换为 Integer 对象
+int num2 = obj;          
+// 自动拆箱，将 Integer 对象转换为 int 类型
+```
+
+| 基本数据类型 | 封装类       |
+|:-:|:-:|
+| `byte`       | `Byte`       |
+| `short`      | `Short`      |
+| `int`        | `Integer`    |
+| `long`       | `Long`       |
+| `float`      | `Float`      |
+| `double`     | `Double`     |
+| `char`       | `Character`  |
+| `boolean`    | `Boolean`    |
+
+对封装类调用对应的`doubleValue()`、`byteValue()`、`intValue()`、`shortValue()`、`longValue()`方法可以返回该对象的基本类型数据  
+
+Character类中的方法可以对字符类型进行判断，如：  
+
+```java
+Character.isDigit(char ch)  // 是否为数字
+Character.isLetter(char ch) // 是否为字母
+Character.isUpperCase(char ch) // 是否为大写字母
+Character.isLowerCase(char ch) // 是否为小写字母
+Character.toUpperCase(char ch) // 转换为大写字母
+Character.toLowerCase(char ch) // 转换为小写字母
+```
+
+## jar文件
+
+jar文件是Java Archive的缩写，它是一种压缩文件格式，用于存储Java类文件、资源文件等，可以将有包名的类的字节码文件压缩为jar文件，供其他文件使用`import`引用。  
+
+
+# 第五章 继承与接口
+
+## 子类与父类
+
+继承允许子类具有父类的属性和方法，同时有独属于自己的属性和方法。  
+
+- 父类（Superclass）：也叫基类，是被继承的类，包含一些通用的属性和方法。   
+- 子类（Subclass）：也叫派生类，是继承父类的类。它可以继承父类的属性和方法，并且可以扩展或重写父类的方法。  
+
+### 继承
+
+使用`extends`表示继承关系，语法如下：  
+
+```java
+class 父类 {
+    // 父类中的属性和方法
+}
+
+class 子类 extends 父类 {
+    // 子类中的属性和方法
+}
+```
+
+### 重写 override
+
+子类可以重写父类的方法，重写的方法必须与父类的方法 **具有相同的名称、参数列表和返回类型**。  
+
+```java
+class 父类 {
+    void 方法1(参数) {
+        方法体
+    }
+}
+
+class 子类 extends 父类 {
+    @Override
+    // 这是一个注解，表明这个方法是对父类方法的重写
+    void 方法1(参数) {
+        方法体
+    }
+}
+```
+
+示例：  
+
+```java
+// 父类
+class Animal {
+    String name; // 父类属性 名字
+
+    public void eat() { // 父类方法
+        System.out.println("This animal is eating.");
+    }
+}
+
+// 子类
+class Dog extends Animal {
+    String varieties; // 子类属性 品种
+    public void bark() { // 子类方法
+        System.out.println("The dog is barking.");
+    }
+
+    @Override
+    public void eat() { // 重写父类方法
+        System.out.println("The dog is eating.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Dog myDog = new Dog();
+        myDog.name = "Buddy";
+        myDog.varieties = "Golden Retriever";
+        myDog.eat();
+        myDog.bark();
+    }
+}
+```
+
+### super关键字
+
+在子类中，当子类覆盖了父类的属性或方法时，可以在子类内部使用`super`关键字来调用父类的属性或方法。  
+
+super关键字不可以在main()方法中使用  
+
+```java
+class Animal {
+    public void makeSound() { // 父类方法
+        System.out.println("Animal makes a sound");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    public void makeSound() { // 重写父类方法
+        System.out.println("Dog barks");
+    }
+
+    public void callParentSound() { 
+        // 调用父类被重写的方法
+        super.makeSound(); 
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Dog myDog = new Dog();
+        myDog.makeSound();        
+        // 输出 "Dog barks"
+        myDog.callParentSound();  
+        // 调用父类方法，输出 "Animal makes a sound"
+    }
+}
+```
+
+## 子类的继承性
+
+若子类和父类在同一个包中：  
+> 子类会自动继承父类的 **非private** 成员变量和方法作为自己的成员变量和方法，被继承的变量和方法的访问权限不变。  
+
+若子类和父类不在同一个包中：  
+
+| 访问修饰符 | 父类和子类在同一个包中 | 父类和子类不在同一个包中 |
+| :-: | :-: | :-: |
+| public | √ | √ |
+| protected | √ | √ |
+| 默认（无修饰符） | √ | × |
+| private | × | × |
+
+
+
+
+
+
+
