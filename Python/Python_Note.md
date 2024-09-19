@@ -553,17 +553,13 @@ for i in range(10, 0, -1):
 |        **函数语法**         |            **解释**            |
 |:---------------------------:|:------------------------------:|
 |       `os.getcwd()`         |    返回当前工作目录             |
-|       `os.listdir(path)`    | 返回指定目录中的文件和目录列表  |
 |     `os.makedirs(path)`     |     创建多级目录                |
 |     `os.remove(path)`       |      删除指定文件               |
 |  `os.path.exists(path)`     |      判断路径是否存在           |
-|      `os.rename(src, dst)`  |   重命名文件或目录             |
+|      `os.rename(当前文件名, 新文件名)`  |   重命名文件或目录             |
 |      `os.rmdir(path)`       |   删除空目录                   |
 |   `os.path.abspath(path)`    |   返回绝对路径                 |
 |   `os.path.join(path1, path2)`|  拼接两个路径，自动处理分隔符  |
-|    `os.path.basename(path)`  |   返回路径中的文件名           |
-|     `os.path.isdir(path)`    |   判断路径是否为目录           |
-|     `os.path.isfile(path)`  |   判断路径是否为文件           |
 
 <br/>
 
@@ -724,7 +720,243 @@ print(dir(math))
 使用`open()`函数打开一个文件，为其创建一个file对象，然后对其进行读写，语法如下：  
 
 ```python
-file object = open(file_name [, access_mode][, buffering])
+file object = open(file, mode='r', encoding=None)
 
-# 
+file = open('example.txt', 'r')
+# 以只读模式打开当前目录下的example.txt文件
+content = file.read()
+print(content)
+file.close()
+
+# open()常搭配with语句使用，用于执行完对文件的操作后自动关闭文件，节约资源
+with open('example.txt', 'r') as file:
+    # 读取文件内容并输出
+    content = file.read()
+    print(content)
+ 
 ```
+
+### 打开模式类型：  
+
+| 打开模式 | 模式名称 | 读取 | 写入 | 追加写入 | 文件存在 | 文件不存在 |
+|:-------:|:-------:|:----:|:----:|:--------:|:--------:|:----------:|
+|   `'r'` |  只读   |  √   |      |          |    √     |            |
+|   `'w'` |  写入   |      |  √   |          |          |     √      |
+|   `'a'` |  追加   |      |      |    √     |    √     |     √      |
+|   `'x'` |  创建   |      |  √   |          |          |     √      |
+|   `'r+'`|  读写   |  √   |  √   |          |    √     |            |
+|   `'w+'`|  读写   |  √   |  √   |          |          |     √      |
+|   `'a+'`|  读写追加 |  √   |      |    √     |    √     |     √      |
+
+读取: 允许读取文件  
+写入: 允许写入文件（覆盖现有内容）  
+追加写入: 在文件末尾追加内容  
+文件存在: 文件必须存在才能操作  
+文件不存在: 文件可以不存在并创建  
+
+### read 读取
+
+`文件名.read(size)`：读取指定大小的字节或字符，不指定则读取整个文件  
+`文件名.readline()`：每次调用读取一行  
+`文件名.readlines()`：读取所有行，保存为一个列表，文件中每行为列表中的一个元素    
+
+### write 写入
+
+`文件名.write(str)`：写入字符串到文件中  
+`文件名.writelines(lines)`：将字符串列表写入文件中，需要手动添加换行符`\n`  
+
+### tell seek 定位
+
+每个文件对象有一个内部指针，记录当前读写的位置  
+
+`文件名.tell()`：返回当前指针的位置，即距离文件开头的字节数  
+`文件名.seek(offset, from)`：移动指针到指定位置，offset为相对于from的偏移量，from为偏移的起始位置，0表示文件开头，1表示当前位置，2表示文件末尾  
+
+```python
+f.seek(0)  # 将指针移动到文件开头
+f.seek(5)  # 将指针移动到文件第5个字节
+f.seek(0, 2)  # 将指针移动到文件末尾
+```
+
+### 其他
+
+`文件名.close()`：关闭文件，释放资源  
+`文件名.name()`：返回文件名
+
+# 异常处理
+
+异常处理机制用于捕获并处理运行时的错误，通过`try-except`实现：  
+
+```python
+try:
+    # 可能会抛出异常的代码
+except (ExceptionType1,(ExceptionType2,...)) as e: 
+    # 可以一次捕捉多个异常
+except ExceptionType3 as e: 
+    # 可以有多个except语句
+except Exception as e: 
+    # 使用Exception捕捉所有异常
+else:
+else:
+    # 没有异常时执行的代码
+finally:
+    # 无论是否抛出异常都执行的代码
+```
+
+## 常见异常
+
+|    异常名称    |                    说明                    |
+|:--------------:|:------------------------------------------:|
+| `AttributeError` | 尝试访问对象中不存在的属性 |
+|  `IndexError`   |   当尝试访问超出序列索引范围的元素 |
+|  `KeyError`     |   访问字典中不存在的键  |
+|  `ValueError`   |   函数接收到的参数类型正确，但值不合适  |
+| `ZeroDivisionError` |  进行除零运算  |
+|  `TypeError`    |   执行操作或函数时，应用于不适当的类型对象  |
+|  `FileNotFoundError` |  尝试打开不存在的文件 |
+| `ImportError`   |   模块导入失败  |
+| `OverflowError` |   数值运算结果超出限制 |
+| `KeyboardInterrupt` |  用户中断执行（例如按下Ctrl+C）  |
+| `RuntimeError` |  一般运行时错误，没有特定的错误类型  |
+| `NameError` |  尝试访问未定义的变量  |
+| `SyntaxError` |  语法错误  |
+
+## 自定义异常
+
+1. 创建一个异常类：创建一个继承自 `Exception` 类的自定义异常类；  
+2. 初始化异常类：在自定义异常类中定义 `__init__` 方法，用于初始化异常的详细信息；  
+3. 抛出异常：使用 raise 关键字来手动抛出自定义异常；    
+4. 捕获异常：通过 try-except 语句捕获自定义异常并处理。  
+
+```python
+# 定义自定义异常类
+class CustomError(Exception):
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+# 使用 raise 抛出异常
+def check_positive_number(value):
+    if value < 0:
+        raise CustomError(f"值 {value} 不能为负数！")
+
+try:
+    check_positive_number(-10)
+except CustomError as e:
+    print(f"捕获到自定义异常: {e}")
+```
+
+# 面向对象
+
+## 类和对象
+
+类是用来描述具有相同的属性和方法的对象的集合，定义了集合中每个对象所共有的属性和方法。对象是类的实例。  
+
+```python
+class ClassName:
+   '类的帮助信息'   # 类文档字符串
+   class_suite  # 类体
+```
+
+```python
+# -*- coding: UTF-8 -*-
+# 定义一个名为Employee的类
+class Employee:
+   '所有员工的基类'
+   
+   # 类变量，在整个类的所有实例间共享，可以使用Employee.empCount访问
+   empCount = 0
+ 
+   def __init__(self, name, salary):
+        # 构造方法，用于初始化新创建的对象
+        # self表示这个类的实例，定义方法时必须有，但是不需要为其传递参数
+        self.name = name
+        self.salary = salary
+        Employee.empCount += 1
+   
+   def displayCount(self):
+        print "Total Employee %d" % Employee.empCount
+ 
+   def displayEmployee(self):
+        print "Name : ", self.name,  ", Salary: ", self.salary
+
+# 类的实例化的语法和函数类似，使用类名后跟括号来创建对象
+# 创建对象时自动调用构造方法 __init__()并传入参数
+emp1 = Employee("Zara", 2000)
+emp2 = Employee("Manni", 5000)
+
+# 使用 类名.元素 访问类中的变量和方法
+emp1.displayEmployee()
+emp2.displayEmployee()
+print("Total Employee %d" % Employee.empCount)
+
+# 对类的元素进行操作
+hasattr(emp1, 'age')    # 如果存在 'age' 属性返回 True
+setattr(emp1, 'age', 8) # 添加属性 'age' 值为 8
+getattr(emp1, 'age')    # 返回 'age' 属性的值
+delattr(emp1, 'age')    # 删除属性 'age'
+```
+
+## 对象的销毁
+
+对象在被创建的同时创建了一个引用计数，当一个对象的引用计数变为0（这个对象不再需要）时，会由解释器在合适的时机被自动调用的析构函数`__del__`进行垃圾回收。    
+
+`__del__`不需要手动定义，默认情况下会自动清理对象中的属性，释放资源，当然也可以手动定义他来执行额外的文件清理操作。  
+
+```python
+class MyClass:
+    def __init__(self):
+        print("对象被创建")
+
+    def __del__(self):
+        print("对象被销毁")
+```
+
+
+
+## 继承
+
+子类可以通过`class 子类名(父类吗)`继承父类的所有属性和方法，若子类中没有定义某个属性或方法则会直接调用父类的实现。  
+
+子类中可以通过方法的重写来改变父类的同名方法，若要在重写的方法中调用父类的原方法需要使用`super().方法名`来实现。  
+
+若子类有自己的构造函数，则不会调用父类的构造函数。则需要在子类中调用父类的构造函数来对父类的属性进行初始化，需要使用`super().__init__`。  
+
+```python
+# 父类
+class Animal:
+    def __init__(self, name):  # 父类的构造函数
+        self.name = name  # 父类的属性
+        print(f"{self.name} is an animal.")
+
+    def sound(self):  # 父类的方法
+        print("Animals make sounds.")
+
+# 子类继承父类
+class Dog(Animal):
+    def __init__(self, name, breed):  # 子类有自己的构造函数
+        super().__init__(name)  # 调用父类的构造函数，初始化父类属性
+        self.breed = breed  # 子类特有的属性
+        print(f"{self.name} is a {self.breed}.")
+
+    # 子类重写父类的方法
+    def sound(self):
+        super().sound()  # 调用父类的方法
+        print(f"{self.name} barks.")  # 子类的扩展功能
+
+# 使用子类
+my_dog = Dog("Buddy", "Golden Retriever")
+my_dog.sound()
+
+# 输出:
+# Buddy is an animal.
+# Buddy is a Golden Retriever.
+# Animals make sounds.
+# Buddy barks.
+```
+
+## 类属性与方法
+
+`__private_attrs`：使用双下划线开头表示这是一个私有属性，只能在类的内部通过`self.__private_attrs`访问，不可以从类的外部访问。  
+
+`def`：使用def定义类的一个方法，其必须有第一个参数`self`，
