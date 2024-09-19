@@ -2042,3 +2042,59 @@ class Outer {
 ```
 
 ### 匿名类
+
+匿名类是一种不单独定义，没有名字的类，常用于简化代码，特别是在实现接口或继承类时，匿名类可以用于快速定义一个类的实现，而无需显式地创建一个新的类文件。  
+
+```java
+// 定义Runnable接口
+public interface Runnable {
+    void run();
+}
+
+// 主程序类
+public class Main {
+    public static void main(String[] args) {
+        // 使用匿名类实现Runnable接口
+        var thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("匿名类的run方法被调用");
+            }
+        });
+        
+        // 启动线程
+        thread.start();
+    }
+}
+```
+
+与不使用匿名类相比：  
+
+```java
+// 定义Runnable接口
+public interface Runnable {
+    void run();
+}
+
+// 显式实现Runnable接口的类
+public class MyRunnable implements Runnable {
+    @Override
+    public void run() {
+        System.out.println("MyRunnable类的run方法被调用");
+    }
+}
+
+// 主程序类
+public class Main {
+    public static void main(String[] args) {
+        // 创建MyRunnable对象
+        MyRunnable myRunnable = new MyRunnable();
+        
+        // 创建Thread对象并传入MyRunnable对象
+        Thread thread = new Thread(myRunnable);
+        
+        // 启动线程
+        thread.start();
+    }
+}
+```
