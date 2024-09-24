@@ -1849,6 +1849,8 @@ public class Main {
 }
 ```
 
+### 接口和继承类的关系
+
 通过类的继承，子类可以**选择性**的实现抽象类中的方法，但是接口要求子类必须实现接口中的**所有方法**，此外实现了接口的类可以有接口中没有的方法。  
 
 ### 接口回调
@@ -2095,6 +2097,435 @@ public class Main {
         
         // 启动线程
         thread.start();
+    }
+}
+```
+
+## Lambda表达式
+
+Lambda表达式，即一个匿名方法（函数），允许使用更简洁的语法来表示函数或代码块，语法：  
+
+```java
+(parameters) -> expression
+或
+(parameters) -> { statements }
+
+箭头左侧参数可以有多个或没有
+箭头右侧可以是单一表达式或大括号括起来的代码块
+```
+
+```java
+() -> System.out.println("Hello, Lambda!");
+
+(str) -> System.out.println(str);
+
+(int a, int b) -> a + b;
+
+(double a, double b) -> {
+    double sum = a + b;
+    return sum;
+};
+```
+
+对**只有一个方法**的接口，可以使用Lambda表达式来简化代码，例如：  
+
+```java
+public interface Task {
+    void execute();
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 使用Lambda表达式实现Task接口
+        Task task1 = () -> System.out.println("Executing task...");
+
+        // 不使用Lambda表达式实现Task接口
+        var task2 = new Task() {
+            @Override
+            public void execute() {
+                System.out.println("Executing task...");
+            }
+        };
+
+        task1.execute();
+        task2.execute();
+    }
+}
+```
+
+## 异常类
+
+Java的异常类分为Error和Exception两种：  
+
+- Error：表示系统错误，通常无法被程序处理，例如内存溢出、堆栈溢出等。  
+- Exception：表示程序运行时可能出现的错误，分为检查异常（Checked Exception）和运行时异常（Runtime Exception）。  
+
+使用`try...catch`语句处理异常：在`try`中的语句发生异常后，`try`立即结束运行，跳转到对应的`catch`部分，如果`catch`没有匹配的异常类型，则继续向上抛出异常。  
+
+```java
+try {
+    // 可能发生异常的代码
+} catch (ExceptionType1 e1) {
+    // 处理ExceptionType1异常的代码
+} catch (ArrayIndexOutOfBoundsException e) {
+    System.out.println("数组下标越界异常: " + e.getMessage());
+} catch (Exception e){
+    System.out.println("产生异常: " + e.getMessage());
+} finally {
+    // 无论是否发生异常，都会执行的代码
+}
+```
+
+可以扩展`Exception`类来自定义异常，例如：  
+
+```java
+// 自定义异常类：年龄小于18
+class InvalidAgeTooYoungException extends Exception {
+    public InvalidAgeTooYoungException(String message) {
+        super(message);  // 调用父类的构造函数
+    }
+}
+
+// 自定义异常类：年龄大于40
+class InvalidAgeTooOldException extends Exception {
+    public InvalidAgeTooOldException(String message) {
+        super(message);  // 调用父类的构造函数
+    }
+}
+
+public class AgeValidationExample {
+    // 检查年龄的方法，抛出不同的自定义异常
+    // 使用throws声明可能的异常类型
+    public static void validateAge(int age) throws InvalidAgeTooYoungException, InvalidAgeTooOldException {
+        if (age < 18) {
+            // 使用throw抛出异常
+            // 年龄小于18，抛出 InvalidAgeTooYoungException
+            throw new InvalidAgeTooYoungException("年龄必须大于或等于 18");
+        } else if (age > 40) {
+            // 年龄大于40，抛出 InvalidAgeTooOldException
+            throw new InvalidAgeTooOldException("年龄不能超过 40");
+        } else {
+            System.out.println("年龄有效：" + age);
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            validateAge(45);  // 测试年龄，触发不同的异常
+        } catch (InvalidAgeTooYoungException e) {
+            System.out.println("捕获到异常：太年轻：" + e.getMessage());
+        } catch (InvalidAgeTooOldException e) {
+            System.out.println("捕获到异常：太年长：" + e.getMessage());
+        } finally {
+            System.out.println("判断完毕");
+        }
+    }
+}
+```
+
+执行逻辑：  
+
+1. 异常类定义：定义两个继承自`Exception`的自定义异常类，接受一个str用于描述异常的具体信息，在构造函数中调用`super(message)`将str传递给父类的构造函数  
+2. 抛出异常：在`validateAge`方法中，首先用`throws`声明所有可能的异常类型，然后根据不同的年龄使用`throw`抛出不同的异常，并传递对应的描述信息，若无异常则执行else  
+3. 捕获异常：调用`validateAge`方法，判断是否抛出异常，若抛出则捕获对应的异常并打印异常信息  
+4. 执行finally的语句
+
+## 断言语句
+
+用于测试代码的逻辑正确性，确保程序的状态或行为符合预期。  
+断言失败时会抛出`AssertionError`异常。  
+
+```java
+public class AssertionExample {
+    public static void main(String[] args) {
+        int age = -5;
+        
+        // 简单断言
+        assert age >= 0; // 如果 age 小于 0，将抛出 AssertionError
+
+        // 带消息的断言
+        assert age >= 0 : "年龄不能为负数，当前年龄: " + age;
+
+        System.out.println("年龄是: " + age);
+    }
+}
+```
+
+断言默认是禁用的，需要通过`java -ea AssertionExample`启用断言。  
+
+## java反射
+
+java反射允许程序在运行时动态获取类的信息，并且可以操作类的成员，如属性、方法、构造函数甚至是实例化对象。  
+
+```java
+import java.lang.reflect.*;
+
+class Person {
+    private String name;
+    
+    public Person(String name) {
+        this.name = name;
+    }
+
+    public void greet() {
+        System.out.println("Hello, my name is " + name);
+    }
+    
+    private void secret() {
+        System.out.println("This is a secret method.");
+    }
+}
+
+public class ReflectionDemo {
+    public static void main(String[] args) {
+        try {
+            // 获取 Person 类的 Class 对象
+            Class<?> personClass = Class.forName("Person");
+            
+            // 创建实例
+            Constructor<?> constructor = personClass.getConstructor(String.class);
+            Object personInstance = constructor.newInstance("Alice");
+            
+            // 调用 greet 方法
+            Method greetMethod = personClass.getMethod("greet");
+            greetMethod.invoke(personInstance);
+            
+            // 访问私有字段 name
+            Field nameField = personClass.getDeclaredField("name");
+            nameField.setAccessible(true); // 允许访问私有字段
+            System.out.println("Name: " + nameField.get(personInstance));
+            
+            // 修改私有字段 name
+            nameField.set(personInstance, "Bob");
+            greetMethod.invoke(personInstance); // 调用 greet 方法
+            
+            // 调用私有方法
+            Method secretMethod = personClass.getDeclaredMethod("secret");
+            secretMethod.setAccessible(true); // 允许访问私有方法
+            secretMethod.invoke(personInstance); // 调用私有方法
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+# 第九章 常用类
+
+## String
+
+### 构造String对象
+
+```java
+// 使用字符串字面量
+String str1 = "Hello, World!";
+
+// 使用new关键字
+String str2 = new String("Hello, World!");
+
+// 使用字符数组
+char s[] = {'J', 'a', 'v', 'a'};
+String str3 = new String(s);
+String str4 = new String(s, 1, 3); // 从索引1开始，长度为3的子数组
+```
+
+### String常用方法
+
+对`String str1 = "Java"`：  
+
+- str1.length()：返回字符串的长度，即字符个数  
+- str1 + str2：字符串连接，返回String类型  
+- str1.equals(str2)：比较字符串内容是否相等，区分大小写，返回boolean类型  
+- str1.indexOf("World")：返回子串在字符串中首次出现的索引，不存在则返回-1  
+- str1.charAt(1)：返回str1中索引为1的字符
+- str1.substring(5)：从索引5截取到字符串末尾，返回String类型  
+- str1.sunstring(5, 10)：从索引5截取到索引10（不包括10），返回String类型  
+- str1.replace(str2, str3)：替换str1中所有的str2为str3    
+- str1.toUpperCase()：转换为大写  
+- str1.toLowerCase()：转换为小写   
+- String.format("name=%s, age=%d", "Alice", 25)：格式化字符串  
+
+### String对象和基本数据的互相转化
+
+```java
+// 基本数据类型转换为String
+int num = 123;
+String str1 = String.valueOf(num);
+String str2 = Integer.toString(num);
+
+// String转换为基本数据类型
+String str3 = "456";
+int num2 = Integer.parseInt(str3);
+// Integer.parseInt转换失败（非数字、null、空字符串、超出int范围）时会抛出NumberFormatException异常
+```
+
+### Object类 和 toString()方法
+
+`Object`类是java中所有类的根类，所有类都直接或间接继承自`Object`类。  
+`Object`类提供了一些基本的方法，他们都可以在子类中被重写，如：  
+
+- `toString()`：返回对象的字符串表示：`"类名@哈希码值"`  
+- `equals()`：比较两个对象的**引用**是否相等，通常需要重写为比较内容  
+- `getClass()`：返回对象的运行时类
+
+其中`toString()`方法通常会被重写为返回对象的详细信息，如：  
+
+```java
+class Person {
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{name='" + name + "', age=" + age + "}";
+    }
+}
+```
+
+## 正则表达式
+
+正则表达式（Regular Expression， regex）是一种用于处理字符串的强大工，可以用来搜索、匹配、替换和分割字符串。  
+
+java中正则表达式通常通过`java.util.regex`包中的`Pattern`类（表示编译后的正则表达式对象）和`Matcher`类（执行匹配操作）实现。  
+
+### 匹配规则  
+
+1. 字符匹配  
+   - 普通字符：匹配自身，如正则表达式`"cat"`匹配字符串`"cat"`  
+   - 转义字符：匹配`. * ?`等符号时需要加反斜杠转义，如`"\. \* \?"`  
+2. 字符类，使用方括号`[]`表示  
+   - `[abc]`：a或b或c  
+   - `[a-z]`：从a到z的小写字母  
+   - `[A-Z]`：从A到Z的大写字母  
+   - `[0-9]`：从0-9的数字  
+   - `[^a-c]`：除a-c的小写字母  
+   - `[a-d[m-p]]`：并集，a-d或m-p  
+   - `[a-z&&[m-p]]`：交集，a-z中m-p  
+   - `[a-z&&[^m-p]]`：差集，a-z中除去m-p  
+3. 预定义字符类：使用时需要加反斜杠转义，如`\. \\d \\S`  
+   - `.`：除换行符外的任意字符  
+   - `\d`：数字  
+   - `\D`：非数字字符  
+   - `\w`：数字、字母、下划线  
+   - `\W`：非数字、字母、下划线的字符  
+   - `\s`：空白字符，如空格、制表符、换行符  
+   - `\S`：非空白字符  
+   - `\p{Lower}`：小写字母  
+   - `\p{Upper}`：大写字母  
+   - `\p{Alpha}`：字母  
+   - `\p{Digit}`：数字  
+   - `\p{Alnum}`：字母或数字  
+   - `\p{Punct}`：标点符号`! " # $ % & 等`  
+   - `\p{ASCII}`：ASCII字符  
+4. 边界匹配：  
+   - `^`：匹配开头，如`"^cat"`匹配以`"cat"`开头的字符串  
+   - `$`：匹配结尾  
+   - `\b`：匹配单词边界（空格、标点符号），如`"\bhello\b"`仅匹配完整的单词`"hello"`  
+   - `\B`：匹配非单词边界，如`"\Bworld\B"`仅匹配仅作为其他字符一部分出现的`"world"`，即不在单词的开头或结尾处  
+5. 重复匹配：  
+   - `char*`：匹配char0次或多次  
+   - `char+`：匹配char1次或多次  
+   - `char?`：匹配char0次或1次  
+   - `char{n}`：匹配char恰好n次  
+   - `char{n,}`：匹配char至少n次  
+   - `char{n,m}`：匹配char $[n,m]$ 次   
+6. 组：将表达式部分封装成组，以便重复或逻辑操作。  
+   - 捕获组：使用圆括号 `()` 表示捕获组，匹配的内容可以通过 `Matcher.group()` 方法获取。例如，`(abc)` 匹配 `abc` 并将其捕获。  
+   - 非捕获组：使用 `(?:...)` 表示非捕获组，仅用于分组逻辑，不捕获内容。例如，`(?:abc)` 匹配 `abc`，但不捕获。  
+   - 向前断言：`(?=...)` 表示正向前瞻匹配。例如，`a(?=b)` 匹配 `a`，但要求后面跟着 `b`。  
+   - 向后断言：`(?<=...)` 表示正向后顾匹配。例如，`(?<=a)b` 匹配 `b`，但要求前面有 `a`。  
+7. 逻辑预算  
+   - 或运算：`|` 表示逻辑或，匹配左右两边的任意一个表达式,如`cat|dog` 匹配 `"cat"` 或 `"dog"`。
+   - 贪婪与惰性匹配：正则表达式默认是**贪婪的**，尽可能多地匹配字符。在量词后添加 `?`，可以变为**惰性匹配**，即尽可能少地匹配字符。例如，`.*` 是贪婪的，`.*?` 是惰性的。
+
+### 常用方法
+
+- `Pattern.compile(String regex)`: 将正则表达式编译为 `Pattern` 对象。  
+- `Matcher matcher = pattern.matcher(String input)`: 通过 `Pattern` 创建 `Matcher` 对象。  
+- `matcher.matches(String regex)`: 判断整个字符串是否与正则表达式匹配。  
+- `matcher.find(String regex)`: 查找字符串中与正则表达式匹配的部分。  
+- `matcher.group()`: 获取匹配的子字符串。   
+
+### 使用正则表达式匹配字符串的过程
+
+1. 使用 `Pattern.compile(String regex)` 方法将正则表达式编译为 `Pattern` 对象。  
+2. 通过 `Pattern.matcher()` 方法，传入要匹配的字符串，生成 Matcher 对象  
+3. 使用 `Matcher` 对象的各种方法来进行匹配操作，如 `matches()`、`find()` 等  
+
+使用 `Pattern.matches(regex, input)` 检查整个字符串是否与正则表达式匹配，返回布尔值  
+
+```java
+import java.util.regex.Pattern;
+
+public class RegexExample {
+    public static void main(String[] args) {
+        String regex = "\\d{3}-\\d{2}-\\d{4}";  
+        // 三个数字-两个数字-四个数字
+        String input = "123-45-6789";  // 要匹配的字符串
+
+        // 使用 matches 方法匹配整个字符串
+        if (Pattern.matches(regex, input)) {
+            System.out.println("格式正确！");
+        } else {
+            System.out.println("格式错误！");
+        }
+    }
+}
+```
+
+使用 `matcher.find()` 查找输入字符串中是否存在匹配的子串  
+使用 `matcher.group()` 返回匹配的子串  
+
+```java
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+public class RegexExample {
+    public static void main(String[] args) {
+        String regex = "\\d{3}-\\d{2}-\\d{4}";  // 正则表达式，匹配社会保障号格式
+        String input = "我的SSN是123-45-6789。";  // 要匹配的字符串
+
+        // 编译正则表达式
+        Pattern pattern = Pattern.compile(regex);
+        // 创建匹配器
+        Matcher matcher = pattern.matcher(input);
+
+        // 使用 find 方法查找部分匹配
+        if (matcher.find()) {
+            System.out.println("找到匹配: " + matcher.group());
+        } else {
+            System.out.println("未找到匹配");
+        }
+    }
+}
+```
+
+使用 `while(matcher.find())` 循环查找所有匹配的子串  
+
+```java
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+public class RegexExample {
+    public static void main(String[] args) {
+        String regex = "\\d+";  // 匹配一个或多个数字
+        String input = "价格分别是10元、20元和30元";  // 要匹配的字符串
+
+        // 编译正则表达式
+        Pattern pattern = Pattern.compile(regex);
+        // 创建匹配器
+        Matcher matcher = pattern.matcher(input);
+
+        // 查找所有匹配的数字
+        while (matcher.find()) {
+            System.out.println("找到匹配的数字: " + matcher.group());
+        }
     }
 }
 ```
