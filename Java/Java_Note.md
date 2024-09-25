@@ -2529,3 +2529,70 @@ public class RegexExample {
     }
 }
 ```
+
+## StringBuffer
+
+StringBuffer是可变的String对象，可以动态修改内容而不需要创建新对象，可以自动扩展占用的空间（默认为16）  
+
+StringBuffer位于`java.lang`包中，不需要手动导入  
+
+```java
+public class StringBufferExample {
+    public static void main(String[] args) {
+        // 创StringBuffer对象
+        var sb = new StringBuffer("Hello");
+
+        // 1. aappend(String str)：在末尾添加字符串
+        sb.append(" World");
+        System.out.println("After append: " + sb); // 输出: Hello World
+
+        // 2. insert(int offset, String str)：在指定位置插入字符串
+        sb.insert(6, "Java ");
+        System.out.println("After insert: " + sb); // 输出: Hello Java World
+
+        // 3. delete(int start, int end)：删除指定范围内的字符
+        sb.delete(6, 11);
+        System.out.println("After delete: " + sb); // 输出: Hello World
+
+        // 4. reverse()：反转字符串
+        sb.reverse();
+        System.out.println("After reverse: " + sb); // 输出: dlroW olleH
+
+        // 5. 转换为String
+        String str = sb.toString();
+        System.out.println("Converted to String: " + str); // 输出: dlroW olleH
+
+        // 6. 获取当前长度
+        System.out.println("Length: " + sb.length()); // 输出: 11
+
+        // 7. 获取当前容量
+        System.out.println("Capacity: " + sb.capacity()); // 输出: 16 (默认初始容量)
+    }
+}
+```
+
+## Math
+
+| 方法名          | 描述                                                         |
+|-----------------|------------------------------------------------------------|
+| `Math.abs(x)`        | 返回 `x` 的绝对值。                                         |
+| `Math.max(x, y)`     | 返回 `x` 和 `y` 中的最大值。                                 |
+| `Math.min(x, y)`     | 返回 `x` 和 `y` 中的最小值。                                 |
+| `Math.ceil(x)`       | 返回大于等于 `x` 的最小整数。                             |
+| `Math.floor(x)`      | 返回小于等于 `x` 的最大整数。                             |
+| `Math.round(x)`      | 返回最接近 `x` 的整数。                                     |
+| `Math.exp(x)`        | 返回 `e^x` 的值。                                            |
+| `Math.log(x)`        | 返回 `x` 的自然对数（底数为 `e`）。                         |
+| `Math.sqrt(x)`       | 返回 `x` 的非负平方根。                                     |
+| `Math.pow(x, y)`     | 返回 `x` 的 `y` 次幂。                                       |
+| `Math.random()`      | 返回大于等于 0.0 小于 1.0 的随机浮点数。            |
+| `Math.random(int n)`| 返回大于或等于 0 小于 `n` 的随机整数。        |
+| `Math.sin(x)`        | 返回 `x` 的正弦值。                                         |
+| `Math.cos(x)`        | 返回 `x` 的余弦值。                                         |
+| `Math.tan(x)`        | 返回 `x` 的正切值。                                         |
+| `Math.asin(x)`       | 返回 `x` 的反正弦值。                                       |
+| `Math.acos(x)`       | 返回 `x` 的反余弦值。                                       |
+| `Math.atan(x)`       | 返回 `x` 的反正切值。                                       |
+| `Math.E`             | 自然对数的底数 `e` 的值。                                  |
+| `Math.PI`            | 圆周率的值。                                                |
+
