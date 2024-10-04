@@ -1751,6 +1751,57 @@ public class Main {
 }
 ```
 
+### 上转型对象和继承的区别
+
+对于上转型对象：  
+
+- 将一个子类的对象赋值给一个父类引用  
+- 在上转型对象中只能访问父类的成员  
+- 若子类重写了父类的方法则访问被重写的方法  
+- 不可以访问子类特有的成员，即只能访问转型后引用类型所定义的方法  
+
+常用情况：  
+
+```java
+public class Animal {
+    public void eat() {
+        System.out.println("This animal is eating.");
+    }
+}
+
+public class Dog extends Animal {
+    public void eat() {
+        System.out.println("This dog is eating.");
+    }
+}
+
+public class Cat extends Animal {
+    public void eat() {
+        System.out.println("This cat is eating.");
+    }
+}
+
+public class Main {
+    public void feed(Animal animal) {
+        // 这个方法接受一个Animal类的参数，调用animal的eat()方法
+        animal.eat();
+    }
+
+    public static void main(String[] args) {
+        Dog dog = new Dog();
+        Cat cat = new Cat();
+        feed(dog);
+        feed(cat);
+        // 传入Animal的子类，方法接收的实际为一个上转型对象
+        // 在feed中会调用被子类重写的eat()方法
+        // 扩展了feed方法，使其可以接受不同继承自Animal的对象
+    }
+
+}
+```
+
+<br/>
+
 ### 多态
 
 同一个方法调用，基于对象的不同，可能会表现出不同的行为，实际调用哪个方法在运行时决定。  
