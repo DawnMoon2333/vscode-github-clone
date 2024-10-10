@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>model_introduction.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h2 id="o1-preview%E5%92%8Co1-mini">o1-preview和o1-mini</h2>
+<p>OpenAI于2024年09月12日推出的全新推理模型o1，在请求之后会有10秒左右的思考时间，然后才开始回复。</p>
+<p>o1-preview和o1-mini在逻辑推理、数学、物理及代码生成领域实现了显著提升，展现出优于前代（如gpt-4、gpt-4o）的自我修正与策略探索能力，模仿人类思维模式，确保了解决方案的高效与精确。</p>
+<p>o1-preview的能力更强，可以进行深度思考，o1-mini的请求速度更快且成本更低。</p>
+<h2 id="gpt-4o">gpt-4o</h2>
+<p>OpenAI的旗舰模型，可以实时推理音频、视觉和文本。</p>
+<p>是迈向更自然的人机交互的一步——它接受文本、音频和图像的任意组合作为输入，并生成文本、音频和图像输出的任意组合。</p>
+<p>它可以在短短 232 毫秒内响应音频输入，平均为 320 毫秒，与现有模型相比，GPT-4o 在视觉和音频理解方面尤其出色。</p>
+<h2 id="gpt-4o-mini">gpt-4o-mini</h2>
+<p>GPT-4o-mini是平衡了性能与成本的小参数模型，能力范围介于gpt-3.5与gpt-4o之间，为用户提供了高性价比的选择。</p>
+<h2 id="gpt-4">gpt-4</h2>
+<p>OpenAI官方GPT4系列。知识库截止于2021年，最大回复8k，价格适中，具有中等参数。</p>
+<h2 id="gpt-3-turbo">gpt-3-turbo</h2>
+<p>作为OpenAI的明星产品，gpt-3-turbo是GPT3.5系列中的高速模型，最大回复长度4k tokens，综合能力强，是目前使用最广泛的文本模型.</p>
+<h2 id="claude-35-%E5%92%8C-claude-3">claude-3.5 和 claude-3</h2>
+<p>Anthropic公司Claude系列模型的最新成员。</p>
+<p>claude-3-5-sonnet在智能和速度之间取得平衡，特别适合企业工作负载。在部分领域已经超越了gpt-4系列模型。最大上下文200k，最大回复8k。</p>
+<p>claude-3-opus是Anthropic目前最强的语言模型，适合处理高度复杂的问题。在很多领域已经超越了gpt-4系列模型。最大上下文200k，最大回复4k，</p>
+<h2 id="qwen-plus">qwen-plus</h2>
+<p>qwen是来自阿里云的通义千问系列国产大模型。<br>
+Qwen-Plus是一个专注于处理图像和文本等多模态数据的模型，能够理解和生成基于视觉和语言的内容，适用于各种多模态任务，如图像描述生成、图像问答、图像生成等。效果、速度、成本均衡。最大上下文130k。</p>
+<h2 id="qwen-turbo">qwen-turbo</h2>
+<p>Qwen-Turbo优化了响应速度，能够在短时间内生成高质量的回答，适合简单任务，速度快、成本低。</p>
+<h2 id="qwen-max">qwen-max</h2>
+<p>Qwen-Max是通义千问系列效果最好的模型，具有强大的语言处理能力，能够处理更复杂的语言任务，如长文本生成、多轮对话等，适合复杂任务，推理能力最强。</p>
+<h2 id="qwen-long">qwen-long</h2>
+<p>Qwen-Long针对大规模文本做了特殊优化，支持对千万字文档的分析，最大上下文1000k。</p>
+<h2 id="qwen-%E9%80%9A%E4%B9%89%E5%8D%83%E9%97%AE">Qwen 通义千问</h2>
+<p>Qwen是来自阿里云的通义千问系列国产大模型。</p>
+<h3 id="qwen-plus">Qwen-Plus</h3>
+<p>专注于多模态数据处理，结合图像与文本理解与生成，广泛应用于图像描述、问答等任务，速度、效果与成本达到良好平衡，最大上下文130k。</p>
+<h3 id="qwen-turbo">Qwen-Turbo</h3>
+<p>优化了响应速度，能够在短时间内生成高质量的回答，适合简单任务，速度快、成本低。</p>
+<h3 id="qwen-max">Qwen-Max</h3>
+<p>Qwen系列中的最强模型，具有强大的语言处理能力和推理能力，能够处理更复杂的语言任务，如长文本生成、多轮对话等。</p>
+<h3 id="qwen-long">Qwen-Long</h3>
+<p>专为大型文档设计，优化处理千万字级别的文本分析，最大上下文1000k，满足大规模数据分析需求。</p>
+<h2 id="moonshot">Moonshot</h2>
+<p>来自“月之暗面”的Moonshot系列，以处理20万汉字的超长文本著称，借助无损长程注意力机制和中文专项优化，有效应对复杂文本分析、长文档摘要等高级需求，提供8k、32k、128k不同最大上下文长度选项，突破了传统模型的长文本处理瓶颈。</p>
+
+</body>
+</html>

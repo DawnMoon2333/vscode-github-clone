@@ -5,6 +5,14 @@
   MathJax.Hub.Config({ tex2jax: {inlineMath: [['$', '$']]}, messageStyle: "none" });
 </script>
 
+
+<script type="text/javascript" 
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [['$', '$']]}, messageStyle: "none" });
+</script>
+
 # 第一章 绪论
 
 # 第二章 基本数据类型、数组、枚举
@@ -1766,6 +1774,7 @@ public class Main {
 - 在上转型对象中只能访问父类的成员  
 - 若子类重写了父类的方法则访问被重写的方法  
 - 不可以访问子类特有的成员，即只能访问转型后引用类型所定义的方法  
+- 上转型对象可以访问隐藏的变量  
 
 常用情况：  
 
