@@ -365,45 +365,180 @@ code {
           : 'default'
     });
   </script>
+<h1 id="%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D">模型介绍</h1>
+<h2 id="%E7%9C%81%E6%B5%81">省流</h2>
+<table>
+<thead>
+<tr>
+<th>模型名</th>
+<th>擅长领域/优点</th>
+<th>最大上下文</th>
+<th>最大回复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>o1-preview</td>
+<td>推理，深度思考，能力最强</td>
+<td>128k</td>
+<td>\</td>
+</tr>
+<tr>
+<td>o1-mini</td>
+<td>推理，轻量级</td>
+<td>128k</td>
+<td>\</td>
+</tr>
+<tr>
+<td>gpt-4o</td>
+<td>多模态，旗舰，综合能力强</td>
+<td>128k</td>
+<td>\</td>
+</tr>
+<tr>
+<td>gpt-4o-mini</td>
+<td>多模态，轻量级，高性价比</td>
+<td>128k</td>
+<td>\</td>
+</tr>
+<tr>
+<td>gpt-4</td>
+<td>综合能力强</td>
+<td>8k</td>
+<td>8k</td>
+</tr>
+<tr>
+<td>gpt-3.5-turbo</td>
+<td>响应速度快，综合能力强</td>
+<td>4k</td>
+<td>4k</td>
+</tr>
+<tr>
+<td>claude-3-5</td>
+<td>多模态，综合能力强</td>
+<td>200k</td>
+<td>8k</td>
+</tr>
+<tr>
+<td>claude-3</td>
+<td>多模态，能力最强</td>
+<td>200k</td>
+<td>4k</td>
+</tr>
+<tr>
+<td>moonshot-8k</td>
+<td>综合能力强</td>
+<td>8k</td>
+<td>4k</td>
+</tr>
+<tr>
+<td>moonshot-32k</td>
+<td>综合能力强</td>
+<td>32k</td>
+<td>4k</td>
+</tr>
+<tr>
+<td>moonshot-128k</td>
+<td>综合能力强</td>
+<td>128k</td>
+<td>4k</td>
+</tr>
+<tr>
+<td>qwen-turbo</td>
+<td>响应速度快，适合简单任务</td>
+<td>131k</td>
+<td>8k</td>
+</tr>
+<tr>
+<td>qwen-plus</td>
+<td>平衡质量和速度，综合能力强</td>
+<td>131k</td>
+<td>8k</td>
+</tr>
+<tr>
+<td>qwen-max</td>
+<td>旗舰，能力最强</td>
+<td>32k</td>
+<td>8k</td>
+</tr>
+<tr>
+<td>qwen-long</td>
+<td>对长文本优化</td>
+<td>1000k</td>
+<td>6k</td>
+</tr>
+<tr>
+<td>glm-plus</td>
+<td>旗舰，能力最强</td>
+<td>128k</td>
+<td>4k</td>
+</tr>
+<tr>
+<td>glm-airx</td>
+<td>轻量级，响应速度快</td>
+<td>8k</td>
+<td>4k</td>
+</tr>
+<tr>
+<td>glm-long</td>
+<td>对长文本优化</td>
+<td>1000k</td>
+<td>4k</td>
+</tr>
+</tbody>
+</table>
+<br/>
 <h2 id="o1-preview%E5%92%8Co1-mini">o1-preview和o1-mini</h2>
 <p>OpenAI于2024年09月12日推出的全新推理模型o1，在请求之后会有10秒左右的思考时间，然后才开始回复。</p>
 <p>o1-preview和o1-mini在逻辑推理、数学、物理及代码生成领域实现了显著提升，展现出优于前代（如gpt-4、gpt-4o）的自我修正与策略探索能力，模仿人类思维模式，确保了解决方案的高效与精确。</p>
 <p>o1-preview的能力更强，可以进行深度思考，o1-mini的请求速度更快且成本更低。</p>
+<br/>
 <h2 id="gpt-4o">gpt-4o</h2>
 <p>OpenAI的旗舰模型，可以实时推理音频、视觉和文本。</p>
 <p>是迈向更自然的人机交互的一步——它接受文本、音频和图像的任意组合作为输入，并生成文本、音频和图像输出的任意组合。</p>
 <p>它可以在短短 232 毫秒内响应音频输入，平均为 320 毫秒，与现有模型相比，GPT-4o 在视觉和音频理解方面尤其出色。</p>
+<br/>
 <h2 id="gpt-4o-mini">gpt-4o-mini</h2>
 <p>GPT-4o-mini是平衡了性能与成本的小参数模型，能力范围介于gpt-3.5与gpt-4o之间，为用户提供了高性价比的选择。</p>
+<br/>
 <h2 id="gpt-4">gpt-4</h2>
 <p>OpenAI官方GPT4系列。知识库截止于2021年，最大回复8k，价格适中，具有中等参数。</p>
+<br/>
 <h2 id="gpt-3-turbo">gpt-3-turbo</h2>
 <p>作为OpenAI的明星产品，gpt-3-turbo是GPT3.5系列中的高速模型，最大回复长度4k tokens，综合能力强，是目前使用最广泛的文本模型.</p>
+<br/>
 <h2 id="claude-35-%E5%92%8C-claude-3">claude-3.5 和 claude-3</h2>
 <p>Anthropic公司Claude系列模型的最新成员。</p>
 <p>claude-3-5-sonnet在智能和速度之间取得平衡，特别适合企业工作负载。在部分领域已经超越了gpt-4系列模型。最大上下文200k，最大回复8k。</p>
-<p>claude-3-opus是Anthropic目前最强的语言模型，适合处理高度复杂的问题。在很多领域已经超越了gpt-4系列模型。最大上下文200k，最大回复4k，</p>
-<h2 id="qwen-plus">qwen-plus</h2>
-<p>qwen是来自阿里云的通义千问系列国产大模型。<br>
-Qwen-Plus是一个专注于处理图像和文本等多模态数据的模型，能够理解和生成基于视觉和语言的内容，适用于各种多模态任务，如图像描述生成、图像问答、图像生成等。效果、速度、成本均衡。最大上下文130k。</p>
-<h2 id="qwen-turbo">qwen-turbo</h2>
-<p>Qwen-Turbo优化了响应速度，能够在短时间内生成高质量的回答，适合简单任务，速度快、成本低。</p>
-<h2 id="qwen-max">qwen-max</h2>
-<p>Qwen-Max是通义千问系列效果最好的模型，具有强大的语言处理能力，能够处理更复杂的语言任务，如长文本生成、多轮对话等，适合复杂任务，推理能力最强。</p>
-<h2 id="qwen-long">qwen-long</h2>
-<p>Qwen-Long针对大规模文本做了特殊优化，支持对千万字文档的分析，最大上下文1000k。</p>
+<p>claude-3-opus是Anthropic目前最强的语言模型，适合处理高度复杂的问题。在很多领域已经超越了gpt-4系列模型。最大上下文200k，最大回复4k。</p>
+<br/>
 <h2 id="qwen-%E9%80%9A%E4%B9%89%E5%8D%83%E9%97%AE">Qwen 通义千问</h2>
 <p>Qwen是来自阿里云的通义千问系列国产大模型。</p>
 <h3 id="qwen-plus">Qwen-Plus</h3>
 <p>专注于多模态数据处理，结合图像与文本理解与生成，广泛应用于图像描述、问答等任务，速度、效果与成本达到良好平衡，最大上下文130k。</p>
+<br/>
 <h3 id="qwen-turbo">Qwen-Turbo</h3>
 <p>优化了响应速度，能够在短时间内生成高质量的回答，适合简单任务，速度快、成本低。</p>
+<br/>
 <h3 id="qwen-max">Qwen-Max</h3>
 <p>Qwen系列中的最强模型，具有强大的语言处理能力和推理能力，能够处理更复杂的语言任务，如长文本生成、多轮对话等。</p>
+<br/>
 <h3 id="qwen-long">Qwen-Long</h3>
 <p>专为大型文档设计，优化处理千万字级别的文本分析，最大上下文1000k，满足大规模数据分析需求。</p>
+<br/>
 <h2 id="moonshot">Moonshot</h2>
 <p>来自“月之暗面”的Moonshot系列，以处理20万汉字的超长文本著称，借助无损长程注意力机制和中文专项优化，有效应对复杂文本分析、长文档摘要等高级需求，提供8k、32k、128k不同最大上下文长度选项，突破了传统模型的长文本处理瓶颈。</p>
+<br/>
+<h2 id="glm-%E6%99%BA%E8%B0%B1%E5%A4%A7%E6%A8%A1%E5%9E%8B">GLM 智谱大模型</h2>
+<p>来自清华大学的GLM-4系列国产大模型。</p>
+<h3 id="glm-4-plus">GLM-4-Plus</h3>
+<p>GLM-4-Plus是GLM-4系列中的高智能旗舰，性能全面提升，长文本和复杂任务能力显著增强，具有更强的语言处理能力，适用于处理复杂文本任务，如长文本生成、多轮对话等，最长上下文128k。</p>
+<br/>
+<h3 id="glm-4-long">GLM-4-Long</h3>
+<p>GLM-4-Long是GLM-4系列中的长文本处理专家，优化了处理长文本的能力，适用于处理大型文档、长文本分析等任务，最长上下文1000k。</p>
+<br/>
+<h3 id="glm-4-airx">GLM-4-AirX</h3>
+<p>GLM-4-AirX是GLM-4系列中的轻量级模型，具有更快的响应速度和更低的成本，适用于处理简单任务，最长上下文8k。</p>
 
 </body>
 </html>
