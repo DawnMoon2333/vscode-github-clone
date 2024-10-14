@@ -2378,6 +2378,83 @@ public class ReflectionDemo {
 }
 ```
 
+# 第七章 面向对象设计的基本原则
+
+## 开闭原则
+
+“对扩展开放，对修改关闭” 即：  
+
+- 允许在不修改现有代码的基础上，通过增加新功能来扩展系统的行为  
+- 增加新的模块时不需要修改现有的模块  
+
+```java
+// 抽象类或接口：Shape
+interface Shape {
+    double getArea();  // 抽象方法
+}
+
+// 圆形类
+class Circle implements Shape {
+    private double radius;
+
+    public Circle(double radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public double getArea() {
+        return Math.PI * radius * radius;
+    }
+}
+
+// 矩形类
+class Rectangle implements Shape {
+    private double width;
+    private double height;
+
+    public Rectangle(double width, double height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    @Override
+    public double getArea() {
+        return width * height;
+    }
+}
+
+// 客户端代码
+class AreaCalculator {
+    public double calculateTotalArea(Shape[] shapes) {
+        double totalArea = 0;
+        for (Shape shape : shapes) {
+            totalArea += shape.getArea();  // 多态调用
+        }
+        return totalArea;
+    }
+}
+```
+
+## 多用组合，少用继承
+
+优先使用组合（实现接口）来实现对象间的功能重用和扩展，尽量减少对继承（继承父类）的依赖。  
+
+继承的缺点：   
+
+- 父类和子类是强耦合关系，对父类的改动会影响所有子类  
+- 一个子类只能继承一个父类  
+- 如果父类设计不当或后期扩展需求变化，子类容易出问题  
+- 继承关系确定后，子类的行为难以动态改变  
+
+组合的优点：  
+
+- 组合是弱耦合关系，只依赖于接口或对象，而不是类层次结构  
+- 可以复用多个类的功能，而不需要考虑类的继承关系  
+- 可以在运行时改变不同组件之间的组合，实现更多的动态行为  
+- 组合允许扩展功能而无需修改已有代码  
+
+
+
 # 第九章 常用类
 
 ## String
