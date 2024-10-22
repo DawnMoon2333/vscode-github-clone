@@ -2453,6 +2453,381 @@ class AreaCalculator {
 - 可以在运行时改变不同组件之间的组合，实现更多的动态行为  
 - 组合允许扩展功能而无需修改已有代码  
 
+# 第八章 设计模式
+
+针对某一类问题的最佳解决方案，即一个**成功的、可复用的**设计方案
+
+## 框架
+
+针对某个领域，用于开发的**类的集合**，包括多个设计模式
+
+## 设计模式的分类
+
+- 行为型模式   
+  - 策略模式  
+  - 访问者模式  
+- 结构型模式  
+  - 装饰模式  
+  - 适配器模式  
+- 创建型模式  
+  - 工厂方法模式  
+
+## 策略模式
+
+将一系列**平行的算法**封装起来，使他们可以互相替换。  
+
+- 策略接口 Strategy：定义若干个抽象方法  
+- 具体策略 ConcreteStrategy：实现策略接口，给出具体算法  
+- 上下文 Context：依赖于接口的类，其中包含的方法调用具体策略所实现的策略接口中的方法  
+
+优点：  
+
+- 每种算法都可以独立变化，客户端不需要知道具体实现  
+- 添加新的策略时，不需要修改Context的代码，在Context中可以直接引用新的具体策略的实例，符合开闭原则  
+- Context和ConcreteStrategy是松耦合关系，Context只需要知道它要使用一个实现了Strategy接口类的实例  
+
+```java
+// 策略接口
+interface DiscountStrategy {
+    double applyDiscount(double price);
+}
+
+// 具体策略1：百分比折扣
+class PercentageDiscount implements DiscountStrategy {
+    private double percentage;
+
+    public PercentageDiscount(double percentage) {
+        this.percentage = percentage;
+    }
+
+    @Override
+    public double applyDiscount(double price) {
+        return price * (1 - percentage / 100);
+    }
+}
+
+// 具体策略2：固定金额折扣
+class FixedAmountDiscount implements DiscountStrategy {
+    private double amount;
+
+    public FixedAmountDiscount(double amount) {
+        this.amount = amount;
+    }
+
+    @Override
+    public double applyDiscount(double price) {
+        return price - amount;
+    }
+}
+
+// 上下文
+class ShoppingCart {
+    private DiscountStrategy discountStrategy;
+
+    public void setDiscountStrategy(DiscountStrategy discountStrategy) {
+        this.discountStrategy = discountStrategy;
+    }
+
+    public double calculateTotal(double price) {
+        return discountStrategy.applyDiscount(price);
+    }
+}
+
+// 使用示例
+public class Main {
+    public static void main(String[] args) {
+        ShoppingCart cart = new ShoppingCart();
+
+        cart.setDiscountStrategy(new PercentageDiscount(10)); // 10%折扣
+        System.out.println("总价：" + cart.calculateTotal(100)); // 输出：90.0
+
+        cart.setDiscountStrategy(new FixedAmountDiscount(15)); // 固定金额折扣
+        System.out.println("总价：" + cart.calculateTotal(100)); // 输出：85.0
+    }
+}
+```
+
+## 访问者模式
+
+表示一个作用于某对象结构中的各个元素的操作，使用户可以在不改变各个元素的类的前提下定义作用于这些元素的新操作。  
+
+- 抽象元素 Element：一个接口，定义接收访问者的`accept`方法  
+- 具体元素 ConcreteElement：定义自己的行为，实现`accept`方法，将当前元素传递给访问者  
+- 抽象访问者  Visitor：一个接口，包含对各种具体元素的访问方法  
+- 具体访问者 ConcreteVisitor：定义对各种具体元素的操作  
+
+优点：  
+
+- 将操作与对象结构分离，使得在不改变对象结构的情况下，可以增加新的操作  
+- 增加新操作时，只需创建一个新的访问者类，而不需要修改现有的元素类，避免对现有代码的干扰，遵循开闭原则  
+- 将所有的处理逻辑都集中在访问者中，便于管理和维护  
+
+```java
+// 访问者接口
+interface BillVisitor {
+    void visit(ResidentialUser user);
+    void visit(CommercialUser user);
+}
+
+// 具体访问者：电费计算
+class ElectricityBillVisitor implements BillVisitor {
+    private double residentialRate; // 居民电价
+    private double commercialRate;   // 商业电价
+
+    public ElectricityBillVisitor(double residentialRate, double commercialRate) {
+        this.residentialRate = residentialRate;
+        this.commercialRate = commercialRate;
+    }
+
+    @Override
+    public void visit(ResidentialUser user) {
+        double amount = user.getConsumption() * residentialRate; // 计算电费
+        System.out.println("居民用户电费：¥" + amount);
+    }
+
+    @Override
+    public void visit(CommercialUser user) {
+        double amount = user.getConsumption() * commercialRate; // 计算电费
+        System.out.println("商业用户电费：¥" + amount);
+    }
+}
+
+// 元素接口
+interface User {
+    void accept(BillVisitor visitor);
+    double getConsumption();
+}
+
+// 具体元素：居民用户
+class ResidentialUser implements User {
+    private double consumption; // 用电量
+
+    public ResidentialUser(double consumption) {
+        this.consumption = consumption;
+    }
+
+    @Override
+    public void accept(BillVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public double getConsumption() {
+        return consumption;
+    }
+}
+
+// 具体元素：商业用户
+class CommercialUser implements User {
+    private double consumption; // 用电量
+
+    public CommercialUser(double consumption) {
+        this.consumption = consumption;
+    }
+
+    @Override
+    public void accept(BillVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
+    public double getConsumption() {
+        return consumption;
+    }
+}
+
+// 使用示例
+public class Main {
+    public static void main(String[] args) {
+        double residentialRate = 0.5; // 居民单价
+        double commercialRate = 0.8;   // 商业单价
+        
+        User residentialUser = new ResidentialUser(100); // 100度电
+        User commercialUser = new CommercialUser(150);   // 150度电
+
+        BillVisitor billVisitor = new ElectricityBillVisitor(residentialRate, commercialRate);
+
+        residentialUser.accept(billVisitor); // 输出：居民用户电费：¥50.0
+        commercialUser.accept(billVisitor);   // 输出：商业用户电费：¥120.0
+    }
+}
+```
+
+1. 定义接口和类
+
+- BillVisitor接口：定义不同用户计算电费的`visit`方法  
+- User接口：定义用户的`accept`和`getConsumption`方法  
+- ElectricityBillVisitor类：实现BillVisitor接口，定义对不同类型用户的电费计算方法  
+- ResidentialUser和CommercialUser类：实现User接口，表示居民和商业用户  
+
+2. 创建User类型的上转型对象：居民和商业  
+
+```java
+User residentialUser = new ResidentialUser(100); // 100度电
+User commercialUser = new CommercialUser(150);   // 150度电
+```
+
+3. 创建访问者实例ElectricityBillVisitor，传入居民和商业的用电单价  
+
+```java
+double residentialRate = 0.5; // 居民单价
+double commercialRate = 0.8;   // 商业单价
+BillVisitor billVisitor = new ElectricityBillVisitor(residentialRate, commercialRate);
+```
+
+4. 计算电费
+
+分别调用不同用户对象的`accept`方法，传入访问者对象billVisitor，计算不同用户的电费  
+
+```java
+residentialUser.accept(billVisitor); // 计算居民电费
+commercialUser.accept(billVisitor);   // 计算商业电费
+```
+
+在`ResidentialUser`的`accept`方法中，`billVisitor.visit(this)`将当前对象`ResidentialUser`传递给访问者`ElectricityBillVisitor`，访问者根据不同的用户类型选择不同的单价计算电费。
+
+## 装饰模式
+
+动态地给对象添加额外的功能。通过组合多个装饰器，可以实现复杂的功能而无需修改原始对象的代码。  
+
+- 抽象组件 Component：一个接口，描述被装饰对象的共同特性，定义需要进行装饰的方法  
+- 具体组件 ConcreteComponent：实现抽象组件接口，表示被装饰的原始对象  
+- 装饰器 Decorator：实现抽象组件接口，持有一个具体组件的引用。用于装饰具体组件  
+- 具体装饰器 ConcreteDecorator：装饰器的子类，添加具体的功能  
+
+```java
+// 抽象组件
+interface Coffee {
+    String getDescription();
+    double cost();
+}
+
+// 具体组件
+class SimpleCoffee implements Coffee {
+    @Override
+    public String getDescription() {
+        return "简单咖啡";
+    }
+
+    @Override
+    public double cost() {
+        return 5.0;
+    }
+}
+
+// 抽象装饰器
+abstract class CoffeeDecorator implements Coffee {
+    protected Coffee coffee;
+
+    public CoffeeDecorator(Coffee coffee) {
+        this.coffee = coffee;
+    }
+}
+
+// 具体装饰器：添加牛奶
+class MilkDecorator extends CoffeeDecorator {
+    public MilkDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public String getDescription() {
+        return coffee.getDescription() + ", 牛奶";
+    }
+
+    @Override
+    public double cost() {
+        return coffee.cost() + 1.5; // 牛奶附加费用
+    }
+}
+
+// 具体装饰器：添加糖
+class SugarDecorator extends CoffeeDecorator {
+    public SugarDecorator(Coffee coffee) {
+        super(coffee);
+    }
+
+    @Override
+    public String getDescription() {
+        return coffee.getDescription() + ", 糖";
+    }
+
+    @Override
+    public double cost() {
+        return coffee.cost() + 0.5; // 糖附加费用
+    }
+}
+
+// 使用示例
+public class Main {
+    public static void main(String[] args) {
+        Coffee coffee = new SimpleCoffee();
+        System.out.println(coffee.getDescription() + " 费用: ¥" + coffee.cost());
+
+        coffee = new MilkDecorator(coffee);
+        System.out.println(coffee.getDescription() + " 费用: ¥" + coffee.cost());
+
+        coffee = new SugarDecorator(coffee);
+        System.out.println(coffee.getDescription() + " 费用: ¥" + coffee.cost());
+    }
+}
+```
+```java
+简单咖啡 费用: ¥5.0
+简单咖啡, 牛奶 费用: ¥6.5
+简单咖啡, 牛奶, 糖 费用: ¥7.0
+```
+
+## 适配器模式
+
+将一个类的接口转换为对客户友好的另一个接口，使得由于接口不兼容而无法一起工作的类可以一起工作。  
+
+- 目标 Target：一个客户使用的接口   
+- 被适配者 Adaptee：已经存在的接口或抽象类  
+- 适配器 Adapter：一个类，实现了目标接口并包含被适配者的引用，对被适配者与目标接口进行适配  
+
+```java
+// 目标接口 USBC
+interface USBTypeC {
+    void chargeWithTypeC();
+}
+
+// 被适配者 Micro-USB
+class MicroUSBCharger {
+    public void chargeWithMicroUSB() {
+        System.out.println("使用 Micro-USB 充电中...");
+    }
+}
+
+// 适配器
+class MicroUSBToTypeCAdapter implements USBTypeC {
+    private MicroUSBCharger microUSBCharger;
+
+    public MicroUSBToTypeCAdapter(MicroUSBCharger microUSBCharger) {
+        this.microUSBCharger = microUSBCharger;
+    }
+
+    @Override
+    public void chargeWithTypeC() {
+        System.out.println("适配器转换中...");
+        microUSBCharger.chargeWithMicroUSB();
+    }
+}
+
+// 客户端代码
+public class Client {
+    public static void main(String[] args) {
+        // 创建一个Micro-USB充电器
+        MicroUSBCharger microUSBCharger = new MicroUSBCharger();
+
+        // 使用适配器让它为USB-C接口的手机充电
+        USBTypeC chargerAdapter = new MicroUSBToTypeCAdapter(microUSBCharger);
+        chargerAdapter.chargeWithTypeC();  // 输出: 适配器转换中... 使用 Micro-USB 充电中...
+    }
+}
+```
+
+
 
 
 # 第九章 常用类
