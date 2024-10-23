@@ -2827,7 +2827,9 @@ public class Client {
 }
 ```
 
+## 工厂方法（虚拟构造）模式
 
+## 责任链模式
 
 
 # 第九章 常用类
@@ -2849,21 +2851,40 @@ String str3 = new String(s);
 String str4 = new String(s, 1, 3); // 从索引1开始，长度为3的子数组
 ```
 
+字符串的值储存在**常量池**中，若有两个String类型的值相同，则都指向同一个值，而不是创建两个相同的对象。  
+```java
+String s1 = "hello"; // 在常量池中创建"hello"
+String s2 = "hello"; // 直接引用常量池中已有的"hello"
+System.out.println(s1 == s2);  // true，因为指向同一个对象
+
+String s3 = new String("hello");  // 创建新对象
+String s4 = new String("hello");  // 又创建一个新对象
+System.out.println(s3 == s4);  // false，因为二者是不同对象
+
+String s5 = "hel" + "lo";  // 编译时会优化为"hello"，从常量池中引用
+
+String s6 = "hel";
+String s7 = s6 + "lo";  // 不会直接引用常量池中的"hello"
+```
+
 ### String常用方法
 
 对`String str1 = "Java"`：  
 
-- str1.length()：返回字符串的长度，即字符个数  
-- str1 + str2：字符串连接，返回String类型  
-- str1.equals(str2)：比较字符串内容是否相等，区分大小写，返回boolean类型  
-- str1.indexOf("World")：返回子串在字符串中首次出现的索引，不存在则返回-1  
-- str1.charAt(1)：返回str1中索引为1的字符
-- str1.substring(5)：从索引5截取到字符串末尾，返回String类型  
-- str1.sunstring(5, 10)：从索引5截取到索引10（不包括10），返回String类型  
-- str1.replace(str2, str3)：替换str1中所有的str2为str3    
-- str1.toUpperCase()：转换为大写  
-- str1.toLowerCase()：转换为小写   
-- String.format("name=%s, age=%d", "Alice", 25)：格式化字符串  
+- `str1.length()`：返回字符串的长度，即字符个数  
+- `str1 + str2`：字符串连接，返回String类型  
+- `str1.equals(str2)`：比较字符串内容是否相等，区分大小写，返回boolean类型  
+- `str1.indexOf("World")`：返回子串在字符串中首次出现的索引，不存在则返回-1  
+- `str1.charAt(1)`：返回str1中索引为1的字符
+- `str1.substring(5)`：从索引5截取到字符串末尾，返回String类型  
+- `str1.sunstring(5, 10)`：从索引5截取到索引10（不包括10），返回String类型  
+- `str1.replace(str2, str3)`：替换str1中所有的str2为str3    
+- `str1.toUpperCase()`：转换为大写  
+- `str1.toLowerCase()`：转换为小写   
+- `str1.startsWith(String prefix)`  
+- `str1.startsWith(String prefix, int offset)`，偏移值为跳过str1的前offset个字符    
+  - 判断是否前缀为指定字符串，返回布尔值  
+- `str1.trim()`：返回一个String对象，其值去掉了str1的**前后的**空格、制表符、换行符等空白字符（不处理内部的）  
 
 ### String对象和基本数据的互相转化
 
@@ -2955,7 +2976,7 @@ java中正则表达式通常通过`java.util.regex`包中的`Pattern`类（表�
    - `char{n,}`：匹配char至少n次  
    - `char{n,m}`：匹配char $[n,m]$ 次   
 6. 组：将表达式部分封装成组，以便重复或逻辑操作。  
-   - 捕获组：使用圆括号 `()` 表示捕获组，匹配的内容可以通过 `Matcher.group()` 方法获取。例如，`(abc)` 匹配 `abc` 并将其捕获。  
+   - 捕获组：使用圆括号 `()` 表示捕获组，匹配的内容可以通过 `Matcher.group()` 方法获取。例如，`(abc)` 匹配 `abc` 并将其捕获。    
    - 非捕获组：使用 `(?:...)` 表示非捕获组，仅用于分组逻辑，不捕获内容。例如，`(?:abc)` 匹配 `abc`，但不捕获。  
    - 向前断言：`(?=...)` 表示正向前瞻匹配。例如，`a(?=b)` 匹配 `a`，但要求后面跟着 `b`。  
    - 向后断言：`(?<=...)` 表示正向后顾匹配。例如，`(?<=a)b` 匹配 `b`，但要求前面有 `a`。  
