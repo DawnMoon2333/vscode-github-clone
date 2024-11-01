@@ -956,6 +956,8 @@ OBS支持通过AK(Acess Key ID)/SK(Secret Access Key)认证方式进行鉴权，
 
 高性能的文件存储服务，允许用户按需扩展文件存储容量，在云服务去中通过网络协议挂载使用  
 
+SFS需要与VPC关联，然后在Windows/Linux主机中通过文件共享协议访问   
+
 ### SFS的优势
 
 - 弹性扩展  
@@ -966,6 +968,30 @@ OBS支持通过AK(Acess Key ID)/SK(Secret Access Key)认证方式进行鉴权，
 - 无缝集成  
   - 支持NFS   
   - 适配主流应用程序  
+- 文件式访问，基于文件协议的共享和上传  
+
+### SFS的应用场景
+
+- 媒体协同处理  
+  - 多人剪辑、渲染  
+- 文件共享  
+  - 多人共享访问相同文档  
+
+### SFS的相关概念   
+
+- NFS 网络文件系统  
+  - 让不同的网络终端可以利用网络进行数据共享  
+- CIFS 通用Internet文件系统   
+  - 允许Windows主机之间共享数据的系统   
+- POSIX 可移植操作系统接口  
+  - 为Unix结构的操作系统提供的API接口   
+- DHCP 动态主机配置协议   
+
+
+### EVS/OBS/SFS对比
+
+![alt text](images/EVS_OBS_SFS.png)
+
 
 
  
