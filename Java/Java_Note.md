@@ -3136,3 +3136,31 @@ public class StringBufferExample {
 | `Math.E`             | 自然对数的底数 `e` 的值。                                  |
 | `Math.PI`            | 圆周率的值。                                                |
 
+## Random
+
+```java
+// 使用系统时间作为种子
+Random random = new Random(); 
+
+// 使用指定的种子
+Random randomWithSeed = new Random(long seed); 
+
+// 随机整数
+// 范围从Integer.MIN_VALUE到Integer.MAX_VALUE
+// 即-2,147,483,648到2,147,483,647
+int randomInt = random.nextInt(); 
+
+// [0, bound) 之间的随机整数
+int randomIntBounded = random.nextInt(int bound); 
+
+// [0.0, 1.0) 之间的随机浮点数
+float randomFloat = random.nextFloat(); 
+
+// [0.0, 1.0) 之间的随机双精度浮点数
+double randomDouble = random.nextDouble(); 
+```
+
+# Java Swing
+
+用于开发桌面应用程序的Java GUI工具包    
+
