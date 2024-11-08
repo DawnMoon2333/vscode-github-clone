@@ -347,6 +347,161 @@ $w_{k+1} = w_k - \eta \nabla f_{w_k}(x^i)$，其中 $\eta$ 为学习率，$i$ �
 
 只要损失值最小，即可得到最优的模型  
 
+使用已有的库实现：  
+
+```python
+from sklearn.linear_model import LinearRegression  # 常用机器学习算法工具包
+import matplotlib.pyplot as plt  # 绘图
+import numpy as np
+
+x = np.array([121, 125, 131, 141, 152, 161])  # 房屋面积
+y = np.array([300, 350, 425, 405, 496, 517])  # 房屋价格
+
+lr = LinearRegression()  # 用导入的类直接实例化为对象
+x = x.reshape(-1, 1)  # 将x重塑为二维数组
+lr.fit(x, y)  # 用x和y训练线性回归的模型
+k = lr.coef_
+b = lr.intercept_
+print("斜率：", k, "，截距：", b)
+plt.scatter(x, y)
+plt.xlabel("area")
+plt.ylabel("price")
+# plt.plot([x1, x2], [y1, y2]) 从x1y1到x2y2画直线
+plt.plot([x[0], x[-1]], [k * x[0] + b, k * x[-1] + b])
+plt.show()
+
+testdata = np.array([130])
+testdata = testdata.reshape(-1, 1)
+print("对", testdata, "的预测结果是:：", lr.predict(testdata))
+```
+
+```
+斜率： [4.98467124] ，截距： -274.8769665187576
+对 [[130]] 的预测结果是:： [373.13029447]
+```
+
+手动实现：  
+
+```python
+import matplotlib.pyplot as plt  # 绘图
+import numpy as np
+
+# 使用外部数据，内容为房屋的面积与价格
+'''
+文件格式如下：
+1.000000	0.635975	4.093119
+1.000000	0.552438	3.804358
+1.000000	0.855922	4.456531
+1.000000	0.083386	3.187049
+1.000000	0.975802	4.506176
+'''
+
+
+# 定义读取数据函数
+
+def get_raw_data(file_path):
+    raw_data = np.loadtxt(file_path, skiprows=1)
+    cols = raw_data.shape[1]
+    return (raw_data, raw_data[:, :cols - 1], raw_data[:, cols - 1:])
+    # 返回rawdata、rawdata除最后一列、rawdata最后一列
+
+
+# 定义梯度计算函数
+'''
+计算给定模型参数 theta 对应的梯度（即损失函数相对于 theta 的偏导数），以便可以在梯度下降算法中更新 theta，逐步找到最优的参数
+1/m * X^T * (X * theta - y)
+X.dot(theta)：特征矩阵X与模型参数theta的矩阵乘法，即预测值
+X.dot(theta) - y：预测值-实际值，即残差
+X.T.dot(X.dot(theta) - y)：将X转置后与残差相乘，得到每个特征在所有样本上的误差总和，即损失函数对每个theta的偏导数
+X.shape[0]：X的第一个维度中的元素数，即样本数
+将结果除以样本数得到平均梯度
+'''
+
+
+def get_gradient(X, theta, y):
+    return (1 / X.shape[0]) * X.T.dot(X.dot(theta) - y)
+
+
+# 初始化theta
+
+def init_theta(y_count):
+    return np.ones(y_count).reshape(y_count, 1)
+    # 创建一个长度为y_count的一维数组，填充为1
+    # 然后将他转化为y_count行1列的矩阵，即列向量
+
+
+# 定义梯度下降函数
+'''
+Jtheta = (X.dot(theta) - y).T.dot(X.dot(theta) - y)
+计算Jtheta的过程：
+X.dot(theta) - y：预测值与实际值之差，即残差
+转置后再乘，即平方
+Jtheta即为均方误差
+'''
+
+
+def gradient_descending(X, y, theta, alpha):
+    # 输入值X，真实值y，权重theta，学习率alpha
+    Jthetas = []  # 存储损失函数的变化趋势，验证是否正常进行梯度下降
+    Jtheta = (X.dot(theta) - y).T.dot(X.dot(theta) - y)
+    index = 0  # 记录训练步数
+    gradient = get_gradient(X, theta, y)  # 计算梯度
+    while not np.all(np.absolute(gradient) <= 1e-5):  # 循环计算直到梯度小于1e-5
+        theta = theta - alpha * gradient  # 用学习率确定权重大小
+        gradient = get_gradient(X, theta, y)  # 计算新梯度
+        Jtheta = (X.dot(theta) - y).T.dot(X.dot(theta) - y)  # 计算损失函数
+        if (index + 1) % 10 == 0:
+            Jthetas.append((index, Jtheta[0]))  # 每10次存储一次损失函数值
+        index += 1
+    return theta, Jthetas
+
+
+# 绘图展示Jtheta
+
+def show_Jtheta(diff_value):
+    x = []
+    y = []
+    for (index, sum) in diff_value:
+        x.append(index)
+        y.append(sum)
+    plt.plot(x, y, color='b')
+    plt.xlabel("steps")
+    plt.ylabel("loss")
+    plt.title("loss function")
+    plt.show()
+
+
+def show_fitting(theta, training_set):
+    # theta包含训练得到的截距和斜率
+    x, y = training_set[:, 1], training_set[:, 2]
+    z = theta[0] + theta[1] * x  # 计算预测值
+    # 绘制散点图
+    plt.scatter(x, y, color='b', marker='x', label='sample data')
+    # 绘制回归曲线
+    plt.plot(x, z, color='r', label='regression curve')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title('linear regression curve')
+    plt.legend()
+    plt.show()
+
+
+def main():
+    file_path = "lr2_data.txt"
+    raw_data, raw_data_x, raw_data_y = get_raw_data(file_path)
+    x_count, y_count = raw_data_x.shape
+    alpha = 0.01  # 学习步长
+    theta = init_theta(y_count)
+    final_theta, Jthetas = gradient_descending(raw_data_x, raw_data_y, theta, alpha)
+    print("拟合得到的截距=", theta[0][0], "，斜率=", theta[1][0])
+    show_Jtheta(Jthetas)
+    show_fitting(final_theta, raw_data)
+
+
+if __name__ == "__main__":
+    main()
+```
+
 ### 线性回归的扩展-多项式回归
 
 模型函数： $h_w(x) = w_1x + w_2x^2 + \dots + w_nx^n + b$   
@@ -376,6 +531,48 @@ $P(Y = 0 | x) = \frac{1}{1 + e^{wx + b}}$
 用最大似然估计计算得到的逻辑回归损失函数：  
 $J(w) = \frac{1}{m} \sum \left( y \log h_w(x) + (1 - y) \log (1 - h_w(x)) \right)$  
 其中 $w$ 为权重参数，$m$ 为样本数量，$x$ 为样本，$y$ 为真实值，$h_w(x)$ 为预测值
+
+代码实现：  
+
+```python
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+import numpy as np
+
+x = [
+    [2200, 15], [2750, 20], [5000, 40], [4000, 20], [3300, 20],
+    [2000, 10], [2500, 12], [12000, 80], [2880, 10], [2300, 15],
+    [1500, 10], [3000, 8], [2000, 14], [2000, 10], [2150, 8],
+    [3400, 20],  [5000, 20], [4000, 10], [3300, 15], [2000, 12],
+    [2500, 14], [10000, 100], [3150, 10], [2950, 15], [1500, 5],
+    [3000, 18], [8000, 12], [2220, 14], [6000, 100], [3050, 10]
+]
+
+y = [
+    1, 1, 0, 0, 1,
+    1, 1, 1, 0, 1,
+    1, 0, 1, 1, 0,
+    1, 1, 0, 1, 1,
+    1, 0, 1, 1, 0,
+    1, 1, 0, 1, 0
+]
+
+ss = StandardScaler()
+x_train = ss.fit_transform(x)  # 标准化数据
+
+lr = LogisticRegression()
+lr.fit(x_train, y)
+
+test_data = np.array([2000, 8]).reshape(1, -1)
+test_data = ss.transform(test_data)
+test_result = lr.predict(test_data)
+test_result_proba = lr.predict_proba(test_data)
+print("对", test_data, "的预测结果为：", test_result, "准确率为：", test_result_proba)
+```
+
+```
+对 [[-0.68911581 -0.57680534]] 的预测结果为： [1] 准确率为： [[0.32438363 0.67561637]]
+```
 
 ### 逻辑回归的扩展-Softmax回归
 
@@ -478,5 +675,15 @@ $P(C_k | X_1, ..., X_n) = \frac{P(X_1, .. ., X_n | C_k) P(C_k)}{P(X_1, ..., X_n)
 
 在不同层次上对数据集进行划分，形成树形的聚类结构  
 
+# 深度学习
 
+## 深度学习概览
+
+神经网络：由多个简单的处理单元按某种方式彼此相互连接形成的计算机系统，该系统依靠其状态对外部输入信息的动态响应来处理信息    
+
+深度学习是一种基于**无监督特征学习**的模型，即传入数据后，神经网络会自己完成对特征的学习，不需要人为干预，这也称为“端到端的学习”    
+
+深度学习需要GPU对矩阵进行大量的并行运算   
+
+### 单层感知器
 
