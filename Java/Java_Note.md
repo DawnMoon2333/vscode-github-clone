@@ -3164,3 +3164,304 @@ double randomDouble = random.nextDouble();
 
 用于开发桌面应用程序的Java GUI工具包    
 
+# 第十二章 输入输出流
+
+## File类
+
+一个File类的对象可以指向一个文件或一个目录
+
+```java
+var file = new File(String path);
+var file = new File(String parent, String filename);
+var file = new File(File parent, String filename); // parent为父目录
+
+var file = new File("C:\\example\\file.txt");
+var file = new File("C:\\example", "file.txt");
+var parentDir = new File("C:\\example");
+var file = new File(parentDir, "file.txt");
+```
+
+### File类的常用方法
+
+文件：  
+
+| 方法 | 描述 |
+| :-: | :-: |
+| boolean createNewFile() | 创建新文件 |
+| boolean delete() | 删除文件或空目录 |
+| String getName() | 获取文件名 |
+| boolean exists() | 判断文件或目录是否存在 |
+| String getAbsolutePath() | 获取文件的绝对路径 |
+| String getParent() | 获取文件的父目录 |
+| boolean isDirectory() | 判断是否为目录 |
+| boolean isFile() | 判断是否为文件 |
+
+
+目录：  
+
+| 方法 | 描述 |
+| :-: | :-: |
+| boolean mkdir() | 创建目录 |
+| String[] list() | 获取目录下的所有文件 |
+| File[] listFiles() | 用File对象返回目录下的所有文件 |
+
+### 运行可执行文件
+
+```java
+// 创建Runtime对象
+Runtime ec = Runtime.getRuntime();
+// 执行命令
+ec.exec("notepad.exe");
+```
+
+## 文件字节流 FileInput/OutputStream
+
+字节流不适用于中文，因为字节流没法很好的处理占用两字节的Unicode字符  
+
+### 文件字节输入流 FileInputStream 
+
+构造方法：  
+- FileInputStream  
+  - (String name)   
+  - (File file)     
+  - name和file是输入流的源，输入流从源中读取数据     
+
+建立输入流失败时会抛出IOException异常  
+
+以字节为单位读取：  
+- int read  
+  - (byte b[])：读取b.length个字节并存入b中  
+  - (byte b[], int off, int len)：读取len个字节，从b中off的位置存入  
+  - read方法顺序读取文件，只要不关闭流就会一直读取下去，直到文件末尾，返回-1  
+
+```java
+var fis = new FileInputStream("C:\\example\\file.txt");
+int b; // 储存当前读取的字节
+while((b = fis.read()) != -1) {
+    System.out.print((char)b);
+}
+fis.close();
+```
+
+### 文件字节输出流 FileOutputStream
+
+构造方法：  
+- FileOutputStream  
+  - (String name)   
+  - (File file)     
+  - name和file是输出流的源，输出流将数据写入源中  
+  - 若目标文件不存在会创建该文件，若已存在会刷新该文件（使文件长度为0）   
+    - (String name, boolean append)     
+    - (File file, boolean append)   
+    - 指定文件已存在时是否刷新该文件，若append为true则不刷新文件，在文件末尾追加内容    
+
+以字节为单位写入：  
+- void write(int b)  
+  - (int b)：写入一个字节的数据    
+  - (byte b[])：写入b.length个字节的数据    
+  - (byte b[], int off, int len) ：从b中off的位置开始写入len个字节到文件   
+  - FileOutputStream顺序地写入内容，直到流被关闭   
+
+```java
+fos = new FileOutputStream("C:\\example\\output.txt", true); // 设置为 true 时会追加到文件末尾
+
+// 写入一个字节
+fos.write(65);  // ASCII值65代表字符 'A'
+
+// 写入字节数组
+byte[] bytes = {66, 67, 68};  // 字节数组表示 'B', 'C', 'D'
+fos.write(bytes);
+
+// 写入字节数组的一部分
+fos.write(bytes, 1, 2);  // 只写入字节数组的从索引 1 开始的 2 个字节，即 'C' 和 'D'
+```
+
+### close 关闭流
+
+完成对一个文件的操作后应调用`close()`方法关闭输入输出流，解除程序对文件的占用       
+
+## 文件字符流 FileReader/Writer
+
+构造方法：  
+- FileReader
+  - (File file)     
+  - (String filepath)  
+- FileWriter  
+  - (File file)     
+  - (String filepath)  
+
+字符输入输出流使用字符数组读写数据，即以字符为基本单位处理数据  
+
+常用方法：  
+
+- int read  
+  - ()：读取一个字符，返回int类型的Unicode字符值，若到文件末尾则返回-1    
+  - (char b[])：读取b.length个字符并存入b中  
+  - (char b[], int off, int len)：读取len个字符，从b中off的位置存入  
+
+- void write  
+  - (int n)或(char c)：存入一个字符  
+  - (char c[])：存入一个字符数组    
+  - (char c[], int off, int len)：从数组中off的位置开始存入len个字符到文件  
+
+```java
+
+try (
+    FileReader fr = new FileReader("C:\\example\\input.txt");
+    FileWriter fw = new FileWriter("C:\\example\\output.txt")
+    ) {
+    // 读取字符并写入到另一个文件
+    int c;  // 用于存储每次读取的字符
+    while ((c = fr.read()) != -1) {
+        fw.write(c);  // 将字符写入输出文件
+    }
+
+    // 使用字符数组读取并写入
+    var buffer = new char[1024];  // 缓冲区
+    int len;
+    while ((len = fr.read(buffer)) != -1) {
+        fw.write(buffer, 0, len);  // 将缓冲区中的字符写入输出文件
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+## 缓冲流 BufferedReader/Writer
+
+缓冲流需要搭配字符流使用，增强了读写文件的能力，且通过缓冲区的方式来减少磁盘操作次数，提高性能          
+
+- BufferedReader(Reader in)  
+- BufferedWriter(Writer out)  
+
+常用方法：  
+- String readLine()：读取一行文本，返回一个字符串，不包含换行符，若到文件末尾则返回null  
+- void newLine()：写入一个换行符  
+- write(String str)：写入一个字符串  
+- write(char buff[], int off, int len)：从buff中off的位置开始写入len个字符到文件    
+- close()  
+
+```java
+String inputFilePath = "C:\\example\\input.txt";
+String outputFilePath = "C:\\example\\output.txt";
+        
+// 使用缓冲流读取和写入文件
+try (
+    BufferedReader br = new BufferedReader(new FileReader(inputFilePath));
+    BufferedWriter bw = new BufferedWriter(new FileWriter(outputFilePath))
+    // 将缓冲流的创建放在try中可以在程序执行完成try语句后自动关闭流
+) {
+    String line;
+    while ((line = br.readLine()) != null) {
+        // 读取一行并写入到输出文件
+        bw.write(line);
+        bw.newLine();  // 写入换行符
+    }
+    // 将input中的内容复制到output中
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+## 随机流 RandomAccessFile
+
+随机流可以对文件中的任意位置进行读写操作    
+
+构造方法：  
+- RandomAccessFile(File file, String mode)，mode可取`r`和`rw`，表示只读或读写权限 
+- RandomAccessFile(String filepath, String mode)  
+- 随机流的指向既可以读也可以写  
+
+常用方法：  
+- seek(long a)：将随机流的指向移动到文件的第a个字节处   
+- getFilePointer()：获取随机流当前指向位置   
+- read()：读取一个字节，返回int  
+- readChar()：读取一个字符  
+- readInt()：读取一个int    
+- readLine()：读取一行文本      
+  - 不适用于非ASCII码，即中文字符，会出现乱码  
+- skipBytes(long n)：跳过n个字节    
+- write(byte b[])：写入一个字节  
+  - write操作会覆盖当前位置的数据  
+- writeChar(char c)：写入一个字符  
+- writeChars(String s)：写入一个字符串  
+- writeInt(int i)：写入一个int  
+
+```java
+try (RandomAccessFile file = new RandomAccessFile("example.txt", "rw")) {
+    // 先读取文件的前 10 个字节
+    var bytes = new byte[10];
+    file.read(bytes);
+    System.out.println("读取的数据: " + new String(bytes));
+
+    // 将文件指针移动到第 5 个字节位置
+    file.seek(5);
+    // 从第 5 个字节开始写入 "Hello"
+    file.write("Hello".getBytes());
+
+    // 将文件指针移动到文件末尾
+    file.seek(file.length());
+    // 在文件末尾追加 " World!"
+    file.write(" World!".getBytes());
+
+    // 再次读取文件的全部内容
+    file.seek(0); // 将文件指针移回到文件开头
+    var fullBytes = new byte[(int) file.length()];
+    file.read(fullBytes);
+    System.out.println("文件的最终内容: " + new String(fullBytes));
+
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+## 文件锁 FileLock
+
+在多个进程或线程访问同一个文件时，使用文件锁防止多个程序或线程同时对同一个文件进行写操作，确保在某个时刻只有一个进程或线程能够对文件进行操作，防止并发访问导致数据的不一致或冲突  
+
+RandomAccessFile创建的流在进行读写时可以使用文件锁，只要不解除该锁，其他程序就无法访问该文件  
+
+```java
+try {
+    RandomAccessFile file = new RandomAccessFile("example.txt", "rw");
+    FileChannel channel = file.getChannel();
+
+    // 尝试获取文件锁
+    FileLock lock = channel.tryLock();
+
+    if (lock != null) {
+        System.out.println("文件锁已成功获取");
+
+        // 执行文件读写操作
+        file.seek(0);  // 移动文件指针到文件开头
+        file.write("Hello, world!".getBytes());  // 向文件写入数据
+
+        // 模拟文件操作，暂停 2 秒
+        Thread.sleep(2000);
+    } else { 
+        System.out.println("文件已被锁定，无法获取文件锁");
+    }
+
+} catch (IOException | InterruptedException e) {
+    e.printStackTrace();
+} finally {
+    // 显式释放文件锁和关闭资源
+    try {
+        if (lock != null && lock.isValid()) {
+            lock.release();  // 释放文件锁
+            System.out.println("文件锁已释放");
+        }
+        if (channel != null) {
+            channel.close();  // 关闭文件通道
+        }
+        if (file != null) {
+            file.close();  // 关闭文件
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+```
+
+
+
