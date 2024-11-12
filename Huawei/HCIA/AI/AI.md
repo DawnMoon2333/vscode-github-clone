@@ -1213,6 +1213,113 @@ Alpha Go 基于 TensorFlow 实现
 
 华为发布的深度学习框架    
 
+## MindSpore
+
+### tensor 张量
+
+张量tensor，即多维数组，是最基础的数据结构，所有数据都封装在tensor中  
+
+- 零阶张量：标量  
+- 一阶张量：向量  
+- 二阶张量：矩阵  
+- 通过`mindspore.Tensor`创建张量  
+  - 接收一组数据，张量的维度由数据决定  
+  - 或不传递维度，仅传递维度，对张量进行初始化  
+
+![alt text](images/tensor.png)
+
+### MindSpore中的数据类型
+
+![alt text](images/DataType.png)
+
+可以通过`mindespore.dtype`创建数据类型对象  
+
+通过`mindspore.dtype_to_nptype`和`dtype_to_pytype`将mindspore数据类型转为numpy和python的数据类型  
+
+### 运行环境配置
+
+即mindspore运行时需要指定的具体环境参数，如计算图的模式、运行时的设备、内存大小  
+
+| API | 用途 | 
+| :---: | :---: |
+| mindspore.context.set_context | 设置运行环境的context |
+| mindspore.context.get_context | 根据输入key获取context中的属性值 |
+| mindspore.context.ParallelMode | 并行模式 |
+| mindspore.context.set_ps_context | 设置参数服务器训练模式的上下文 |
+
+### context
+
+`mindspore.context`用于配置当前执行环境
+
+| 参数 | 作用 | 取值 |
+| :---: | :---: | :---: |
+| device_id | 训练目标设备id | [0, 4096-1]，默认为0 |
+| device_target | 运行目标设备 | 'Ascend', 'GPU', 'CPU' |
+| mode | 运行模式 | GRAPH_MODE/0（默认）, PYNATIVE_MODE/1 |
+
+### 数据处理 
+
+`mindspore.dataset`提供了用于加载和处理各种通用数据集的API，也有对语音、图像、文本等数据的数据增强功能    
+
+### MindRecord
+
+由MindSpore开发的高效的数据格式，将数据进行序列化并存储在可线性读取的文件中，可以有效减低网络（适用于流式传输）和磁盘IO的开销  
+
+在mindrecord的文件头中有对文件的索引信息
+
+`mindspore.mindrecore`提供了将不同数据集转为mindrecore格式，和对mindrecord文件读取、写入、检索的方法  
+
+### 神经网络
+
+`mindspore.nn`用于构建神经网络中的预定义计算块和计算单元  
+
+- 网络结构：RNN、CNN、LSTM  
+- 损失函数：交叉熵、均方误差   
+- 优化器：动量、Adam  
+- 模型评价指标  
+
+`mindspore.Model`：模型训练和推理的高阶接口  
+
+### 回调函数 callback
+
+回调函数本身不是一个函数，而是一个类，统称为回调函数  
+
+可以通过callback观察模型训练过程中网络内部的状态或相关信息，并执行特定任务，如监控loss，保存模型参数，动态调整参数，提前终止训练  
+
+mindspore提供多种callback类，也可以用户自定义callback  
+
+### 模型文件
+
+mindspore可以基于训练好的模型在不同的平台进行推理   
+
+保存的数据类型：  
+
+- 训练参数：checkpoint  
+- 网络模型：MindIR、AIR、ONNX  
+
+![alt text](images/model_save.png)
+
+## MindSpore特性
+
+### 动态图和静态图
+
+- 静态图：在编译时先生成神经网络的图结构，网络结构固定，运行效率高  
+- 动态图：程序按代码编写顺序执行，动态生成反向执行图，可以动态调整网络结构，方便debug  
+
+一般开发过程使用动态图，便于debug，训练完成后转为静态图，提升运行效率   
+
+### mindspore静态图
+
+称为`Graph`模式，通过`set_context(mode=GRAPH_MODE)`设置为静态图模式（默认）  
+
+在Graph模式下，mindspore先将python代码转为MindIR，再进行相关的图优化，最终在硬件上执行优化过的图  
+
+### mindspore动态图
+
+称为`PyNative`模式，通过`set_context(mode=PYNATIVE_MODE)`设置为动态图模式    
+
+在PyNative模式下，用户可以使用完整的Python API
+
 
 
 
