@@ -1232,7 +1232,7 @@ Alpha Go 基于 TensorFlow 实现
 
 ![alt text](images/DataType.png)
 
-可以通过`mindespore.dtype`创建数据类型对象  
+可以通过`mindspore.dtype`创建数据类型对象  
 
 通过`mindspore.dtype_to_nptype`和`dtype_to_pytype`将mindspore数据类型转为numpy和python的数据类型  
 
@@ -1267,7 +1267,7 @@ Alpha Go 基于 TensorFlow 实现
 
 在mindrecord的文件头中有对文件的索引信息
 
-`mindspore.mindrecore`提供了将不同数据集转为mindrecore格式，和对mindrecord文件读取、写入、检索的方法  
+`mindspore.mindrecord`提供了将不同数据集转为mindrecord格式，和对mindrecord文件读取、写入、检索的方法  
 
 ### 神经网络
 
@@ -1319,6 +1319,236 @@ mindspore可以基于训练好的模型在不同的平台进行推理
 称为`PyNative`模式，通过`set_context(mode=PYNATIVE_MODE)`设置为动态图模式    
 
 在PyNative模式下，用户可以使用完整的Python API
+
+### mindspore动静统一
+
+mindspore针对动态图和静态图模式使用相同的API，并统一底层微分机制  
+
+### MindIR
+
+IR（中间表示）是程序编译过程中介于源语言和目标语言之间的程序表示，便于编译器进行程序分析和优化  
+
+mindspore使用**基于图表示的函数式IR**，即MindIR，其核心目的是服务于自动微分变化  
+
+借助MindIR，可以实现一次训练多处部署，实现端云互通  
+
+### 异构并行训练
+
+通过分析图上算子内存占用和计算密集度  
+- 将内存消耗大或适合CPU逻辑处理的算子切分到CPU子图  
+- 将内存消耗小的计算密集型算子切分到硬件加速器子图进行训练  
+
+![alt text](images/parallel_compute.png)
+
+充分利用服务器硬件资源  
+
+## MindSpore开发组件
+
+### 推理部署流程
+
+![alt text](images/inference.png)
+
+- 使用MindSpore训练并得到模型文件  
+- 使用MindSpore Serving提供在线推理服务  
+- 使用MindSpore Lite离线推理  
+
+### MindSpore Serving
+
+轻量级高性能的服务模型，可以高效部署在线推理服务  
+
+访问方法：   
+- 基于gRPC接口   
+- 基于RESTful接口   
+- 通过Servable访问   
+
+### MindSpore Lite
+
+极速极简的AI引擎，为用户提供端到端的解决方案  
+
+ Lite分为离线和在线两个模块  
+
+### MindInsight
+ 
+用于**可视化**调试调优，可以查看训练过程、优化模型性能、调试精度，还可以搜索超参，迁移模型    
+
+
+### MindSpore Vision
+
+基于MindSpore框架的开源**计算机视觉**研究工具箱，涉及分类、检测等任务组件  
+
+### MindSpore Reinforcement
+
+开源的强化学习框架，支持分布式训练  
+
+将算法的实现部署和执行进行了解耦  
+
+### MindSpore Federated
+
+联邦学习，一共加密的分布式机器学习技术，可以在各参与方不直接共享本地数据的前提下共建AI模型  
+
+即在不泄露隐私的前提下共享数据  
+
+## AI应用开发流程
+
+### 需求分析
+
+确定AI模型要解决的任务，开发环境，编程语言，准确度需求
+
+### 环境搭建
+
+安装python环境和对应版本的mindspore  
+
+也可以使用ModelArts云环境进行开发、训练、部署  
+
+### 数据准备
+
+使用开源数据集，分类训练集和测试集  
+
+数据预处理：  
+
+- 为了提升模型准确率，保证模型的泛化能力，对数据做数据增强、标准化等操作   
+- 使用函数`read_dataset`实现数据集的加载，包括  
+  - 读取数据集  
+  - 定义数据增强所需参数  
+  - 根据参数对数据进行增强  
+  - 使用`map`映射函数，将数据操作应用到数据集   
+  - 对生成的数据集进行处理    
+
+数据处理API  
+| API | 功能 |
+| :-: | :-: |
+| `mindspore.dataset` | 数据集加载、处理 |
+| `mindspore.dataset.vision` | 图像数据增强 |
+| `mindspore.dataset.text` | 文本数据增强 |
+| `mindspore.dataset.audio` | 音频数据增强 |
+| `mindspore.dataset.transforms` | 数据增强 |
+
+```python
+# 导入
+from mindspore.dataset.vision import c_transforms as vision
+
+# 根据标准差和均值对输入图像归一化
+vision.Normalize(mean, std) # 标准差，均值
+
+# 将输入图像的shape从<H,W,C>转为<C,H,W>
+vision.HWC2CHW()
+
+# 对输入图像应用中心区域裁剪
+vision.CenterCrop(size)
+
+```
+
+
+ 
+
+### 构建网络
+
+- ResNet网络  
+  - 使用残差网络结构有效减轻退化问题，实现更深的网络结构设计   
+
+API：  
+- `mindspore.nn`：神经网络cell，用于构建神经网络中的预定义构建块或计算单元  
+  - `mindspore.nn.Cell`：构建所有网络的基类，网络的基本单元  
+  - `mindspore.nn.LossBase`：损失函数的基类  
+- `mindspore.nn.Dense(in_channels, out_channels, weight_init, bias_init, has_bias, activation)`：全连接层   
+  - `in_channels`：Dense层输入Tensor的空间维度  
+  - `out_channels`：Dense层输出Tensor的空间维度   
+  - `weight_init`：权重参数初始化方法   
+- `mindspore.nn.Conv2d(in_channels, out_channels, kernel_size, stride, pad_mode, padding, dilation, group, has_bias, weight_init, bias_init, data_format)`：二维卷积层    
+  - `kernel_size`：二位卷积核的高度和宽度   
+  - `stride`：卷积核在输入Tensor上移动的步长  
+  - `pad_mode`：填充模式，取值为"valid"、"same"（默认）或"pad"  
+- `mindspore.nn.RNN(*args, **kwargs)`：循环神经网络层，激活函数为tanh或relu  
+  - `input_size`：输入层输入的特征向量维度  
+  - `hidden_size`：隐藏层输出的特征向量维度  
+  - `num_layers`：隐藏层的层数，默认为1  
+- `mindspore.nn.Dropout(keep_prob, dtype)`：Dropout层，防止过拟合   
+  - `keep_prob`：神经元存活率，取值范围为(0,1]  
+
+构建网络需要继承Cell类，并重写__init__和construct方法  
+
+```python
+class ResNet(nn.Cell):
+  def __init__(self, *args, **kwargs):  
+    super(ResNet, self).__init__()
+    # 初始化后续网络中用到的计算
+    # 如卷积、全连接、最大池化
+
+  def construct(self, x):
+    # 定义网络结构
+    # 第一层是卷积核，第二层的池化层，等等
+
+```
+
+### 模型训练
+
+训练方式：  
+
+- 基于自身数据集**从零开始**，适用于数据集充足且算力资源充足    
+- 基于训练好的模型进行**微调**，适合于数据集较小，算力资源有限  
+  - ImageNet数据集上训练好的ResNet模型文件  
+  - 修改最后一层即输出层的参数  
+  - 基于自身数据集训练  
+
+训练API：  
+- `mindspore.Model(network, loss_fn, optimizer, metrics, eval_network, eval_indexes, amp_level, boost_level, **kwargs)`：根据传入的参数封装可训练或推理的实例   
+  - `network`：用于训练或推理的神经网络  
+  - `loss_fn`：损失函数   
+  - `optimizer`：优化器   
+  - `metrics`：评价函数   
+
+保存与加载：  
+
+```python
+import mindspore as ms
+# 只会保存网络参数，不保存网络结构
+ms.save_checkpoint(network, "./MyNet.ckpt")
+
+# 在训练过程中保存
+from mindspore.train.callback import ModelCheckpoint, CheckpointConfig
+# 设置epoch_num数量
+epoch_num = 5
+# 设置模型保存参数
+config_ck = CheckpointConfig(save_checkpoint_steps=100, keep_checkpoint_max=10)
+# 应用模型保存参数
+ckpoint = ModelCheckpoint(prefix="ResNet", directory="./", config=config_ck)
+# 开始训练
+model.train(epoch_num, dataset_train, callbacks=[ckpoint])
+```
+
+预测：  
+- 创建相同模型的实例  
+- 使用`load_checkpoint`和`load_param_into_net`加载参数  
+- 使用`model.predict(*predict_data)`对测试数据进行预测  
+
+```python
+from mindspore import load_checkpoint, load_param_into_net
+# 将模型参数存入parameter的字典中
+param_dict = load_checkpoint("./MyNet.ckpt")
+# 定义ResNet神经网络
+net = ResNet(num_class=5, pretrained=False)
+# 加载参数到网络中
+load_param_into_net(net, param_dict)
+#定义优化器参数
+net_opt = nn.Momentum(net.trainable_params(), learning_rate=0.01, momentum=0.9)
+
+model = Model(net, net_opt, loss_fn=loss, optimizer=net_opt, metrics={'accuracy'})
+```
+
+### 应用部署
+
+- 移动端  
+  - 将ckpt文件转为mindir文件格式，再转为ms模型文件，即移动端上的mindspore lite可识别文件  
+  - 在移动端安装mindspore vision套件Android apk  
+  - 将ms模型文件导入  
+- 云端  
+  - 通过mindspore serving部署在云服务中  
+  - 基于ModelArts快速部署到云端   
+- 边缘设备    
+  - 基于AscendCL、Atlas计算平台实现部署  
+
+
+
 
 
 
