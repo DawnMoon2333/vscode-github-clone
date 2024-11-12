@@ -1188,7 +1188,30 @@ $C_{t-1}$ 表示先前时刻中保存下来的信息，$C_t$表示当前时刻�
 - 将 $h_t$ 输出，作为当前时刻的输出  
 
 
-#
+# 人工智能开发框架
+
+## AI开发框架
+
+### Pytorch
+
+Meta发布的机器学习计算框架，前身是Torch  
+
+特点    
+
+- 基于python语言，简洁易用  
+- 动态神经网络  
+- 易于debug   
+- 支持cpu和gpu的tensor，加速计算    
+
+### TensorFlow
+
+Google发布的端到端机器学习计算框架  
+
+Alpha Go 基于 TensorFlow 实现  
+
+### MindSpore
+
+华为发布的深度学习框架    
 
 
 
