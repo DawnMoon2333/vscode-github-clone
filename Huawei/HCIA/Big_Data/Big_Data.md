@@ -246,8 +246,395 @@ Leader节点收到数据变更请求后，先写硬盘后写内存
 
 ## 概述
 
-Hive是Apache的一个开源大数据组件
+Hive是Apache的一个开源大数据组件，是基于Hadoop的数据仓库软件们可以查询管理PB级别的分布式数据    
+
+### 特性 
+
+- 灵活方便的ETL（extract transform load），可以将传统关系型数据库中的数据导入至大数据平台上   
+- 支持Tez，Spark等多种计算引擎  
+- 可直接访问HDFS文件和HBase 
+- 易用易编程    
+
+### 应用场景
+
+- 数据挖掘  
+  - 用户行为分析  
+  - 兴趣分区  
+- 非实时分析  
+  - 日志、文本分析  
+- 数据汇总  
+  - 每日用户点击数  
+  - 流量统计  
+- 数据仓库  
+  - 数据的抽取、加载、转换  
+
+### 与传统数据库的比较
+
+![alt text](image/compare.png)
+
+![alt text](image/compare2.png)
+
+### 优点
+
+- 高科高，高容错  
+  - 集群式架构    
+  - 双metastore存储元数据   
+  - 超时重试机制  
+- 类SQL语法   
+- 可扩展  
+  - 自定义存储格式和函数  
+- 多接口  
 
 ## 功能与架构
 
+Hive运行流程  
+
+- Client提交HQL命令   
+- Tez执行查询   
+- Yarn为集群中的应用程序分配资源，为Yarn队列中的Hive作业启用授权  
+- Hive根据表类型更新HDFS或Hive仓库中的数据  
+- Hive通过JDBC返回查询结果  
+
+### Hive数据存储模型
+
+- 分区  
+  - 数据包可以按照某个字段的值划分分区  
+  - 每个分区是一个目录  
+  - 分区数量不固定  
+  - 分区下可以再有分区和桶  
+- 桶  
+  - 根据桶的方式将不同数据放入不同桶中  
+  - 每个桶是一个文件  
+  - 建表时可以指定桶的个数，桶内可排序  
+  - 数据根据字段的Hash存入桶中    
+
+分区和分桶都是为了加速Hive的查询而采用的数据模型  
+
+- 托管表（内部表）  
+  - 默认创建托管表  
+  - Hive将数据存放于Hive所在HDFS所属的数据仓库的目录  
+  - 所有数据处理均由Hive完成时使用托管表   
+- 外部表  
+  - 创建外部表需要关键字`external`  
+  - Hive将数据存放于数据仓库之外，目录可以是HDFS上的任意目录  
+  - Hive和其他程序处理数据使用外部表  
+
+| 命令 | 托管表 | 外部表 |
+| :-: | :-: | :-: |
+| CREATE/LOAD | 数据移动到仓库目录 | 数据位置不移动 |
+| DROP | 删除数据和元数据 | 仅删除元数据 |
+
+### 常用函数
+
+- 数学函数  
+  - `round`, `floor`, `rand`, `abs`  
+- 日期函数  
+  - `to_date`, `mouth`, `day`  
+- 字符串函数  
+  - `trim`, `length`, `substr`  
+
+自定义函数 UDF(User-Defined Function)
+
 ## 基本操作
+
+打开Hive服务HiveServer2：  
+
+![alt text](image/Hive_Open.png)
+
+打开Hcatalog，向其他大数据组件提供元数据：  
+
+![alt text](image/Hive_Hcatalog.png)
+
+打开WebHcat，提供https的restful api服务：  
+
+![alt text](image/Hive_WebHcat.png)
+
+### Hive SQL
+
+- DDL 数据定义语言   
+  - 建表，修改表，删表，分区，数据类型  
+- DML 数据管理语言   
+  - 数据导入导出    
+- DQL 数据查询语言    
+
+![alt text](image/Hive_DDL.png)
+
+![alt text](image/Hive_DML.png)
+
+![alt text](image/Hive_DQL.png)
+
+![alt text](image/Hive_DQL2.png)
+
+# HBase技术原理
+
+HBase是一种非关系型的分布式数据库，可以满足对海量数据的实时响应需求   
+
+## 基本介绍
+
+HBase是谷歌bigTable的开源实现，是高可靠、高性能、面向列、可伸缩的分部署存储系统，适用于存储大型表数据（数十亿行和数百万列），对其读写可达到实时级别，可**同时处理结构化和非结构化**的数据   
+
+使用Hadoop HDFS作为其文件存储系统，使用Zookeeper作为协同服务    
+
+HBase与RDB的区别    
+
+- 数据索引  
+  - 传统关系型数据库有复杂的多个索引，HBase仅有**行键**一个索引 
+- 数据维护    
+  - HBase的数据更新不会覆盖原版本，而是增加新版本   
+- 可伸缩性  
+  - RDB很难实现横纵向的扩展，HBase可以实现灵活的水平扩展  
+
+## 相关概念
+
+### 数据模型
+
+原有程序以表的形式在HBase中存储数据，表由行和列组成，所有列从属于某一个列族  
+
+行和列的交叉点称为cell，cell是版本化的，其内容是不可分割的字节数组    
+
+表的行键是**字节数组**，任何东西（字符串或数字）都可以保存进去    
+
+HBase所有表都必须有主键-key，HBase的表按字节的Key排序
+
+### HBase表结构
+
+![alt text](image/HBase_Table.png)
+
+- 表：由行和列组成  
+- 行：每行由行键row key标识   
+- 列族：表被分组成多个列族column family，是基本的访问控制单元   
+- 列限定符：列族中的元素通过列限定符或列来定位  
+- 单元格cell：行和列的交汇处，存储的数据没有数据类型，都被视为字节数组byte[]  
+- 时间戳：cell中保存的数据的多个版本用时间戳索引  
+
+![alt text](image/HBase_Table2.png)
+
+这个表有两个列族：`contents`和`anchor`，anchor中有两个列`aachor:aa.com`和`aachor:bb.com`，contents中有一个列`contents:html`  
+
+不同的行键、时间戳、列限定符构成一行数据  
+
+HBase存储表示具有稀疏性，部分cell不存储数据  
+
+### 行存储
+
+数据按行存储在底层文件系统中，每一行分配固定的空间  
+
+优点：利于对整行记录进行操作  
+缺点：单列查询效率低，会读取不必要的数据    
+
+### 列存储
+
+HBase采用列存储，数据以列为存储单位   
+
+优点：利于面向单列数据的读取统计  
+缺点：整行读取需要多次IO    
+
+## 架构
+
+HBase中的文件最终存储于HDFS，文件需要转为DataNode中的block  
+
+HBase架构包含三个功能组件：   
+
+- 库函数  
+  - 连接到Client    
+- HMaster主服务器   
+  - 是主控节点，负责维护HBase表的分区信息，维护其slaver节点HRegionServer服务器列表，分配Region负载均衡   
+- HRegionServer服务器
+  - 存储数据，维护分配给自己的Region，处理Client的请求  
+
+Client通过**Zookeeper**获取Region的存储位置，然后从HRegionServer读取数据    
+
+Client**不依赖于HMaster**，但是创建表需要与HMaster通信  
+
+### 表和Region
+
+HBase表最开始仅有一个Region，后来不断分裂  
+
+Region分为Meta Region和User Region，Meta Region存储所有User Region的地址，User Region存储用户数据   
+
+读取Region数据的过程：  
+
+- 寻找Meta Region地址 
+- 由Meta Region寻找User Region地址  
+
+MetaRegion存储于内存中，每行占用1kb，每个Region最多占用128mb，即最多储存2^17个Region  
+
+### HMaster高可用
+
+Zookeeper帮助选举出一个Master作为集群的总管，保证同一时刻仅有一个Master在运行，避免Master单点失效   
+
+Master负责：  
+
+- 管理用户对表的增删改查  
+- 实现不同Region服务器之间的负载均衡  
+- 在Region分裂或合并后调整Region分布  
+- 对失效的Region进行迁移    
+
+### Region Server
+
+HBase中最核心的模块，负责维护分配给自己的Region并相应Client请求，并定期报告自身心跳给Zookeeper   
+ 
+## 关键流程
+
+### 写入数据
+
+- 访问Zookeeper，找到要访问的Region，然后找到相应的服务器写入数据    
+- 数据先写入HLog，然后返回给客户端    
+- 写入Memstore    
+
+### 读取数据
+
+- Region服务器访问Memstore（缓存）    
+- 若MemStore中没有则去StoreFile中查找   
+
+### MemStore缓存的刷新
+
+- 系统周期性地把MemStore中的内容写入StoreFile并清空缓存，然后在HLog中写入标记   
+- 每次刷写都会生成新的StoreFile文件，每个Store包中包含多个StoreFile文件  
+- 每个HRegionServer都有一个HLog文件，每次启动时检查该文件，确认最近一次刷新后是否产生了新的写入操作   
+  - 若有则先写入MemStore，然后刷写到StoreFile，再开始为Client服务   
+
+大量的StoreFile会影响查找速度，需要调用`Store.compact`将多个StoreFile合并为一个   
+但是合并比较耗费资源，只有到一定阈值才会进行合并    
+
+### Store工作原理
+
+Store是Region服务器的核心   
+
+StoreFile过多时会合并为一个大StoreFile，StoreFile过大时会将Region分裂为两个子Region   
+
+如，4个64m的StoreFile合并为1个256m的StoreFile，然后再分裂为2个128m的StoreFile  
+
+### HLog工作原理
+
+HBase使用HLog保证系统恢复  
+
+每个Region Server都有一个HLog文件，是一种预写式日志  
+
+Client更新数据后先写入HLog，当改日志写入磁盘后，将更新的数据写入MemStore    
+
+当一个Region Server故障时：  
+
+- Zookeeper通知HMaster  
+- HMaster处理故障Region Server上的HLog    
+  - 根据Region的记录和HLog的对应关系对HLog进行拆分    
+  - 把HLog放在相应的Region下  
+- Region Server接收相应的Region和HLog  
+- Region Server重做HLog中的数据操作，写入MemStore，刷写到StoreFile  
+
+## 突出特点
+
+### 多HFile影响 Compaction
+
+随HFile文件数的增加，读取时延越来越大   
+
+为了降低时延，会采用压缩Compaction，减少同一个Region下同一个列族的小文件HFile数量  
+
+Compaction的分类   
+
+- Minor：小范围的Compaction，有最少最大文件数量限制，通常选一段连续时间内的小文件进行合并   
+- Major：对该Region该ColumnFamily下的所有HFile进行合并    
+
+![alt text](image/Compaction.png)
+
+### OpenScanner
+
+采用OpenScanner进一步提升读写性能   
+
+创建两个Scanner来读取HFile和MemStore中的数据：  
+
+- MemStoreScanner：读取MemStore中的数据   
+- StoreFileScanner：读取HFile中的数据
+
+### BloomFilter
+
+用于优化随机读取的场景（Get），可以快速判断一条数据是否在一个大的数据集合中  
+
+对于“不存在”的结果可信，但是对“存在”有一定误判率    
+
+BloomFilter的索引存储于HFile中    
+
+## 性能优化
+
+### 行键 Row Key
+
+HBase仅通过row key进行索引，因此需要将经常一起读取的数据存储在同一行    
+
+### 构建二级索引
+
+访问行的三种方式：  
+
+- 通过一个row key访问   
+- 通过一个row key的区间访问   
+- 全表扫描    
+
+为了提高访问速度可以通过`coprocessor`特性构建二级索引：  
+
+- `HIndex`：对多个表、多个列、部分列值索引   
+- `Redis`、`Solor`二级索引  
+
+## 常用shell命令 
+
+| 命令 | 用途 |
+|:---:|:---:|
+| create | 创建表 |
+| list | 列出HBase中所有表信息 |
+| put | 向表、行、列指定的cell添加数据 |
+| get | 通过表、行、列、时间戳查询数据 |
+| scan | 浏览表的相关信息 |
+| drop | 删除表 |
+| disable/enable | 启用/禁用表 |
+
+删除表需要先disable然后再drop  
+
+# MapReduce和Yarn
+
+## 基本介绍
+
+MapReduce是大数据领域中著名的分布式计算处理框架，Yarn是Hadoop集群中负责资源管理与调度的组件   
+
+### MapReduce
+
+MapReduce基于谷歌的论文开源实现，用于对大规模数据集的并行和离线计算   
+
+特点：  
+
+- 编程思想高度抽象  
+  - 程序员仅考虑做什么，如何实现交给框架    
+- 良好的扩展性  
+  - 可以添加节点以扩展集群能力  
+- 高容错性    
+  - 通过计算迁移或数据迁移提高集群的可用性与容错性    
+
+### 资源调度与分配  
+
+在Hadoop1.0中，仅有HDFS和Map Reduce，资源调度通过MapReduce自带的资源调度管理器MRv1实现  
+
+缺点：  
+
+- 单点master，故障恢复依赖于周期性的checkpoint，故障时由用户决定是否重新计算    
+- 不区分作业调度和资源调度  
+- 没有资源隔离和安全性    
+
+在Hadoop2.0中引入Yarn，负责资源调度与分配，MapReduce仅负责计算，两者解耦    
+
+### Yarn
+
+Apache Hadoop YARN(Yet Another Resource Negotiator)是新的Hadoop资源管理器，是一个通用资源管理系统，可以为上层应用提供统一的资源调度  
+
+## 功能与架构
+
+### MapReduce过程
+
+- Map阶段   
+  - 解析杂乱无章的数据，提取出key和value，即数据的特征    
+  - 先将待处理的任务进行分片Split，默认将一个block作为一个分片，可以自定义    
+  - 将数据写入环形内存缓冲区，占用达到80%时进行溢写Spill，将缓冲区中的数据进行分区、排序、合并、归并，最后写入磁盘  
+- Reduce阶段    
+  - 对key和value重新组织，使其有相关性    
+
+![alt text](image/MapReduce.png)
+
+
+
+
