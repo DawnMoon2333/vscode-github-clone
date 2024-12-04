@@ -206,14 +206,14 @@ System.out.println("这是第一部分"+
 
 也可以使用c语言中printf函数类似的格式控制输出，可用的格式控制符号如下：
 
-| 格式控制符号 | 输出类型 |
-| :-: |  :-: |
-| %d | int |
-| %f | float，保留6位小数 |
-| %c | char |
-| %s | string |
-| %md | int占m列 |
-| %m.nf | float占m列，小数保留n位 |
+| 格式控制符号 |        输出类型        |
+|:------------:|:----------------------:|
+|      %d      |          int           |
+|      %f      |   float，保留6位小数    |
+|      %c      |          char          |
+|      %s      |         string         |
+|     %md      |        int占m列        |
+|    %m.nf     | float占m列，小数保留n位 |
 
 
 示例：  
@@ -526,24 +526,24 @@ byte z = x + y;
 
 运算返回值为boolean型的true或false。  
 
-| 运算符 | 含义 |
-| :-: |  :-: |
-| \> | 大于 |
-| < | 小于 |
-| \>= | 大于等于 |
-| <= | 小于等于 |
-| \== | 等于 |
-| != | 不等于 |
+| 运算符 |   含义   |
+|:------:|:------:|
+|   \>   |   大于   |
+|   <    |   小于   |
+|  \>=   | 大于等于 |
+|   <=   | 小于等于 |
+|  \==   |   等于   |
+|   !=   |  不等于  |
 
 <br/>
 
 ### 逻辑运算符和逻辑表达式
 
 | 运算符 | 含义 |
-| :-: |  :-: |
-| && | 与 |
-| \|\| | 或 |
-| ! | 非 |
+|:------:|:---:|
+|   &&   |  与  |
+|  \|\|  |  或  |
+|   !    |  非  |
 
 对“与”和“或”运算，存在“短路原则”，若根据前一个表达式的值已经可以判断出整个表达式的真假，则不再计算后边表达式的值。  
 
@@ -572,15 +572,15 @@ int n = 100;
 
 java的位运算用于对整数类型的位进行直接操作，性能高效，适用于性能和资源有限的环境。  
 
-| 位运算符 | 含义 | 解释 |
-| :-: |  :-: |  :-: |
-| & | 按位与 | 都为1则为1 |
-| \| | 按位或 | 其中一个为1则为1 |
-| ^ | 按位异或 | 不同则为1 |
-| ~ | 按位取反 | 取反 |
-| << | 左移 | 位左移指定的位数，右侧用0填充<br>相当于乘2 |
-| \>> | 右移 | 位右移指定的位数，右侧用符号位填充（正0负1）<br>相当于除2 |
-| \>>> | 无符号右移 | 右移指定的位数，左侧用0填充 |
+| 位运算符 |    含义    |                          解释                          |
+|:--------:|:--------:|:----------------------------------------------------:|
+|    &     |   按位与   |                       都为1则为1                       |
+|    \|    |   按位或   |                    其中一个为1则为1                    |
+|    ^     |  按位异或  |                       不同则为1                        |
+|    ~     |  按位取反  |                          取反                          |
+|    <<    |    左移    |       位左移指定的位数，右侧用0填充<br>相当于乘2        |
+|   \>>    |    右移    | 位右移指定的位数，右侧用符号位填充（正0负1）<br>相当于除2 |
+|   \>>>   | 无符号右移 |               右移指定的位数，左侧用0填充               |
 
 举例：  
 
@@ -624,23 +624,23 @@ object instanceof ClassName
 ### 运算符的优先级
 
 优先级由高到低排序：
-| 运算符类型 | 运算符 |
-| :-: |  :-: |
-| 括号 | () |
-| 一元运算符 | ++ -- + -(正负) ! ~ |
-| 类型转换 | (type) |
-| 乘除、取余 | \* / % |
-| 加减 | \+ - |
-| 移位 | << >> >>> |
-| 关系 | \> < >= <= instanceof |
-| 相等性 | \== != |
-| 按位与 | & |
-| 按位异或 | ^ |
-| 按位或 | \| |
-| 逻辑与 | && |
-| 逻辑或 | \|\| |
-| 三元运算符 | ?: |
-| 赋值 | \= += -+ \*= /= |
+| 运算符类型 |        运算符         |
+|:--------:|:---------------------:|
+|    括号    |          ()           |
+| 一元运算符 |  ++ -- + -(正负) ! ~  |
+|  类型转换  |        (type)         |
+| 乘除、取余  |        \* / %         |
+|    加减    |         \+ -          |
+|    移位    |       << >> >>>       |
+|    关系    | \> < >= <= instanceof |
+|   相等性   |        \== !=         |
+|   按位与   |           &           |
+|  按位异或  |           ^           |
+|   按位或   |          \|           |
+|   逻辑与   |          &&           |
+|   逻辑或   |         \|\|          |
+| 三元运算符 |          ?:           |
+|    赋值    |    \= += -+ \*= /=    |
 
 <br/>
 
@@ -1400,12 +1400,12 @@ Java中常用的访问权限有四种：`public`、`protected`、`default`（默
 - `private`：只能被定义它的类访问。  
 
 
-| 访问修饰符   | 同一个类内 | 同一个包内 | 子类（不同包） | 其他包中的类 |
-| :-: | :-: | :-: | :-: | :-: |
-| `public`     | √          | √          | √              | √            |
-| `protected`  | √          | √          | √              | ×            |
-| `default`    | √          | √          | ×              | ×            |
-| `private`    | √          | ×          | ×              | ×            |
+| 访问修饰符  | 同一个类内 | 同一个包内 | 子类（不同包） | 其他包中的类 |
+|:-----------:|:----------:|:----------:|:------------:|:------------:|
+|  `public`   |     √      |     √      |      √       |      √       |
+| `protected` |     √      |     √      |      √       |      ×       |
+|  `default`  |     √      |     √      |      ×       |      ×       |
+|  `private`  |     √      |     ×      |      ×       |      ×       |
 
 ### 公有 public
 
@@ -1537,16 +1537,16 @@ int num2 = obj;
 // 自动拆箱，将 Integer 对象转换为 int 类型
 ```
 
-| 基本数据类型 | 封装类       |
-|:-:|:-:|
-| `byte`       | `Byte`       |
-| `short`      | `Short`      |
-| `int`        | `Integer`    |
-| `long`       | `Long`       |
-| `float`      | `Float`      |
-| `double`     | `Double`     |
-| `char`       | `Character`  |
-| `boolean`    | `Boolean`    |
+| 基本数据类型 |   封装类    |
+|:------------:|:-----------:|
+|    `byte`    |   `Byte`    |
+|   `short`    |   `Short`   |
+|    `int`     |  `Integer`  |
+|    `long`    |   `Long`    |
+|   `float`    |   `Float`   |
+|   `double`   |  `Double`   |
+|    `char`    | `Character` |
+|  `boolean`   |  `Boolean`  |
 
 对封装类调用对应的`doubleValue()`、`byteValue()`、`intValue()`、`shortValue()`、`longValue()`方法可以返回该对象的基本类型数据  
 
@@ -1690,12 +1690,12 @@ public class Main {
 
 若子类和父类不在同一个包中：  
 
-| 访问修饰符 | 父类和子类在同一个包中 | 父类和子类不在同一个包中 |
-| :-: | :-: | :-: |
-| public | √ | √ |
-| protected | √ | √ |
-| 默认（无修饰符） | √ | × |
-| private | × | × |
+|   访问修饰符   | 父类和子类在同一个包中 | 父类和子类不在同一个包中 |
+|:--------------:|:----------------------:|:------------------------:|
+|     public     |           √            |            √             |
+|   protected    |           √            |            √             |
+| 默认（无修饰符） |           √            |            ×             |
+|    private     |           ×            |            ×             |
 
 ### 子类对象的构造过程
 
@@ -3113,28 +3113,28 @@ public class StringBufferExample {
 
 ## Math
 
-| 方法名          | 描述                                                         |
-|-----------------|------------------------------------------------------------|
-| `Math.abs(x)`        | 返回 `x` 的绝对值。                                         |
-| `Math.max(x, y)`     | 返回 `x` 和 `y` 中的最大值。                                 |
-| `Math.min(x, y)`     | 返回 `x` 和 `y` 中的最小值。                                 |
-| `Math.ceil(x)`       | 返回大于等于 `x` 的最小整数。                             |
-| `Math.floor(x)`      | 返回小于等于 `x` 的最大整数。                             |
-| `Math.round(x)`      | 返回最接近 `x` 的整数。                                     |
-| `Math.exp(x)`        | 返回 `e^x` 的值。                                            |
-| `Math.log(x)`        | 返回 `x` 的自然对数（底数为 `e`）。                         |
-| `Math.sqrt(x)`       | 返回 `x` 的非负平方根。                                     |
-| `Math.pow(x, y)`     | 返回 `x` 的 `y` 次幂。                                       |
-| `Math.random()`      | 返回大于等于 0.0 小于 1.0 的随机浮点数。            |
-| `Math.random(int n)`| 返回大于或等于 0 小于 `n` 的随机整数。        |
-| `Math.sin(x)`        | 返回 `x` 的正弦值。                                         |
-| `Math.cos(x)`        | 返回 `x` 的余弦值。                                         |
-| `Math.tan(x)`        | 返回 `x` 的正切值。                                         |
-| `Math.asin(x)`       | 返回 `x` 的反正弦值。                                       |
-| `Math.acos(x)`       | 返回 `x` 的反余弦值。                                       |
-| `Math.atan(x)`       | 返回 `x` 的反正切值。                                       |
-| `Math.E`             | 自然对数的底数 `e` 的值。                                  |
-| `Math.PI`            | 圆周率的值。                                                |
+| 方法名               | 描述                                    |
+|----------------------|---------------------------------------|
+| `Math.abs(x)`        | 返回 `x` 的绝对值。                      |
+| `Math.max(x, y)`     | 返回 `x` 和 `y` 中的最大值。             |
+| `Math.min(x, y)`     | 返回 `x` 和 `y` 中的最小值。             |
+| `Math.ceil(x)`       | 返回大于等于 `x` 的最小整数。            |
+| `Math.floor(x)`      | 返回小于等于 `x` 的最大整数。            |
+| `Math.round(x)`      | 返回最接近 `x` 的整数。                  |
+| `Math.exp(x)`        | 返回 `e^x` 的值。                        |
+| `Math.log(x)`        | 返回 `x` 的自然对数（底数为 `e`）。        |
+| `Math.sqrt(x)`       | 返回 `x` 的非负平方根。                  |
+| `Math.pow(x, y)`     | 返回 `x` 的 `y` 次幂。                   |
+| `Math.random()`      | 返回大于等于 0.0 小于 1.0 的随机浮点数。 |
+| `Math.random(int n)` | 返回大于或等于 0 小于 `n` 的随机整数。   |
+| `Math.sin(x)`        | 返回 `x` 的正弦值。                      |
+| `Math.cos(x)`        | 返回 `x` 的余弦值。                      |
+| `Math.tan(x)`        | 返回 `x` 的正切值。                      |
+| `Math.asin(x)`       | 返回 `x` 的反正弦值。                    |
+| `Math.acos(x)`       | 返回 `x` 的反余弦值。                    |
+| `Math.atan(x)`       | 返回 `x` 的反正切值。                    |
+| `Math.E`             | 自然对数的底数 `e` 的值。                |
+| `Math.PI`            | 圆周率的值。                             |
 
 ## Random
 
@@ -3185,24 +3185,24 @@ var file = new File(parentDir, "file.txt");
 
 文件：  
 
-| 方法 | 描述 |
-| :-: | :-: |
-| boolean createNewFile() | 创建新文件 |
-| boolean delete() | 删除文件或空目录 |
-| String getName() | 获取文件名 |
-| boolean exists() | 判断文件或目录是否存在 |
-| String getAbsolutePath() | 获取文件的绝对路径 |
-| String getParent() | 获取文件的父目录 |
-| boolean isDirectory() | 判断是否为目录 |
-| boolean isFile() | 判断是否为文件 |
+|           方法           |          描述          |
+|:------------------------:|:--------------------:|
+| boolean createNewFile()  |       创建新文件       |
+|     boolean delete()     |    删除文件或空目录    |
+|     String getName()     |       获取文件名       |
+|     boolean exists()     | 判断文件或目录是否存在 |
+| String getAbsolutePath() |   获取文件的绝对路径   |
+|    String getParent()    |    获取文件的父目录    |
+|  boolean isDirectory()   |     判断是否为目录     |
+|     boolean isFile()     |     判断是否为文件     |
 
 
 目录：  
 
-| 方法 | 描述 |
-| :-: | :-: |
-| boolean mkdir() | 创建目录 |
-| String[] list() | 获取目录下的所有文件 |
+|        方法        |              描述              |
+|:------------------:|:----------------------------:|
+|  boolean mkdir()   |            创建目录            |
+|  String[] list()   |      获取目录下的所有文件      |
 | File[] listFiles() | 用File对象返回目录下的所有文件 |
 
 ### 运行可执行文件
@@ -3463,5 +3463,570 @@ try {
 }
 ```
 
+# 第十四章 JDBC与MySQL数据库
 
+## MySQL数据类型
+
+### 整型
+
+以下是将表示范围改为科学计数法后的表格：
+
+以下是将表示范围改为 **2 的指数幂形式** 并将行内容居中的表格：
+
+| **类型名**     | **表示范围**                             | **用途**             | **占用空间**           |
+|:-:|:-:|:-:|:-:|
+| **INT/INTEGER** | ± \( 2^{31} \)（有符号） | 存储标准范围的整数 |    4 字节    |
+|   **BIGINT**    | ± \( 2^{63} \)（有符号） |  存储非常大的整数  |    8 字节    |
+
+### 浮点型
+
+| **类型名**          | **表示范围**                         | **用途**             | **占用空间**         |
+|:-:|:-:|:-:|:-:|
+| **FLOAT**           | 单精度浮点数（约 7 位有效数字）          | 存储低精度小数    | 4 字节               |
+| **DOUBLE**     | 双精度浮点数（约 15 位有效数字）         | 存储高精度小数       | 8 字节               |
+| **DECIMAL(精度，标度)** | 自定义精度和标度，精度为总长度，标度为小数长度 | 精确小数（如财务数据） | 由定义的精度和标度决定 |
+
+### 字符串
+
+| **类型名**     | **表示范围**                             | **用途**             | **占用空间**           |
+|:-:|:-:|:-:|:-:|
+| **CHAR(n)**    | 定长字符串，最多存储 `n` 个字符（1 到 255）   | 存储固定长度的字符串 | `n` 字节               |
+| **VARCHAR(n)** | 变长字符串，最多存储 `n` 个字符（1 到 65535） | 存储长度变化的字符串 | 实际长度 + 2 字节 |
+| **TEXT**       | 最大 65,535 字节                           | 存储中等大小文本     | 实际大小 + 2 字节      |
+| **LONGTEXT**   | 最大 4,294,967,295 字节                    | 存储超大文本         | 实际大小 + 4 字节      |
+| **ENUM**       | 从定义列表中选一个值（最多 65,535 个）       | 存储有限选项值       | 1 到 2 字节            |
+| **SET**        | 从定义列表中选多个值（最多 64 个）           | 存储有限组合值       | 1 到 8 字节            |
+
+### 日期和时间
+
+| **类型名**     | **表示范围**                             | **用途**             | **占用空间**           |
+|:-:|:-:|:-:|:-:|
+| **DATE**      | `1000-01-01` 到 `9999-12-31`                           | 存储日期            | 3 字节       |
+| **DATETIME**  | `1000-01-01 00:00:00` 到 `9999-12-31 23:59:59`         | 存储日期和时间      | 8 字节       |
+| **TIMESTAMP** | `1970-01-01 00:00:01 UTC` 到 `2038-01-19 03:14:07 UTC` | 记录时间戳，支持时区 | 4 字节       |
+| **TIME**      | `-838:59:59` 到 `838:59:59`                            | 存储时间（时:分:秒）  | 3 字节       |
+| **YEAR**      | `1901` 到 `2155`                                       | 存储年份            | 1 字节       |
+
+### 其他
+
+| **类型名**     | **表示范围**                             | **用途**             | **占用空间**           |
+|:-:|:-:|:-:|:-:|
+| **BOOL** | `TRUE` 或 `FALSE`（内部存储为整数） | 存储布尔值                 | 1 字节           |
+| **JSON**         | 依赖实际数据大小                  | 存储 JSON 格式的结构化数据 | 依赖实际数据大小 |
+
+
+
+## MySQL语句
+
+创建表语法：  
+
+```sql
+CREATE TABLE 表名 (
+    列名 数据类型 [约束条件],
+    ...
+) [表选项];
+```
+
+在 SQL 中，`CREATE TABLE` 用于创建表。它的语法和参数可以根据不同的数据库（如 MySQL、PostgreSQL、SQL Server）有所不同，但通常支持以下主要参数：
+
+---
+
+### 基本语法
+```sql
+CREATE TABLE 表名 (
+    列名 数据类型 [约束条件],
+    ...
+) ;
+```
+
+常见约束条件：  
+
+| **约束名**         | **功能**  |
+|:-:|:-:|
+| **PRIMARY KEY**    | 定义主键，唯一标识表中的每一行，不能有重复值且不能为空。                   |
+| **UNIQUE**         | 确保该列的值唯一，但允许存在多个 NULL 值。                                |
+| **NOT NULL**       | 确保该列不能存储 NULL 值。                                               |
+| **DEFAULT**        | 为该列设置默认值，当插入数据时未指定该列值时，自动填充默认值。             |
+| **CHECK**          | 定义条件约束，确保列值符合指定条件（如 `CHECK (age >= 18)`）。             |
+| **CHARACTER SET** | 指定字符集，如 `CHARACTER SET utf8`。                                       |
+
+
+综合实现：  
+
+```sql
+-- 创建数据库Book 
+create database Book;
+
+-- 使用数据库Book
+use Book;
+
+-- 创建表Booklist
+create table Booklist(
+    ISBN varchar(100) primary key,
+    name varchar(100) character set utf8,
+    price decimal(10,2),
+    publishdate date
+);
+
+-- 插入数据
+insert into Booklist values('9787115428028','余胜军教你学Java',99.99,'2020-01-01');
+
+-- 查询数据
+select * from Booklist;
+
+-- 删除表
+drop table Booklist;
+
+-- 删除数据库
+drop database Book;
+
+```
+
+## JDBC
+
+即Java Database Connectivity，Java数据库连接，是用于操作数据库的API  
+
+## 连接MySQL数据库
+
+### 导入jar包
+
+在IDEA的 文件-项目结构-库 导入`mysql-connector-j-9.1.0.jar`  
+
+### 加载驱动
+
+```java
+static void loadDriver(){
+    try{
+        Class.forName("com.mysql.cj.jdbc.Driver");   }
+    catch(Exception e){
+        System.out.println(e.getMessage());
+    }
+}
+```
+
+### 连接数据库
+
+```java
+String uri = "jdbc:mysql://127.0.0.1:3306/new_schema?useSSL=false&serverTimezone=GMT&characterEncoding=utf-8";
+String user="root";
+String password="1mTheB055@";
+
+try{
+    Connection con = DriverManager.getConnection(uri, user, password);
+}catch (SQLException e) {
+    System.out.println(e.getMessage());
+}
+```
+
+### 查询 更新数据
+
+```java
+public static void main(String[] args) {
+    loadDriver();
+    
+    String sql;
+    try {
+        // 建立数据库连接
+        Connection con = DriverManager.getConnection(uri, user, password);
+
+        // SQL查询语句
+        sql = "SELECT * FROM Booklist WHERE column_name = 'ISBN'";
+        // 使用Statement对象执行查询
+        // 使用try-with-resources保证自动释放资源
+        try (Statement stmt = con.createStatement()) { 
+            // 执行查询并返回结果集
+            try (ResultSet rs = stmt.executeQuery(sql)) {
+                printResultSet(rs);
+            }
+        } catch (SQLException e) {
+        e.printStackTrace();
+        }
+
+        // SQL更新语句
+        // 更新指定 ISBN 的书的价格
+        sql = "UPDATE Booklist SET price = 9.99 WHERE ISBN = '9787115428028'";
+        try (Statement stmt = con.createStatement()) {
+            int rowsUpdated = stmt.executeUpdate(sql);
+            // 返回值，即rowsUpdated，为执行UPDATE操作受影响的行数
+            if (rowsUpdated > 0) {
+                System.out.println("书的价格更新成功！");
+            } else {
+                System.out.println("没有找到匹配的书，更新失败！");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // SQL更新语句，使用预处理
+        // 更新指定 ISBN 的书的价格
+        sql = "UPDATE Booklist SET price = ? WHERE ISBN = ?";
+        try (PreparedStatement stmt = con.prepareStatement(sql)) {
+            // 设置参数
+            stmt.setDouble(1, 9.99);  // 设置新的价格
+            stmt.setString(2, "9787115428028");  // 设置要更新的书的 ISBN
+
+            // 执行更新
+            int rowsUpdated = stmt.executeUpdate(); 
+            if (rowsUpdated > 0) {
+                System.out.println("书的价格更新成功！");
+            } else {
+                System.out.println("没有找到匹配的书，更新失败！");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        con.close(); // 关闭连接
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+static void loadDriver(){
+    //加载驱动
+    try{
+        Class.forName("com.mysql.cj.jdbc.Driver");   }
+    catch(Exception e){
+        System.out.println(e.getMessage());
+    }
+}
+
+static void printResultSet(ResultSet rs) throws SQLException {
+    while (rs.next()) {
+        String ISBN = rs.getString(1);
+        String name = rs.getString(2);
+        System.out.printf("ISBN：%s，书名：%s\n", ISBN，name);
+    }
+}
+```
+
+### 事务
+
+保证数条SQL语句要么全部执行成功，要么全部不执行    
+
+```java
+con.setAutoCommit(False); // 关闭自动提交
+stmt = con.createStatement(); // 先关闭自动提交再获取stmt
+try{
+    int rows1 = stmt.executeUpdate(sql1); // 执行第一条SQL语句
+    int rows2 = stmt.executeUpdate(sql2);
+    if(rows1 != 0 && rows2 != 0){ // 两条sql语句都执行成功
+        con.commit(); // 提交事务
+    }else{
+        con.rollback(); // 回滚事务
+    }
+}catch(SQLException e){
+    try{
+        con.rollback(); // 发生异常时回滚事务
+    }catch(SQLException ex){
+        System.out.println(ex.getMessage());
+    }
+}
+```
+
+# 第十五章 Java多线程
+
+## 程序、进程、线程
+
+### 程序 Program
+   - 程序是一个静态的文件或代码集合，通常是源代码（.java文件）或者编译后的字节码文件（.class文件）。   
+   - 程序本身并不会执行，只有在运行时被加载到内存中，成为进程的一部分后，才能执行。   
+
+### 进程 Process
+   - 进程是正在执行的程序的实例，包含程序代码、数据、堆栈、文件描述符等资源。   
+   - 每个进程都有自己独立的内存空间，因此不同的进程之间相互隔离。   
+   - 在 Java 中，启动一个应用程序时，JVM 会为这个应用程序创建一个进程。    
+
+   举例：当运行一个 Java 程序时，JVM 会启动一个进程来执行这个程序，并为这个进程分配内存。      
+
+### 线程 Thread
+   - 线程是进程中的一个执行单元，是程序执行的最小单位。   
+   - 每个进程至少有一个主线程（通常是 `main` 方法所运行的线程），而进程中的多个线程可以共享进程的内存空间（如堆和方法区），但每个线程有自己的栈空间。   
+   - 线程是程序执行的基本单位，它在进程内执行任务，多个线程可以并发执行，从而提高程序的执行效率。  
+   - 当程序中所有的线程都被结束后 JVM 才会结束 Java 程序。    
+
+   举例：在 Java 中，可以创建多个线程来并行执行任务，常见的方法有继承 `Thread` 类或实现 `Runnable` 接口。    
+
+   对一个n核cpu，每个核都可以独立地处理一个或多个线程（超线程技术），在同一时刻可以同时处理n个（或2n等）线程。  
+   对于每个核心，每个线程都会被在短暂执行后快速切换到下一个线程执行，保证每个线程都有机会被执行。  
+
+## 线程的状态和生命周期
+
+使用`Thread`类及其子类表示线程，使用`getState()`方法获取枚举类型状态`Thread.State`的值：  
+
+`Thread`类的构造方法：  
+
+- Thread()：通过重写`run()`方法指定任务  
+- Thread(Runnable target)：通过实现`Runnable`接口的`run()`方法指定任务  
+- Thread(String name)：创建一个新的线程对象，并指定线程的名称  
+- Thread(Runnable target, String name)：创建一个新的线程对象，并指定线程的名称和任务    
+
+线程的状态：  
+
+- NEW 新建      
+  - 一个`Thread`类或其子类的对象被创建，获得了内存空间和其他资源，单还未调用`start()`方法启动线程  
+- RUNNABLE 可运行   
+  - NEW状态的线程调用`start()`方法启动线程  
+    - 仅NEW状态的线程可以调用`start()`方法，否则触发异常    
+  - JVM将线程放入可运行队列，等待CPU调度执行    
+  - JVM将CPU使用权切换给当前RUNNABLE线程时，调用`run()`方法执行线程     
+    - **需要重写父类中的`run()`方法**   
+- BLOCKED WAITING TIMED_WAITING 中断  
+  - 当JVM将CPU使用权切换给其他线程时，当前线程进入BLOCKED状态，等待JVM解除BLOCKED状态重新进入RUNNABLE状态   
+  - 线程执行期间调用`sleep(int millsecond)`方法会立刻让出CPU使用权指定的时间，并在此期间进入TIMED_WAITING状态，等待时间结束后重新进入RUNNABLE状态   
+  - 线程执行期间调用`wait()`方法会立刻让出CPU使用权，并在此期间进入WAITING状态，等待其他线程调用`notify()`或`notifyAll()`方法唤醒，唤醒后重新进入RUNNABLE状态   
+- TERMINATED 死亡   
+  - 线程执行完`run()`方法，结束运行     
+
+```java
+public class Main {
+
+    public static void main(String[] args) {
+        // 创建一个线程并启动
+        MyThread myThread = new MyThread();
+
+        // 打印线程初始状态（NEW）
+        System.out.println("Thread state after creation: " + myThread.getState());
+
+        // 启动线程
+        myThread.start();
+
+        // 打印线程状态（RUNNABLE）
+        // 在这里，由于线程的执行非常快，可能无法准确捕捉线程状态
+        // 线程状态会经历 RUNNABLE 和其他状态，如 BLOCKED 等
+        try {
+            Thread.sleep(100); // 主线程休眠，给子线程一些时间
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 打印线程当前状态
+        System.out.println("Thread state after start: " + myThread.getState());
+
+        // 等待线程执行完毕
+        try {
+            myThread.join();  // 等待myThread线程结束
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 打印线程结束后的状态（TERMINATED）
+        System.out.println("Thread state after completion: " + myThread.getState());
+    }
+
+    // 自定义线程类
+    static class MyThread extends Thread {
+        @Override
+        public void run() {
+            try {
+                // 模拟一些任务
+                System.out.println("Thread is running...");
+                Thread.sleep(500);  // 使线程进入TIMED_WAITING状态
+                System.out.println("Thread finished sleeping...");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+```
+
+输出：  
+
+```
+Thread state after creation: NEW
+Thread is running...
+Thread state after start: TIMED_WAITING
+Thread finished sleeping...
+Thread state after completion: TERMINATED
+```
+
+## 使用Runnable接口创建线程
+
+Runnable接口：  
+
+```java
+public interface Runnable {
+    void run();
+}
+```
+
+示例：  
+
+```java
+public class Main {
+
+    public static void main(String[] args) {
+        // 创建一个Runnable对象
+        MyRunnable task = new MyRunnable();
+        
+        // 创建一个Thread对象，并将Runnable对象传入
+        Thread thread = new Thread(task);
+        
+        // 启动线程
+        thread.start();
+
+        // 主线程执行其他任务
+        System.out.println("Main thread is running...");
+    }
+
+    // 实现Runnable接口
+    static class MyRunnable implements Runnable {
+        @Override
+        public void run() {
+            // 线程执行的任务
+            System.out.println("Thread is running...");
+            try {
+                Thread.sleep(2000);  // 模拟任务执行，休眠2秒
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Thread finished.");
+        }
+    }
+}
+```
+
+输出：  
+
+```
+Main thread is running...
+Thread is running...
+Thread finished.
+```
+
+前两行的顺序可能不一样，因为 **线程的执行顺序是不可预测的，取决于操作系统的调度**  
+
+## 线程run()方法中的局部变量
+
+若多次将同一个实现了`Runnable`接口的类传递给同一个`Thread`类或其子类创建线程，则创建的多个线程相互隔离，每个都有独立的局部变量，互不干扰，除非使用了共享的资源，如静态变量  
+
+```java
+public class RunnableExample {
+    public static void main(String[] args) {
+        // 创建 Runnable 实现
+        MyRunnable task = new MyRunnable();
+
+        // 创建多个线程，传入相同的 Runnable 实现
+        Thread thread1 = new Thread(task);
+        Thread thread2 = new Thread(task);
+        Thread thread3 = new Thread(task);
+
+        // 启动多个线程
+        thread1.start();
+        thread2.start();
+        thread3.start();
+    }
+
+    // 实现 Runnable 接口
+    static class MyRunnable implements Runnable {
+        @Override
+        public void run() {
+            // 每个线程执行时都有自己独立的局部变量
+            int localVar = 0;
+            localVar++;
+            String threadName = Thread.currentThread().getName();
+            System.out.println(threadName + " is running with localVar: " + localVar);
+        }
+    }
+}
+```
+
+输出：  
+
+```
+Thread-2 is running with localVar: 1
+Thread-1 is running with localVar: 1
+Thread-0 is running with localVar: 1
+```
+
+## 线程的同步
+
+**synchronized** 是 Java 中用来控制多线程并发访问共享资源的一种机制，它保证了**同一时刻只有一个线程能够执行**被 synchronized 修饰的代码块或方法，进而避免了多线程同时访问共享资源导致的数据不一致问题。  
+
+### 同步实例方法
+
+同步实例方法会锁定当前对象`this`，确保同一时刻只有一个线程能执行该方法。  
+
+当一个线程执行 increment() 方法时，其他线程不能执行同一个对象的任何被 synchronized 修饰的方法，直到当前线程执行方法完毕。    
+
+```java
+class Counter {
+    private int count = 0;
+
+    public synchronized void increment() {
+        count++;
+    }
+
+    public synchronized int getCount() {
+        return count;
+    }
+}
+```
+
+### 同步静态方法
+
+如果同步的方法是静态的，锁的对象将是**类本身**，而不是实例对象。  
+
+当一个线程执行被 synchronized 修饰的静态方法时，所有当前类的对象中被 synchronized 修饰的静态方法都不能被其他线程执行，直到当前线程执行完毕。  
+
+```java
+class Counter {
+    private static int count = 0;
+
+    public synchronized static void increment() {
+        count++;
+    }
+
+    public synchronized static int getCount() {
+        return count;
+    }
+}
+```
+
+### 同步代码块
+
+```java
+class Counter {
+    private int count = 0;
+
+    public void increment() {
+        synchronized (this) { // 锁定this
+            count++;
+        }
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+```
+
+increment() 方法中的 synchronized (this) 语句块锁定了 this，即当前对象。只有获得该锁的线程才可以执行 count++ 操作。  
+
+### 指定锁对象
+
+```java
+class Counter {
+    private int count = 0;
+    private final Object lock = new Object();  // 定义一个锁对象
+
+    public void increment() {
+        synchronized (lock) { // 锁定lock
+            count++;
+        }
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+```
+
+可以用任意对象作为锁。锁对象可以是任意类型的对象，常见的做法是定义一个专门的锁对象。   
+
+这里的 lock 对象是专门用于同步的对象，所有想要访问 increment() 方法的线程都必须先获取 lock 对象的锁。   
+
+这样可以更精细地控制哪些代码块需要同步，而不影响其他部分的并发。  
 
