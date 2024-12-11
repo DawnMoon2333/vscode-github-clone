@@ -4030,3 +4030,382 @@ class Counter {
 
 这样可以更精细地控制哪些代码块需要同步，而不影响其他部分的并发。  
 
+# 第十六章 Java网络基础
+
+## URL类
+
+`java.net`中的`URL(Uniform Resource Locator，统一资源定位符)`类提供了使用URL对象获取URL资源的方法。     
+
+一个URL对象至少包括：  
+
+- 协议：如http、https、ftp等    
+- 地址：有效的域名或IP地址，如www.baidu.com，39.156.66.10     
+- 资源：主机上的任意文件    
+
+### URL类构造方法
+
+```java
+import java.net.*;
+
+// 使用域名初始化一个URL对象
+public URL(String spec) throws MalformedURLException
+
+try {
+    var url = new URL("http://www.baidu.com/");
+}catch(MalformedURLException e) {
+    System.out.println("URL格式错误，Bad URL：" + e);
+}
+
+// 指定协议、地址和资源
+public URL(String protocol, String host, String file) throws MalformedURLException
+```
+
+### 读取URL中的资源
+
+对URL对象调用`InputStream()`和`openStream()`方法以返回一个输入流，指向URL资源。     
+
+受网络等因素影响，读取URL资源可能很慢，因此需要将其放在一个线程中进行，避免阻塞主线程。  
+
+```java
+import java.io.*;
+import java.net.*;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        // 启动新线程来读取URL
+        String urlString = "https://www.baidu.com/";
+        var urlReaderThread = new URLReaderThread(urlString);
+        urlReaderThread.start(); // 启动线程
+    }
+
+    // 在新的线程中读取URL
+    static class URLReaderThread extends Thread {
+        private String urlString;
+
+        public URLReaderThread(String urlString) {
+            this.urlString = urlString;
+        }
+
+        @Override
+        public void run() {
+            // 执行读取URL的任务
+            readFromURL(urlString);
+        }
+    }
+
+    public static void readFromURL(String urlString) {
+        try {
+            // 创建URL对象
+            URL url = new URL(urlString);
+
+            // 打开输入流
+            InputStream inputStream = url.openStream();
+
+            // 使用Scanner读取数据
+            Scanner scanner = new Scanner(inputStream, "UTF-8");
+
+            // 按行读取数据
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                System.out.println(line);  // 打印每一行内容
+            }
+
+            // 关闭Scanner和流
+            scanner.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+## InetAddress类
+
+### 地址的表示
+
+Internet上的主机使用域名或IP地址表示地址，`java.net`中的`InetAddress`类中含有一个主机的域名和IP地址，如`www.baidu.com/39.156.66.10`。  
+
+### 获取地址
+
+使用`getByName()`方法获取指定主机的地址，getByName是java.net包中InetAddress类的静态方法，可以直接使用`InetAddress.getByName()`调用而不需要创建`InetAddress`的对象。  
+
+```java
+import java.net.*;
+
+public class Main{
+    public static void main(String[] args){
+        try{
+            InetAddress address_1 = InetAddress.getByName("www.baidu.com");
+            System.out.println(address_1.toString());
+            InetAddress address_2 = InetAddress.getByName("47.103.24.173");
+            System.out.println(address_2.toString());
+            // 如果对IP地址使用getByName方法，需要该IP地址的DNS服务器设置PTR记录，也就是允许根据IP地址反向查询域名
+            // 否则无法根据IP地址获取到域名，这个与DNS服务商有关
+        }catch (UnknownHostException e){
+            System.out.println("查找失败");
+            e.toString();
+        }
+    }
+}
+```
+
+输出：  
+
+```
+www.baidu.com/110.242.68.3
+47.103.24.173
+```
+
+`InetAddress`类中还有两个实例方法：  
+
+- `getHostName()`：获取域名         
+- `getHostAddress()`：获取IP地址        
+
+## 套接字 Socket
+
+`Socket`，套接字，用于表示网络通信中的一个端点，每个套接字由 **IP地址** 和 **端口号** 组成。  
+
+### 客户端 Socket
+
+在客户端创建`Socket`对象，指定目标服务器的IP地址和端口号。构造方法为：`Socket(String host, int port)`。  
+
+```java
+try{
+    var mysocket = new Socket("http://192.168.1.1", 80);
+}catch(IOException e){
+    // ...
+}
+```
+
+对`Socket`对象调用`getInputStream()`方法可以获得一个输入流，并从中读取host的信息，调用`getOutputStream()`方法可以获得一个输出流，并通过向这个输出流中写入信息来发送给host  
+
+### 服务器端 ServerSocket
+
+在服务器端建立`ServerSocket`对象，构造方法为`ServerSocket(int port)`，监听指定的端口号。  
+
+```java
+try{
+    var myserversocket = new ServerSocket(1880);
+}catch(IOException e){
+    // 若1880端口被占用则会抛出IOException异常  
+}
+```
+
+对`ServerSocket`对象调用`accept()`方法将`Socket`和`ServerSocket`连接起来：  
+
+```java
+try{
+    Socket sc = myserversocket.accept();
+}catch(IOException e){
+    // ...
+}
+```
+
+### 建立连接
+
+- 在客户端创建 `Socket mysocket`，在服务器端创建 `ServerSocket myserversocket`  
+- 调用 `myserversocket.accept()` 方法，等待 `mysocket` 连接     
+- 若客户端连接，则返回 `myserversocket` 与 `mysocket` 相连接的 `Socket` 对象 `sc`   
+- `sc.getOutputStream()` 方法获得的输出流指向 `mysocket.getInputStream()` 方法获得的输入流  
+- `mysocket.getOutputStream()` 方法获得的输入流指向 `sc.getInputStream()` 方法获得的输出流     
+- `mysocket` 或 `sc` 调用 `getInetAddress()` 方法获得服务器或客户端的IP地址和域名  
+- `mysocket` 或 `sc` 调用 `close()` 方法关闭套接字连接  
+
+`myserversocket.accept()` 方法会堵塞线程的执行，即 `accpet()` 被调用后，如果没有客户端与服务器端连接，`accept()` 就会一直等待，直到有客户端与其连接。      
+
+读取数据也会堵塞线程的执行，因为还没有发送数据时，另一端就可能已经开始读取数据了。  
+
+![alt text](image/Socket.png)
+
+### 程序实现
+
+先启动Server，然后启动Client  
+
+Server:   
+
+```java
+import java.io.*;
+import java.net.*;
+
+public class Server {
+    public static void main(String[] args) {
+        try (ServerSocket myServerSocket = new ServerSocket(12345)) {
+            System.out.println("服务器已启动，等待客户端连接...");
+            Socket sc = myServerSocket.accept(); // 等待客户端连接
+            System.out.println("客户端已连接: " + sc.getInetAddress());
+
+            // 创建输入流
+            BufferedReader input = new BufferedReader(new InputStreamReader(sc.getInputStream()));
+
+            // 接收服务器端发送的消息
+            String serverMessage;
+            while ((serverMessage = input.readLine()) != null) {
+                System.out.printf("服务器端收到: %s%n", serverMessage);
+            }
+
+            // 关闭连接
+            System.out.println("客户端结束连接");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+Client:  
+
+```java
+import java.io.*;
+import java.net.*;
+
+public class Client {
+    public static void main(String[] args) {
+        try (Socket mySocket = new Socket("localhost", 12345)) {
+            System.out.println("已连接到服务器: " + mySocket.getInetAddress());
+
+            // 创建输入输出流
+            OutputStream outputStream = mySocket.getOutputStream();
+            PrintWriter output = new PrintWriter(outputStream, true);
+
+            // 客户端发送0到9
+            for (int i = 0; i <= 9; i++) {
+                output.println(i);
+                System.out.printf("客户端发送: %d%n", i);
+                Thread.sleep(1000); // 等待1秒
+            }
+
+            // 关闭连接
+            mySocket.close();
+            System.out.println("客户端关闭连接");
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+Server输出：  
+
+```
+服务器已启动，等待客户端连接...
+客户端已连接: /127.0.0.1
+服务器端收到: 0
+服务器端收到: 1
+服务器端收到: 2
+服务器端收到: 3
+服务器端收到: 4
+服务器端收到: 5
+服务器端收到: 6
+服务器端收到: 7
+服务器端收到: 8
+服务器端收到: 9
+客户端结束连接
+```
+
+Client输出：  
+
+```
+已连接到服务器: localhost/127.0.0.1
+客户端发送: 0
+客户端发送: 1
+客户端发送: 2
+客户端发送: 3
+客户端发送: 4
+客户端发送: 5
+客户端发送: 6
+客户端发送: 7
+客户端发送: 8
+客户端发送: 9
+客户端关闭连接
+```
+
+## UDP数据报
+
+前文中`Socket`使用的是TCP连接  
+
+- TCP（传输控制协议）连接       
+  - 传输数据前需要建立连接，传输的每个数据包都需要接收端确认，传输结束后需要释放连接    
+  - 高可靠性，保证数据完整准确地传输        
+  - 流量、延迟开销大，实时性低      
+- UDP（用户数据报协议）连接     
+  - 传输数据无需建立连接，没有数据重传机制，不保证数据到达和按顺序到达，支持广播和多播    
+  - 实时性高，延迟低，资源消耗低    
+  - 数据传输不可靠，易出现丢包、重复、乱序  
+
+### 发送UDP数据包
+
+使用`DatagramPacket`类封装数据包，构造方法为：  
+
+- `DatagramPacket(byte[] data, int length, InetAddress address, int port)`  
+  - 将数据`data`发送到`address:port`    
+- `DatagramPacket(byte[] data, int offset, int length, InetAddress address, int port)`  
+  - 将数据`data`从`offset`开始的`length`个字节发送到`address:port`    
+
+```java
+import java.io.IOException;
+import java.net.*;
+
+public class Main {
+    public static void main(String[] args) throws UnknownHostException, SocketException {
+        byte[] data = "你好Java".getBytes(); // 数据内容
+        var address = InetAddress.getByName("www.baidu.com"); // 获取目标域名的ip地址
+        var datapack = new DatagramPacket(data, data.length, address, 980); // 打包数据包
+
+        // 根据datapack获取其数据、ip、端口
+        byte[] data2 = datapack.getData();
+        InetAddress address2 = datapack.getAddress();
+        int port2 = datapack.getPort();
+
+        // 发送datapack
+        try(var datasocket = new DatagramSocket()){ // 使用没有参数的构造方法
+            datasocket.send(datapack); // 发送数据包
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+```
+
+### 接收UDP数据包
+
+- 用构造方法`DatagramSocket(int port)`创建用于接收数据包的类，其中`port`为发送的端口号    
+- 用构造方法`DatagramPacket(byte[] data, int length)`创建用于接收数据包的类，其中`data`为用于存储接收到的数据的字节数组，`length`为数据包中最多能接收的字节数         
+  - 数据包中数据长度不超过 **8mb**  
+- 用`receive(DatagramPacket pack)`方法接收数据包，将数据包存入`pack`中      
+
+```java
+import java.io.IOException;
+import java.net.*;
+
+public class Main {
+    public static void main(String[] args) {
+        var data = new byte[100]; // 存储数据的数组
+        int length = 90; // 最大接收的数据大小，不大于数组的长度
+        var datapack = new DatagramPacket(data, length); // 用于接收数据包的pack
+        try(var datasocket = new DatagramSocket(12345)){ // 通过12345端口接收数据包
+            datasocket.receive(datapack); // 接收数据包存入datapack
+
+            // 根据datapack获取其数据、ip、端口
+            byte[] data2 = datapack.getData();
+            InetAddress address2 = datapack.getAddress();
+            int port2 = datapack.getPort();
+            int length2 = datapack.getLength();
+
+
+            String receivedData = new String(datapack.getData(), 0, datapack.getLength()); // 将接收到的数据转为String
+            System.out.println("接收到的数据: " + receivedData);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+```
+
+`receive()`方法会堵塞线程，直到接收到数据包  
+
+## 广播数据报
+
+
