@@ -165,3 +165,161 @@ int main() {
 }
 ```
 
+# std::string
+
+```cpp
+#include<iostream>
+#include<string>
+
+int main() {
+	// 声明并初始化空字符串
+	std::string str1;
+
+	// 声明字符串并赋值
+	std::string str2 = "Hello String";
+
+	// 声明字符串并使用字符串初始化字符串
+	std::string str3 = str2;
+
+	// 声明字符串并使用重复的字母初始化字符串
+	std::string str4(5, 'A');
+
+	// 字符数组和字符串的转换
+	const char* chars1 = "Hello";
+	std::string str5(chars1);  // str -> char*
+	const char* chars2 = str5.c_str();  // char* -> str
+
+	// 获取长度
+	int length = str2.length();
+
+	// 拼接
+	std::string str6 = str2 + "and" + str3;
+	std::string str7 = str2.append("and").append(str3); // 这两个等价
+
+	// 查找
+	int pos = str2.find("String");  // 返回值为字串的起始位置，不存在时为-1
+
+	// 替换
+	str2.replace(7, 6, "C++");  // 起始位置，长度，目标字符串
+
+	// 截取
+	str2 = str2.substr(0, 5);  // 起始位置，长度
+
+	// 比较
+	int result = str1.compare(str2);  // 比较的是unicode值
+}
+```
+
+# 范围基 for 循环
+
+```cpp
+for (auto &element : container) {
+    // auto 会自动推断容器元素的类型
+    // & 表示通过引用访问元素，避免复制
+}
+
+```
+
+```cpp
+#include <iostream>
+#include <string>
+
+int main() {
+    // 数组
+    int arr[] = {10, 20, 30, 40, 50};
+    // auto 推断为 int& 类型
+    for (auto &num : arr) {
+        printf("%d ", num);
+    }
+
+    std::string str = "Hello, World!";
+    // auto 推断为 char& 类型
+    for (auto &ch : str) {
+        printf("%c ", ch);
+    }
+
+    return 0;
+}
+```
+
+# 排序
+
+使用位于`#include<algorithm>`中的`sort`函数（使用快速排序）对元素进行排序，时间复杂度 $O(nlog_2 n)$  
+
+`sort(first, last)`，first为第一个元素的地址，last为最后一个元素的地址（**不包含**），默认为升序排序。  
+
+```cpp
+#include <iostream>
+#include <algorithm>
+
+int main() {
+    int arr[] = {4, 2, 5, 1, 3};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    std::sort(arr, arr + n);
+
+    for (int i = 0; i < n; ++i) {
+        std::cout << arr[i] << " ";  // 1 2 3 4 5
+    }
+
+    return 0;
+}
+```
+
+可传入**比较函数**，实现降序排序：  
+
+```cpp
+#include <iostream>
+#include <algorithm>
+
+bool compare(int a, int b) {
+    return a > b;  // 降序
+    // 返回true则a在前
+}
+
+int main() {
+    int arr[] = {4, 2, 5, 1, 3};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    std::sort(arr, arr + n, compare);
+
+    for (int i = 0; i < n; ++i) {
+        std::cout << arr[i] << " ";  // 5 4 3 2 1
+    }
+
+    return 0;
+}
+```
+
+也可以使用lambda表达式实现降序：  
+
+```cpp
+#include <iostream>
+#include <algorithm>
+
+int main() {
+    int arr[] = {4, 2, 5, 1, 3};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    std::sort(arr, arr + n, [](int a, int b) {
+        return a > b; 
+    });
+
+    // 输出排序后的数组
+    for (int i = 0; i < n; ++i) {
+        std::cout << arr[i] << " ";  // 5 4 3 2 1
+    }
+
+    return 0;
+}
+
+```
+
+# 最值
+
+`#include<algorithm>`中的`min_element(st, ed)`返回地址 $[st, ed)$ 中最小值的地址，`max_element(st, ed)`同理。  
+
+`nth_element(first, pos, last)`将`[first, last)`区间内的第`pos`个元素放到正确的位置，`[first, pos)`区间内的元素都小于等于`pos`，`[pos, last)`区间内的元素都大于等于`pos`，可以类比快速排序。  
+
+
+
