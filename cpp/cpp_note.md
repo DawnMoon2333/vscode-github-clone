@@ -1,3 +1,10 @@
+<script type="text/javascript" 
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [['$', '$']]}, messageStyle: "none" });
+</script>
+
 # 变量类型
 
 使用关键字`auto`可以自动推导变量的类型，相当于java的`var`。  
@@ -210,7 +217,27 @@ int main() {
 }
 ```
 
-# 范围基 for 循环
+
+# 常用函数
+
+## 最值
+
+`#include<algorithm>`中的`min_element(st, ed)`返回地址 $[st, ed)$ 中最小值的地址，`max_element(st, ed)`同理。  
+
+`nth_element(first, pos, last)`将`[first, last)`区间内的第`pos`个元素放到正确的位置，`[first, pos)`区间内的元素都小于等于`pos`，`[pos, last)`区间内的元素都大于等于`pos`，可以类比快速排序。  
+
+## 大小写转换
+
+`#include<cctype>`中的`islower(char ch)`和`isupper(char ch)`函数用于检查一个字母是否为小写/大写。  
+
+`tolower(char ch)`和`toupper(char ch)`将字母转换为小写/大写。  
+
+## memset
+
+`#include<cstring>`中的`memset(void* ptr, int value, size_t num)`函数可将ptr指向的内存块用value填充num个字节。  
+
+
+## 范围基 for 循环
 
 ```cpp
 for (auto &element : container) {
@@ -242,7 +269,7 @@ int main() {
 }
 ```
 
-# 排序
+## 排序
 
 使用位于`#include<algorithm>`中的`sort`函数（使用快速排序）对元素进行排序，时间复杂度 $O(nlog_2 n)$  
 
@@ -312,14 +339,195 @@ int main() {
 
     return 0;
 }
-
 ```
 
-# 最值
+## swap
 
-`#include<algorithm>`中的`min_element(st, ed)`返回地址 $[st, ed)$ 中最小值的地址，`max_element(st, ed)`同理。  
+`#include<utility>`中的`swap(T& a, T& b)`函数可以交换传入的两个同类型变量的引用。
 
-`nth_element(first, pos, last)`将`[first, last)`区间内的第`pos`个元素放到正确的位置，`[first, pos)`区间内的元素都小于等于`pos`，`[pos, last)`区间内的元素都大于等于`pos`，可以类比快速排序。  
+# STL 标准模板库
+
+仅学习竞赛常用的部分  
+
+## 算法
+
+## 容器
+
+### 顺序容器 vector
+
+与数组类似，是连续的顺序存储结构，但是 **长度可变**  
+数据量巨大时对比普通数组有优势，不容易爆内存  
+
+若数组长度可提前确定则应在构造时就指定初始大小，否则当内存耗尽后重新分配内存会浪费时间  
+
+构造：  
+
+```cpp
+// vector<类型> arr(长度, [初值])
+
+// 一维数组
+vector<int> arr = {1, 2, 3};    // int数组并指定初值
+vector<int> arr(100);    // 初始长100的int数组
+vector<int> arr(100, 1); // 初始长100的int数组，初值为1
+
+// 二维数组
+vector<vector<int>> matrix(n, vector<int> (m))
+vector<int> arr[100];    // 初始100行，不指定列数的二维数组
+vector<int> arr[100] {{100, 1}, ... ,{100, 1}}; // 使用列表初始化  
+```
+
+使用：  
+
+```cpp
+arr.push_back(elem);  // 在末尾添加元素
+arr.pop_back();       // 删除末尾元素
+arr[int pos]          // 与数组相同，获取pos位置的元素
+arr.size()            // 获取长度
+arr.empty()           // 判断是否为空
+arr.clear()           // 清空数组
+arr.resize(int newlength)  // 修改vector长度
+arr.resize(int newlength, elemtype defaultvalue)  // 修改vector长度并指定默认值
+// 长度增加时，使用元素类型默认值或指定的默认值填充
+// 长度缩短时，截断超出部分
+```
+
+### 容器适配器
+
+- stack 栈    
+  - 构造：`stack<int> stk;`  
+  - 进栈：`stk.push(elem);`  
+  - 出栈：`stk.pop();`   
+  - 取栈顶：`stk.top();`  
+  - 不可以通过`stk[int pos]`访问内部元素，栈只能操作栈顶元素  
+- queue 队列   
+  - 构造：`queue<int> que;`     
+  - 进队：`que.push(elem);`     
+  - 出队：`que.pop();`      
+  - 取队首：`que.front();`      
+  - 取队尾：`que.back();`   
+  - 与栈同理，不可访问内部元素，只能操作队首队尾元素  
+- priority_queue 优先队列     
+  - 提供O(1)的最大元素查找，O(logn)的插入与提取  
+  - 保证每次进行插入删除后，优先级最高的元素总是在队首  
+  - 构造：`priority_queue<类型, 容器, 比较器> pque`  
+    - 容器默认为`vector<类型>`，比较器默认为`less<类型>`即降序排列
+    - 设定比较器为`greater<类型>`可实现升序排列     
+  - 进队：``pque.push(elem);`       
+  - 出队：`pque.pop();`     
+  - 取队首：`pque.top();`   
+  - **仅队首可读**，队中元素和队尾均不可读，且所有元素**不可修改**
+  - 若先后进队10，5，20，则出队顺序为20，10，5（less）  
+
+### 关联容器
+
+- set 集合  
+  - 特点：一个元素仅可能在或不在set中，set中元素无顺序，不可重复，默认按升序排列  
+  - 由于元素无顺序，故无法用下标索引，仅能用迭代器遍历      
+  - 构造：`set<int> st;`  
+  - 使用for循环遍历：`for (auto &ele : st)`  
+  - 第一个元素：`st.begin();`   
+  - 最后一个元素的下一个位置：`st.end();`
+  - 插入：`st.insert(elem);`    
+  - 删除：`st.erase(elem);`     
+  - 查找：`st.find(elem);`，若存在则返回指向该元素的迭代器，否则返回`st.end()`    
+  - 判断是否存在：`st.count(elem);`     
+
+
+```cpp
+#include <iostream>
+#include <set>
+using namespace std;
+
+int main() {
+    // 创建 set 容器
+    set<int> mySet = {10, 20, 30, 40, 50};
+
+    // 使用迭代器遍历 set
+    for (set<int>::iterator it = mySet.begin(); it != mySet.end(); ++it) {
+        // 创建int类型set的迭代器it
+        // 赋初值mySet.begin()，每次循环都自增，直到等于mySet.end()
+        cout << *it << " ";  // 输出: 10 20 30 40 50
+    }
+    cout << endl;
+
+    // 使用auto自动推断迭代器类型
+    for (auto it = mySet.begin(); it != mySet.end(); ++it) {
+        std::cout << *it << " ";  // 输出: 10 20 30 40 50
+    }
+    cout << endl;   
+
+    // 使用范围for循环遍历set
+    for (const auto& val : mySet) {
+        std::cout << val << " ";  // 输出: 10 20 30 40 50
+    }
+    cout << endl;
+
+    return 0;
+}
+```
+- map   
+  - 一种有序的键值对结构，一个键只能出现一次    
+  - 构造：`map<键类型, 值类型 [, 比较器]> mp`，比较器默认为`less<类型>`  
+  - 增/查/改元素：`mp[key] = value;`     
+    - 若执行`mp[1]`，但mp中没有元素键为1，则会新增键值对，值为默认值0  
+  - 查元素（返回迭代器）：`mp.find(key);`    
+  - 删除：`mp.erase(key);`     
+  - 判断是否存在：`mp.count(key);`    
+
+```cpp
+// 使用迭代器遍历
+for (map<int, int>::iterator it = mp.begin(); it != mp.end(); ++it)
+    cout << it->first << ' ' << it->second << endl;
+
+for (auto it = mp.begin(); it != mp.end(); ++it) 
+    cout << *it << " ";  // 输出: 10 20 30 40 50
+
+// 使用pair访问
+for (auto &pr : mp)
+    cout << pr.first << ' ' << pr.second << endl;
+
+// 使用键值对遍历
+for (auto &[key, val] : mp)
+    cout << key << ' ' << val << endl;
+```
+
+### 字符串
+
+```cpp
+string s1;           // 空字符串
+string s2 = "awa!";  // 赋值awa!
+string s3(10, '6');  // 复制10个6，即6666666666
+```
+
+比较两个string是否相同可以直接使用`==`，也可以使用`.compare(str)`  
+
+尾接字符串尽量使用`+=`而不是`+`，因为`+`会创建新的字符串并赋值，而`+=`会原地操作  
+
+### 对 二元组
+
+`pair<第一个值类型, 第二个值类型> pr`  
+
+```cpp
+pair<int, int> p1;
+pair<int, long long> p2;
+pair<char, int> p3 = {'a', 1};
+
+// 使用first和second取值
+char key = p3.first;    
+int value = p3.second;  
+```
+
+## 迭代器
+
+对如树、集合这样非线性的数据结构，没有下标，因此使用 **迭代器** 进行遍历  
+
+`vector<int>::iterator it`  
+
+- 头迭代器：`.begin()`  
+- 尾迭代器：`.end()`   
+  - end指向的是最后一个元素的下一个位置，是无意义的值   
+- 前一个迭代器：`prev(it)`  
+- 后一个迭代器：`next(it)`  
 
 
 

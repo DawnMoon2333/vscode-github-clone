@@ -1,3 +1,10 @@
+<script type="text/javascript" 
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [['$', '$']]}, messageStyle: "none" });
+</script>
+
 # 概述
 
 - 机器学习  
@@ -43,7 +50,26 @@ $
   - $b = b - \alpha \frac{\partial}{\partial b} J(w, b)$  
   - 参数的梯度下降计算应**同时进行**，而不是先后进行，即先基于当前的参数计算更新的值，全部计算完成后再进行参数的更新   
 
-  
+## 多类特征
+
+记：  
+  - $ x_i $：第i个特征  
+  - $ n $：每个训练样本有n个特征  
+  - $ \vec{x}^{(i)} $：第i个训练样本  
+  - $ \vec{x}^{(i)}_j $：第i个训练样本的第j个特征  
+  - 此时，模型为 $ f_{w,b}(\vec{x}) = w_0 + w_1 x_1 + w_2 x_2 + \cdots + w_n x_n + b $  
+  - 设参数 $ \vec{w} = [ w_1, w_2, \cdots, w_n ] , \vec{x} = [ x_1, x_2, \cdots, x_n ] $   
+  - 则 $ f_{\vec{w},b}(\vec{x}) = \vec{w}^T \vec{x} + b = \vec{w} \cdot \vec{x} + b $，称其为 **多元线性回归**  
+
+## 向量化
+
+```python
+w = np.array([1.0, 2.0 -3.5])
+b = 4
+x = np.array([20, -4, 3])
+
+f = np.dot(w, x) + b
+```
 
 
 

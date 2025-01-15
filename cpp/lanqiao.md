@@ -2,4 +2,6 @@
 
 `#include<bits/stdc++.h>`  
 
-#
+# 常用算法
+
+## 
