@@ -301,94 +301,232 @@
 <table>
   <caption>
   <!-- 标题 -->
-    Front-end web developer course 2021
+    这里是标题
   </caption>
-  <thead>
-  <!-- 每个tr是一行 -->
-    <tr>
-      <!-- th是表头 -->
-      <th scope="col">Person</th>
-      <th scope="col">Most interest in</th>
-      <th scope="col">Age</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">Chris</th>
-      <!-- 每个td是一个单元格 -->
-      <td>HTML tables</td>
-      <td>22</td>
-    </tr>
-    <tr>
-      <th scope="row">Dennis</th>
-      <td>Web accessibility</td>
-      <td>45</td>
-    </tr>
-    <tr>
-      <th scope="row">Sarah</th>
-      <td>JavaScript frameworks</td>
-      <td>29</td>
-    </tr>
-    <tr>
-      <th scope="row">Karen</th>
-      <td>Web performance</td>
-      <td>36</td>
-    </tr>
-  </tbody>
-  <tfoot>
-    <tr>
-      <th scope="row" colspan="2">Average age</th>
-      <td>33</td>
-    </tr>
-  </tfoot>
+  <!-- tr是一行，即table row -->
+  <tr>
+    <!-- th是表头，即table header -->
+    <th>姓名</th>
+    <th>年龄</th>
+    <th>城市</th>
+  </tr>
+  <tr>
+    <!-- td是一个单元格，即table data -->
+    <td>张三</td>
+    <td>30</td>
+    <td>北京</td>
+  </tr>
+  <tr>
+    <td>李四</td>
+    <td>25</td>
+    <td>上海</td>
+  </tr>
+  <tr>
+    <td>王五</td>
+    <td>35</td>
+    <td>广州</td>
+  </tr>
+  <tr>
+      <td>赵六</td>
+      <td>28</td>
+      <td>深圳</td>
+  </tr>
 </table>
 
 ```html
 <table>
   <caption>
   <!-- 标题 -->
-    Front-end web developer course 2021
+    这里是标题
   </caption>
+  <!-- tr是一行，即table row -->
+  <tr>
+    <!-- th是表头，即table header -->
+    <th>姓名</th>
+    <th>年龄</th>
+    <th>城市</th>
+  </tr>
+  <tr>
+    <!-- td是一个单元格，即table data -->
+    <td>张三</td>
+    <td>30</td>
+    <td>北京</td>
+  </tr>
+  <tr>
+    <td>李四</td>
+    <td>25</td>
+    <td>上海</td>
+  </tr>
+  <tr>
+    <td>王五</td>
+    <td>35</td>
+    <td>广州</td>
+  </tr>
+  <tr>
+      <td>赵六</td>
+      <td>28</td>
+      <td>深圳</td>
+  </tr>
+</table>
+```
+
+### 基本属性
+
+- `align`, `valign`：表格相对周围元素的水平、垂直对齐方式  
+  - left, left, right  
+- `bgcolor`：背景颜色   
+  - 取值参考 [颜色表示形式](#颜色的表示形式)  
+- `border`：边框宽度  
+- `cellpadding`：单元格内容与单元格边框之间的距离   
+- `cellspacing`：单元格之间的距离   
+- `height`, `width`：表格的高度和宽度   
+
+### 单元格合并 跨行跨列
+
+表格从上向下，从左向右解析，使用 `colspan` 和 `rowspan` 可以实现合并单元格，解析时若该单元格被其他合并的单元格占用会跳过该单元格的解析：  
+
+<table>
+  <tr>
+    <td colspan ="2">单元格占两列</td>
+    <td width="90">&nbsp;</td>
+    <!-- 三个单元格已经被解析完了 -->
+  </tr>
+  <tr>
+    <td width="75">&nbsp;</td>
+    <td width="90">&nbsp;</td>
+    <td rowspan="2"> 单元格占两行</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <!-- 接下来这个单元格不解析 -->
+  </tr>
+</table>
+
+```html
+<table>
+  <tr>
+    <td colspan ="2">单元格占两列</td>
+    <td width="90">&nbsp;</td>
+    <!-- 使用 &nbsp; 创建一个空白实体引用，防止单元格被跳过 -->
+    <!-- 三个单元格已经被解析完了 -->
+  </tr>
+  <tr>
+    <td width="75">&nbsp;</td>
+    <td width="90">&nbsp;</td>
+    <td rowspan="2"> 单元格占两行</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <!-- 接下来这个单元格不解析 -->
+  </tr>
+</table>
+```
+
+### 单元格分组
+
+- 行分组  
+  - `<caption>`：表格标题
+  - `<thead>`, `<tfoot>`：表头、表尾   
+    - 仅可出现一次
+  - `<tbody>`：表的主体   
+    - 可以出现多次，用于将表格分为多个部分    
+
+<table>
+  <caption>企业员工薪水绩效表</caption>
   <thead>
-  <!-- 每个tr是一行 -->
     <tr>
-      <!-- th是表头 -->
-      <th scope="col">Person</th>
-      <th scope="col">Most interest in</th>
-      <th scope="col">Age</th>
+      <th>员工编号</th>
+      <th>员工岗位</th>
+      <th>基本工资</th>
+      <th>本月绩效</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th scope="row">Chris</th>
-      <!-- 每个td是一个单元格 -->
-      <td>HTML tables</td>
-      <td>22</td>
+      <td>YF0016</td>
+      <td>Java高级工程师</td>
+      <td>6000</td>
+      <td>3000</td>
     </tr>
     <tr>
-      <th scope="row">Dennis</th>
-      <td>Web accessibility</td>
-      <td>45</td>
+      <td>YF0021</td>
+      <td>Java程序员</td>
+      <td>3000</td>
+      <td>2500</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td>YF0016</td>
+      <td>WEB前端工程师</td>
+      <td>5000</td>
+      <td>2500</td>
     </tr>
     <tr>
-      <th scope="row">Sarah</th>
-      <td>JavaScript frameworks</td>
-      <td>29</td>
-    </tr>
-    <tr>
-      <th scope="row">Karen</th>
-      <td>Web performance</td>
-      <td>36</td>
+      <td>YF0021</td>
+      <td>软件测试工程师</td>
+      <td>3000</td>
+      <td>2000</td>
     </tr>
   </tbody>
   <tfoot>
     <tr>
-      <th scope="row" colspan="2">Average age</th>
-      <td>33</td>
+      <td colspan="3">总计</td>
+      <td>10W</td>
+    </tr>
+  </tfoot>
+</table>
+
+```html
+<table>
+  <caption>企业员工薪水绩效表</caption>
+  <thead>
+    <tr>
+      <th>员工编号</th>
+      <th>员工岗位</th>
+      <th>基本工资</th>
+      <th>本月绩效</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>YF0016</td>
+      <td>Java高级工程师</td>
+      <td>6000</td>
+      <td>3000</td>
+    </tr>
+    <tr>
+      <td>YF0021</td>
+      <td>Java程序员</td>
+      <td>3000</td>
+      <td>2500</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td>YF0016</td>
+      <td>WEB前端工程师</td>
+      <td>5000</td>
+      <td>2500</td>
+    </tr>
+    <tr>
+      <td>YF0021</td>
+      <td>软件测试工程师</td>
+      <td>3000</td>
+      <td>2000</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3">总计</td>
+      <td>10W</td>
     </tr>
   </tfoot>
 </table>
 ```
+
 
 ## 颜色的表示形式
 
