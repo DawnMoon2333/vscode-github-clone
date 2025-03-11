@@ -55,6 +55,18 @@
 
 # Body
 
+## 全局属性
+
+适用于所有html元素的属性
+
+| 属性名   | 作用 |
+|---------|------|
+| `id` | 元素的唯一标识符 |
+| `class` | 为元素指定一个或多个 CSS 类名 |
+| `style` | 行内样式定义 |
+| `title` | 鼠标悬停时显示的提示文本 |
+| `hidden` | 隐藏元素 |
+
 ## 标题
 
 ```HTML
@@ -74,8 +86,7 @@
 <a href="https://www.baidu.com">百度</a>
 ```
 
-- `herf`：指向的地址   
-- `title`：鼠标悬停时显示的文本   
+- `herf`：指向的地址    
 - `target` 为打开方式   
   - `_blank`：新窗口打开    
   - `_self`：本窗口打开（默认值）  
@@ -109,7 +120,6 @@
 - `src`：图片地址   
 - `alt`：对图像的文本描述     
   - 在图片加载失败时显示    
-- `title`：鼠标悬停时显示的文本  
 - `width`：宽度  
 - `height`：高度  
   - 宽度和高度建议仅设置一个，另一个会被自动等比例缩放，若同时设置宽度和高度则会导致白边  
@@ -527,7 +537,6 @@
 </table>
 ```
 
-
 ## 颜色的表示形式
 
 - 关键字  
@@ -539,7 +548,188 @@
 - 十六进制  
   - `#rrggbb`，红绿蓝三色的强度，取值范围00-FF    
 
+## 表单
+
+用于采集和提交用户输入，包括表单域和按钮两部分  
+
+<form action="http://www.baidu.com">
+  <label for="username">用户名：</label>
+  <input type="text" name="username" id="username">
+  <br>
+  <label for="password">密码：</label>
+  <input type="password" name="password" id="password">
+  <br>
+  <input type="submit" value="提交">
+</form>
+
+```html
+<form action="http://www.baidu.com">
+  <label for="username">用户名：</label>
+  <input type="text" name="username" id="username">
+  <br>
+  <label for="password">密码：</label>
+  <input type="password" name="password" id="password">
+  <br>
+  <input type="submit" value="提交">
+</form>
+```
+- `<form>` 表单
+  - `action`：表单提交的地址  
+  - `method`：表单提交的方式，默认为 `get`    
+    - get, post, put, delete, etc.    
+    - 传输的url中，域名和数据之间用`?`分隔，数据之间用`&`分隔   
+  - `name`：表单域的名称，用于提交时识别，现在多用`id`替代     
+  - `enctype`：表单数据的编码方式  
+    - `application/x-www-form-urlencoded`：**默认方式**，将数据编码为 `key=value` 的形式，并所有字符用`unicode`编码，并对特殊字符进行处理（空格替换为`+`，其他字符替换为百分号加十六进制值）      
+    - `multipart/form-data`：将数据编码为二进制格式，用于上传文件   
+
+### 常见表单域
+
+- `<input>` 表单域   
+  - `type`：表单域的类型，默认为 `text`    
+    - text, password, radio, checkbox, submit, reset, button, file, hidden, etc.    
+    - 值为`password`，显示的输入值为`***`   
+    - 值为`radio`，需要设置相同的`name`属性，表示一组单选按钮，提交时只提交被选中的那个按钮的值   
+    - 值为`checkbox`，需要设置相同的`name`属性，表示一组复选框，提交时提交所有被选中的复选框的值   
+    - 值为`hidden`，会在页面中隐藏，但还是会传递给服务器。但是可以在源码中查看，因为不可用于存储敏感数据  
+    - 
+  - `value`：表单域的默认值，默认为空字符串    
+  - `size`：表单域显示的宽度，默认为20个字符宽度  
+  - `disabled`：是否禁用，默认为不禁用  
+
+可以使用`<fieldset>`以**边框环绕**的形式实现表单的分组：  
+
+<form>
+  <fieldset>
+    <legend>用户信息</legend>
+    <label for="username">用户名：</label>
+    <input type="text" name="username" id="username">
+  </fieldset>
+  <fieldset>
+    <label for="password">密码：</label>
+    <input type="password" name="password" id="password">
+    <input type="submit" value="提交">
+  </fieldset>
+</form>
+
+```html
+<form>
+  <fieldset>
+    <legend>用户信息</legend>
+    <label for="username">用户名：</label>
+    <input type="text" name="username" id="username">
+  </fieldset>
+  <fieldset>
+    <label for="password">密码：</label>
+    <input type="password" name="password" id="password">
+    <input type="submit" value="提交">
+  </fieldset>
+</form>
+```
+
+
+### 多行文本框
+
+<textarea name="content" id="content" cols="30" rows="4">
+这里是
+多行
+文本
+可以
+翻动</textarea>
+
+```html
+<textarea name="content" id="content" cols="30" rows="4">
+这里是
+多行
+文本
+可以翻动</textarea>
+```
+
+- `wrap`：自动换行的效果  
+  - `off`：默认值，不自动换行，超出的部分用滚动条查看  
+  - `virtual`：在用户视角自动换行，但实际换行以回车为准   
+  - `physical`：在用户视角和实际都自动换行  
+
+### 列表选择框
+
+<select name="city" id="city">
+  <option value="bj">北京</option>
+  <option value="sh">上海</option>
+  <option value="gz">广州</option>
+  <option value="sz">深圳</option>
+</select>
+
+```html
+<select name="city" id="city">
+  <option value="bj">北京</option>
+  <option value="sh">上海</option>
+  <option value="gz">广州</option>
+  <option value="sz">深圳</option>
+</select>
+```
+
+- `<select>` 列表选择框   
+  - `size`：列表选择框显示的行数，默认为1   
+  - `multiple`：是否可多选，默认为单选  
+  - `disabled`：是否禁用，默认为不禁用  
+    - 禁用后，无法选择，也无法提交  
+- `<option>` 列表选项   
+  - `selected`：默认选中的选项    
+  - `value`：选项的值，默认为选项的文本内容   
+
+可以使用`optgroup`来将选项分组：  
+
+<select>
+    <optgroup label="水果">
+        <option value="apple">苹果</option>
+        <option value="banana">香蕉</option>
+    </optgroup>
+    <optgroup label="蔬菜">
+        <option value="carrot">胡萝卜</option>
+        <option value="tomato">番茄</option>
+    </optgroup>
+</select>
+
+
+```html
+<select>
+    <optgroup label="水果">
+        <option value="apple">苹果</option>
+        <option value="banana">香蕉</option>
+    </optgroup>
+    <optgroup label="蔬菜">
+        <option value="carrot">胡萝卜</option>
+        <option value="tomato">番茄</option>
+    </optgroup>
+</select>
+```
+
+### 按钮控件
+
+<input type="submit" value="提交">
+
+```html
+<input type="submit | reset | button" value="提交">
+```
+
+- `type`：按钮的类型，默认为 `submit`  
+  - `submit`：提交按钮，点击后会提交表单  
+  - `reset`：重置按钮，点击后会重置表单  
+  - `button`：普通按钮，点击后不会提交表单，需要通过JavaScript来处理   
+- `value`：按钮的文本内容，默认为空字符串     
+- `disabled`：是否禁用，默认（不写disabled）为不禁用    
+
+
 # CSS
+
+## 简介
+
+CSS（Cascading Style Sheets，层叠样式表）是一种用于描述HTML文档样式的语言，可以控制HTML元素的布局、颜色、字体、背景等样式。   
+
+**样式** 是CSS的基本单元，每个样式包含：  
+
+- 选择器：用于选择要应用样式的HTML元素    
+- 声明：包含一个或多个属性和值，用于定义样式  
 
 ## CSS引入方式
 
