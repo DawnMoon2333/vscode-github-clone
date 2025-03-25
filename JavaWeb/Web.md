@@ -837,6 +837,12 @@ a[href*="example.com"] { ... }
 p span { ... }
 ```
 
+选择所有id为`content`的元素中有`kaiti`类的`p`元素
+
+```css
+#content p.kaiti { ... }
+```
+
 ### 选择器优先级  
 - id > 类 > 元素  
 - 即根据id选择来添加的样式会覆盖其他的样式  
@@ -950,7 +956,37 @@ CSS布局用于控制网页元素在页面上排列方式。
 
 ![BoxModel](imgs/BoxModel.png)
 
-网页元素自身位于矩形区域，也与其它元素共同位于另一个更大的矩形区域，这些矩形区域就称为“盒子”，规范着内部元素的排版和样式。
+网页元素自身位于矩形区域，也与其它元素共同位于另一个更大的矩形区域，这些矩形区域就称为“盒子”，规范着内部元素的排版和样式。  
+
+### 边框样式
+
+- 边框样式 `border-style`  
+  - none/dotted/dashed/solid/double/  
+  - groove（凹槽线边框）  
+  - ridge（凸槽线）  
+  - Outset（突起效果的边框）  
+  - inset（凹进效果的边框）   
+- 边框宽度 `border-width`  
+  - 1个值：全部边框  
+  - 2个值：上下、左右      
+  - 3个值：上、左右、下  
+  - 4个值：上右下左  
+  - `border-top-width`  
+  - `border-bottom-width`  
+  - `border-left-width`  
+  - `border-right-width`  
+- 边距 `margin`  
+  - 1-4个值 同上  
+  - `margin-left`  
+  - `margin-right`  
+  - `margin-top`  
+  - `margin-bottom`  
+- 填充距 `padding`
+  - 1-4个值 同上  
+  - `padding-left`  
+  - `padding-right`  
+  - `padding-top`  
+  - `padding-bottom`  
 
 ### 元素类型
 
@@ -1006,3 +1042,193 @@ HTML 元素本身具有 `block` (块级) 属性或 `inline` (内联) 属性。 C
 | vmin | 相对于视口*较小尺寸的 1% |
 | vmax | 相对于视口*较大尺寸的 1% |
 | % | 相对于父元素 |
+
+## 字体属性
+
+| 属性 |  CSS 属性 | 描述 |
+|---|---|---|
+| 字体名称 | `font-family` | 多个字体用逗号分隔，不止一个单词的字体用双引号包围 |
+| 字体大小 | `font-size` | 值可取small、medium、large或使用单位px、cm |
+| 字体风格 | `font-style` | normal、italic（斜体）、oblique（略斜）|
+| 字体粗细 | `font-weight` | normal、bold |
+| 字体颜色 | `color` | 详见`Body-颜色的表示形式` |
+| 字体大写转换 | `font-variant` | normal、small-caps（小写转为大写） |
+| 字体复合属性 | `font: font-style属性值 font-size属性值 ...` | 上述属性以空格分隔 |
+
+全部字体属性 <https://www.w3school.com.cn/css/css_font.asp>
+
+示例：  
+
+```html
+p.mix3 {
+  font-style: oblique;
+  font-family: 宋体,"Times New Roman",Arial
+  font-size: 20px;
+  font-weight: normal;
+  color: #03C;
+}
+```
+
+## 文本属性
+
+| 功能  | 属性名 | 描述 |
+|---|---|---|
+| 缩进文本 | `text-indent` | 设置行的缩进大小，值可以为正值或负值，单位可以用 em, px 或% |
+| 水平对齐 | `text-align` | 设置文本的水平对齐方式，取值 left, right, center, justify |
+| 垂直对齐 | `vertical-align` | 设置文本的垂直对齐方式，取值 bottom, top, middle, baseline |
+| 字间距 | `word-spacing` | 设置字 (单词) 之间的标准间隔，默认 normal (或 0) |
+| 字母间隔 | `letter-spacing` | 设置字符或字母之间的间隔 |
+| 字符转换 | `text-transform` | 设置文本中字母的大小写，取值 none, uppercase, lowercase, capitalize |
+| 文本修饰 | `text-decoration` | 设置段落中需要强调的文字，取值 none, underline (下划线), overline (上划线), line-through (删除线), blink (闪烁) |
+| 空白字符 | `white-space` | 设置源文档中的多余的空白，取值 normal (忽略多余), pre (正常显示), nowrap (文本不换行，除非遇到 <br/> 标签) |
+
+## 背景属性
+
+| 功能 | CSS 属性 | 描述 |
+|---|---|---|
+| 背景颜色 | `background-color` |  |
+| 背景图片 | `background-image` |  |
+| 背景图片重复属性 | `background-repeat` | 取值：repeat、no-repeat、repeat-x、repeat-y |
+| 背景图片滚动属性 | `background-attachment` | 取值：fixed、scroll |
+| 背景图片位置属性 | `background-position` | 相对于左上角,取值为数字或 top、left、right、center、bottom |
+| 背景复合属性 | `background` | 上述各种属性以空格分隔 |
+
+## 定位布局属性
+
+### 定位方式 `position`
+
+一般情况下，页面由页面流构成，页面元素在页面流中的位置由该元素在HTML文档中的位置决定。  
+
+块级元素从上向下排列(每个块元素单独成行)，内联元素从左向右排列，元素在页面中的位置会随外层容器的改变而改变。  
+
+使用`position`可以将元素从页面流中偏移或分离出来以设定其具体位置，从而实现更精确的定位。  
+
+`position`的取值：   
+
+- `static`：正常流  
+  - 元素作为页面流的一部分在页面流中正常出现  
+  - 取值为static时，left、top、right、bottom 等值会被忽略  
+- `relative`：相对正常位置定位  
+  - 通过设置left、right、top、bottom进行重新定位  
+  - 不影响其他元素的位置
+- `absolute`：相对于浏览器窗口定位
+  - 设置absolute后元素脱离文档流，若元素不设置宽度则为内容的宽度，原本在页面中的位置会被下一个元素占用    
+  - 浏览器滚动时元素随着滚动    
+- `fixed`：固定定位   
+  - 浏览器滚动时元素位置不变  
+
+示例：  
+
+```css
+.relativeBlock{
+width: 600px;
+height: 300px;
+background-color: blue;
+position: relative;
+margin-top: 200px;
+}
+
+.absoluteBlock{
+width: 20px;
+height: 20px;
+background-color: green;
+position: absolute;
+top: 100px;
+left: 200px;
+}
+
+.fixedBlock{
+width: 20px;
+height: 100px;
+background-color: red;
+position: fixed;
+top: 0;
+left: 0;
+}
+```
+
+### 层叠顺序 `z-index`
+
+`z-index`，即元素在z轴上的层叠顺序值，可取值为`auto`或整数值（可为负数）。值较大的元素会覆盖在值较小的元素上方
+
+示例：
+
+```css
+.box {
+  position: absolute; /* 必须是定位元素，才能使用 z-index */
+  width: 150px;
+  height: 150px;
+  text-align: center;
+  line-height: 150px;
+  color: white;
+  font-weight: bold;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 居中盒子 */
+}
+
+.box-red {
+  background-color: red;
+  z-index: 1; /* 红色盒子 z-index 设置为 1 */
+}
+
+.box-blue {
+  background-color: blue;
+  z-index: 2; /* 蓝色盒子 z-index 设置为 2 */
+}
+
+.box-green {
+  background-color: green;
+  z-index: 0; /* 绿色盒子 z-index 设置为 0 */
+}
+```
+
+在html中：
+
+```html
+<div class="container">
+  <div class="box box-red">红色盒子 (z-index: 1)</div>
+  <div class="box box-blue">蓝色盒子 (z-index: 2)</div>
+  <div class="box box-green">绿色盒子 (z-index: 0)</div>
+</div>
+```
+
+### 浮动属性 `float`
+
+使用`float`属性可以控制元素在其父容器内的水平方向上的位置，并允许周围的文本和内联元素环绕它。  
+
+可取值为`left`和`right`。即让元素浮动到父元素的左侧或右侧，其他内容环绕在其右侧/左侧。  
+
+示例：  
+
+```css
+.float-left {
+  float: left; /* 图片向左浮动 */
+  margin-right: 15px; /* 为了让文本和图片之间有间距 */
+  margin-bottom: 10px; /* 为了下方如果还有元素，可以有间距 */
+}
+```
+
+## 超链接样式
+
+`<a>` 标签的伪类
+
+| 伪类        | 描述             |
+|-------------|------------------|
+| `a:link`    | 未访问链接         |
+| `a:hover`   | 鼠标光标在链接上时   |
+| `a:active`  | 鼠标点击时         |
+| `a:visited` | 已访问链接         |
+
+`text-decoration` 的值
+
+| 值                     | 描述      |
+|-------------------------|-----------|
+| `text-decoration: none` | 无装饰线    |
+| `underline`             | 下划线     |
+| `line-through`          | 删除线     |
+| `overline`              | 上划线     |
+
+
+
+
