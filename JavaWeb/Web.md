@@ -67,6 +67,15 @@
 | `title` | 鼠标悬停时显示的提示文本 |
 | `hidden` | 隐藏元素 |
 
+<h4 id="main-title">全局属性示例</h2>
+<div id="content-section" class="container">
+  <p class="paragraph-text highlight-text" style="color: blue;">
+    这是一个段落，使用了 <span title="元素的唯一标识符">id</span>,
+    <span title="为元素指定一个或多个 CSS 类名">class</span>,
+    <span title="行内样式定义">style</span> 和 <span title="鼠标悬停时显示的提示文本">title</span> 属性。
+  </p>
+</div>
+
 ## 标题
 
 ```HTML
@@ -122,7 +131,8 @@
   - 在图片加载失败时显示    
 - `width`：宽度  
 - `height`：高度  
-  - 宽度和高度建议仅设置一个，另一个会被自动等比例缩放，若同时设置宽度和高度则会导致白边  
+  - 宽度和高度建议仅设置一个，另一个会被自动等比例缩放  
+  - 若同时设置宽度和高度则会导致白边  
   - 单位：px，%（相对于父元素的百分比）
 
 ```html
@@ -130,7 +140,7 @@
 ```
 
 - `src`：视频地址   
-- `controls`：显示控制条  
+- `controls`：显示播放控件    
 - `autoplay`：自动播放  
 - `width`：宽度  
 - `height`：高度      
@@ -224,7 +234,8 @@
 ## 文本格式化
 
 <font face="Arial" size="4" color="red">Red Text</font>
-<b>加粗</b>
+<b>加粗1</b>
+<strong>加粗2</strong>
 <i>斜体</i>
 <u>下划线</u>
 <s>删除线</s>
@@ -267,7 +278,7 @@
 
 ## div 和 span
 
-`<div>` 是一个 **块级元素**，它作为一种容器，本身不显示内容，而是用于 **组织内容**  
+`<div>` 是一个 **块级元素**，它作为一种容器，用于 **对元素进行编组**，以便于添加样式。    
 
 每个 `<div>` 会独占一行，在末尾自动换行     
 
@@ -731,70 +742,106 @@ CSS（Cascading Style Sheets，层叠样式表）是一种用于描述HTML文档
 - 选择器：用于选择要应用样式的HTML元素    
 - 声明：包含一个或多个属性和值，用于定义样式  
 
-## CSS引入方式
-
-- 行内  
-  - 写在标签的 `style` 属性中  
-  - <h4 style="color: red;">Hello World</h1>  
-  - <span style="color: gray;">2025年1月1日</span>  
-  - 注意，`<span>` 可以用于给元素添加样式，但是 `<span>` 本身没有特殊含义  
-- 内部  
-  - 写在 `<head>` 标签中的 `<style>` 标签中  
-
-```html
-<head>
-    <meta charset="UTF-8">
-    <title>这是一个测试文件</title>
-  <style>
-    span {
-      color: red;
-    } 
-  </style>
-</head>
-<body>
-  <span>这个是红色的</span>
-</body>
-```
-
-写在 `<head>` 中的 `<style>` 的作用范围是 `<body>` 中的所有 `<span>` 元素
-
-- 外部  
-  - 写在单独的 `.css` 文件中，通过 `<link>` 标签引入  
-
-/css/style.css  
+CSS的基本格式：  
 
 ```css
-span {
-  color: red;
+选择器 {
+    属性1: 值1;
+    属性2: 值2;
+    ...
 }
 ```
 
-/index.html  
+## 选择器
 
-```html
-<head>
-    <meta charset="UTF-8">
-    <title>这是一个测试文件</title>
-    <!-- 在这一行中引入css文件 -->
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-    <span>外部引入的css</span>
-    </body>
-</html>
+### 元素选择器
+
+选择所有的`<p>`元素   
+
+```css
+p { ... }
 ```
 
-使用 `css选择器` 来为特定的元素添加样式   
+### 类选择器
 
-- 元素选择器 `h1 {...}`  
-  - 选择页面中所有 `<h1>` 标签  
-- 类选择器 `.cls {...}`  
-  - 选择页面中所有class属性为 `cls` 的标签  
-- id选择器 `#hid {...}`  
-  - 选择页面中id属性为 `hid` 的标签   
-- 优先级  
-  - id > 类 > 元素  
-  - 即根据id选择来添加的样式会覆盖其他的样式  
+选择所有类名为`highlight`的元素   
+
+```css
+.highlight { ... }
+```
+
+### ID选择器
+
+选择所有ID为`unique-title`的元素    
+
+```css
+#unique-title { ... }
+```
+
+### 组合选择器
+
+选择所有`<p>`元素和类名为`highlight`的元素   
+
+```css
+p, .highlight { ... }
+```
+
+选择所有`<p>`元素和类名为`highlight`的元素   
+
+```css
+p.highlight { ... }
+```
+
+选择所有`<h1>`元素和`<h2>`元素   
+
+```css
+h1, h2 { ... }
+```
+
+选择所有`<h1>`和id为`subtitle`的`<h2>`元素
+```css
+h1, h2#subtitle { ... }
+```
+
+### 属性选择器
+
+选择所有具有`<type>`属性的`<input>`元素  
+
+```css
+input[type] { ... }
+```
+
+选择所有`<type>`属性值为`text`的`<input>`元素
+
+```css
+input[type="text"] { ... }
+```
+
+选择所有`<class>`属性值以`icon`开头的`<a>`元素
+
+```css
+a[class^="icon"] { ... }
+```
+
+选择所有`<herf>`属性值中包含`example.com`的`<a>`元素    
+
+```css
+a[href*="example.com"] { ... }
+```
+
+### 后代选择器
+
+选择所有`<p>`元素中的`<span>`元素   
+
+```css
+p span { ... }
+```
+
+### 选择器优先级  
+- id > 类 > 元素  
+- 即根据id选择来添加的样式会覆盖其他的样式  
+
+示例：  
 
 ```html
 <!DOCTYPE html>
@@ -821,3 +868,141 @@ span {
 </body>
 </html>
 ```
+
+效果：   
+
+<span style="color:red;"> 红色</span> <span style="color:green;">绿色</span> <span style="color:blue;"> 蓝色</span>
+
+
+## CSS引入方式
+
+### 行内/内嵌  
+- 写在标签的 `style` 属性中  
+- <h4 style="color: red;">Hello World</h1>  
+- <span style="color: gray;">2025年1月1日</span>  
+- 注意，`<span>` 可以用于给元素添加样式，但是 `<span>` 本身没有特殊含义  
+
+### 内部  
+- 写在 `<head>` 标签中的 `<style>` 标签中  
+
+```html
+<head>
+  <meta charset="UTF-8">
+  <title>内部 CSS 示例</title>
+  <style>
+    /* 元素选择器 */
+    p {
+      color: blue; /* 所有段落文字蓝色 */
+    }
+
+    /* 类选择器 */
+    .highlight {
+      background-color: lightgreen; /* 类名为 highlight 的元素背景浅绿色 */
+    }
+
+    /* ID 选择器 */
+    #unique-title {
+      font-size: 24px; /* ID 为 unique-title 的元素字体 24px */
+      color: red; /* ID 为 unique-title 的元素文字红色 */
+    }
+  </style>
+</head>
+```
+
+### 外部  
+- 写在单独的 `.css` 文件中，通过 `<link>` 标签引入  
+
+/css/style.css  
+
+```css
+span {
+  color: red;
+}
+```
+
+/index.html  
+
+```html
+<head>
+    <meta charset="UTF-8">
+    <title>这是一个测试文件</title>
+    <!-- 在这一行中引入css文件 -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <span>外部引入的css</span>
+    </body>
+</html>
+```
+
+## CSS布局
+
+CSS布局用于控制网页元素在页面上排列方式。  
+
+### 盒模型
+
+**盒模型** 描述了HTML元素周围的空间是如何构成的。每个HTML元素都可以看作一个矩形的盒子，这个盒子由以下几个部分组成：
+
+- **内容 Content**：盒子的核心，显示元素的内容，例如文本、图片等。
+- **内边距 Padding**：内容区域与边框之间的空间，用于增加内容与边框的距离。
+- **边框 Border**：包围内容和内边距的线条，可以设置样式、宽度和颜色。
+- **外边距 Margin**：边框以外的空间，用于控制元素与周围元素之间的距离。
+
+![BoxModel](imgs/BoxModel.png)
+
+网页元素自身位于矩形区域，也与其它元素共同位于另一个更大的矩形区域，这些矩形区域就称为“盒子”，规范着内部元素的排版和样式。
+
+### 元素类型
+
+HTML 元素本身具有 `block` (块级) 属性或 `inline` (内联) 属性。 CSS 中可以通过 `display: inline` 和 `display: block` 来设置元素为内联元素和块级元素。
+
+**1. 块级元素 (block)**
+
+- **独占一行**：默认情况下，每个块级元素都会另起一行，并占据一整行空间。
+- **宽度默认填满父元素**：默认宽度会自动填满父元素的宽度。
+- **可以设置 `width` 和 `height`**：可以显式地设置元素的宽度和高度。
+- **可以设置 `margin` 和 `padding`**：可以设置所有方向的内外边距。
+- **常见的块级元素**：`div`、`ul`、`ol`、`p`、`h1~h6`、`table` 等。
+
+**2. 内联元素 (inline)**
+
+- **不独占一行**：多个内联元素会在同一行从左到右水平排列。
+- **宽度由内容决定**：宽度由元素自身内容决定，无法通过 `width` 和 `height` 设置有效宽度和高度。
+- **设置 `width` 和 `height` 无效**：`width` 和 `height` 属性对内联元素不起作用。
+- **可以设置水平方向的 `margin` 和 `padding`**：可以设置水平方向 (左右) 的 `margin` 和 `padding` (例如 `padding-left`, `margin-left` 等)，垂直方向的 `margin` 和 `padding` 可能效果有限或不明显。
+- **常见的内联元素**：`a` (链接元素)、`img` (图像元素)、`em` (强调元素)、`input` (输入元素)、`span` (文本内区块元素)、`br` (换行元素) 等。
+
+**3. 行内块元素 (inline-block)**
+
+- **兼具块级和内联元素的特点**： 既可以像内联元素一样水平排列，又可以像块级元素一样设置宽度、高度、内外边距。
+- **需要通过 `display: inline-block` 设置**： 默认情况下不是行内块元素，需要通过 CSS `display: inline-block` 属性来设置。
+
+
+### 元素嵌套规则
+
+- **块级元素可以包含块级元素和内联元素。**
+- **特殊：块级元素 `<p>` 只能包含内联元素。**  `p` 元素中不能嵌套块级元素，这是一个HTML规范的限制。
+- **内联元素只能包含内联元素。**  虽然技术上可能允许，但不建议内联元素嵌套块级元素，会破坏布局结构。
+
+## CSS长度单位
+
+### 绝对长度
+
+- cm  
+- mm  
+- ln（英寸）  
+- px  
+
+### 相对长度
+
+| 单位 | 描述 |
+| :-: | --- |
+| em | 相对于元素的字体大小 (font-size) (2em 表示当前字体大小的 2 倍) |
+| ex | 相对于当前字体的 x-height (极少使用) |
+| ch | 相对于 "0" (零) 的宽度 |
+| rem | 相对于根元素的字体大小 (font-size) |
+| vw | 相对于视口*宽度的 1% |
+| vh | 相对于视口*高度的 1% |
+| vmin | 相对于视口*较小尺寸的 1% |
+| vmax | 相对于视口*较大尺寸的 1% |
+| % | 相对于父元素 |

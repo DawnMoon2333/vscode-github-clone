@@ -76,3 +76,36 @@ int main() {
     }
 }
 ```
+
+## DFS（回溯法）
+
+DFS，深度优先搜索
+
+模板
+
+```cpp
+int a[N];
+bool used[N];
+
+void dfs(int depth) {
+  // 只有正确的解能到达第n+1层
+  if(depth == n+1) { 
+    for(int i = 1; i <= n; i++) {
+      cout << a[i] << " ";
+    }
+    cout << endl;
+    return;
+  }
+
+  // 遍历所有可能的选择
+  for(int i = 1; i <= n; i++) {
+    if(!used[i]) { // 排除不合法情况
+      a[depth] = i; // 更新内容
+      used[i] = true;
+      dfs(depth + 1); // 递归
+      used[i] = false; // 恢复状态，允许回溯
+    }
+  }
+}
+
+```
