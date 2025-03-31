@@ -376,6 +376,7 @@ WHERE Sno IN(
     FROM SC
     WHERE Cno = '1'
 );
+// 查询选了id为1的课的同学的姓名
 ```
 
 其中，下层查询块是嵌套在上层查询块中的，称上层查询块为 **外层查询** 或 **父查询**，下层查询块为 **内层查询** 或 **子查询**。  
@@ -384,9 +385,9 @@ WHERE Sno IN(
 - 子查询中SELECT的列必须与父查询中WHERE的列相同。  
 - 子查询不允许使用 `ORDER BY`，只能对最外层的查询排列。  
 
-#### 带有IN谓词的子查询
+#### 带有 IN 谓词的子查询
 
-- 不相关子查询  
+- **不相关子查询**  
   - 子查询的条件不依赖于父查询。  
   - 先执行子查询，将子查询的结果作为父查询的条件。      
 
@@ -427,4 +428,204 @@ WHERE Sdept IN ('CS')
 SELECT s1.Sno, s1.Sname, s1.Sdept
 FROM Stu s1, Stu s2
 WHERE s1.Sdept = s2.Sdept AND s2.Sname = '张三';
+```
+
+#### 带有比较运算符的子查询
+
+若可以确定子查询的结果只有一行，则可以使用比较运算符进行连接。 
+
+如：  
+
+```sql
+SELECT Sname, Sdept
+FROM Stu
+WHERE Sdept = (
+    SELECT Sdept
+    FROM Stu
+    WHERE Sname = '张三'
+); // 查询张三所在系的所有学生的姓名和所在系
+```
+
+```sql
+SELECT Sno, Cno
+FROM SC x
+WHERE Score > (
+    SELECT AVG(Score)
+    FROM SC y
+    WHERE x.Cno = y.Cno
+); // 查询每个学生选修课程超过平均分的课程号
+```
+
+在上方这个例子中，子查询的 WHERE 子句 `x.Cno = y.Cno` 引用了父查询的列 `x.Cno`，这意味着子查询的执行结果**不是固定的**，而是**依赖于外部查询当前正在处理的行**，这样与查询相关的子查询称为 **相关子查询**，整个查询称为 **相关嵌套查询**。  
+
+处理过程：   
+
+- 遍历父查询表的行，假设遍历到某一行的Cno=1；
+- 判断当前行是否满足父查询 `where score > (子查询)` 的条件  
+  - 进入子查询，使用当前父查询行的值进行子查询中的where条件判断  
+  - 即 `where y.Cno = 1`，查询出所有Cno=1的成绩  
+  - 使用聚集函数 `AVG()` 计算出平均值，返回给父查询  
+  - 判断父查询的条件是否成立
+- 如果成立，则将该行加入结果表中；否则继续父表下一行的比较  
+
+#### 带有 ANY/SOME ALL 谓词的子查询
+
+若子查询返回单个值可以用比较运算符，若返回多个值则需要使用 `ANY`（有些系统用`SOME`）或 `ALL`：  
+
+| 谓词 | 含义 |
+| :---: | :---: |
+| ANY | |
+| `>ANY` | 大于子查询结果中的某个值 |
+| `<ANY` | 小于子查询结果中的某个值 |
+| `>=ANY` | 大于等于子查询结果中的某个值 |
+| `<=ANY` | 小于等于子查询结果中的某个值 |
+| `=ANY` | 等于子查询结果中的某个值 |
+| `!=ANY` | 不等于子查询结果中的某个值 |
+| ALL | |
+| `>ALL` | 大于子查询结果中的所有值 |
+| `<ALL` | 小于子查询结果中的所有值 |
+| `>=ALL` | 大于等于子查询结果中的所有值 |
+| `<=ALL` | 小于等于子查询结果中的所有值 |
+| `=ALL` | 等于子查询结果中的所有值（无意义） |
+| `!=ALL` | 不等于子查询结果中的所有值 |
+
+eg.
+
+```sql
+SELECT Sname, Sage
+FROM Stu
+WHERE Sage < ANY (
+  SELECT Sage
+  FROM Stu
+  WHERE Sdept='CS')
+AND Sdept!='CS';
+// 查询非计科系中比计科系任意一个学生年龄小的学生的姓名和年龄
+// 也可以等价于小于最小值
+```
+
+#### 带有 EXISTS 谓词的子查询
+
+`EXISTS`，即存在量词 $\exist$，用于判断子查询的结果集中是否存在满足属于、子集、非空等条件，最终返回逻辑值 `true` 或 `false`。  
+
+由 EXISTS 引出的子查询的目标列表达式无实际意义，因此常用 `*`表示。  
+
+`NOT EXISTS` 同理，若结果为空集则返回 `true`，否则返回 `false`。
+
+eg.
+
+```sql
+SELECT Sname
+FROM Stu
+WHERE EXISTS (
+  SELECT *
+  FROM SC
+  WHERE Sno = Stu.Sno AND Cno = '1'
+); // 查询选修了1号课程的学生姓名
+```
+
+处理过程：  
+
+- 遍历父查询表的行，假设遍历到某一行的Sno=114514；
+- 判断使用当前行进行子查询的结果是否为空    
+  - 进入子查询，使用当前父查询行的值进行子查询中的where条件判断  
+  - 即 `where Sno=114514`，查询出所有学生id为114514的成绩  
+  - 还有AND条件：且选修了1号课程
+- 如果子查询结果非空，则返回true，把当前行的Sname加入结果表，否则返回false，跳过当前Sname  
+
+这个查询也可以等价为不相关IN查询：  
+
+```sql
+SELECT Sname
+FROM Stu
+WHERE Sno IN (
+  SELECT Sno 
+  FROM SC 
+  WHERE Cno = '1');
+```
+
+注意：  
+- 部分(NOT)EXISTS查询无法用其他形式的子查询等价替换  
+- 所有其他形式的子查询都可以用(NOT)EXISTS替换  
+- EXISTS子查询只关心内层查询是否有返回值，而不关心返回值的内容  
+
+SQL语言中没有全称量词 $\forall$，但是可以转换为：   
+$$\forall xP(x) \equiv \neg \exist x(\neg P(x))$$
+
+即涉及到全称量词的查询可以转换为两层NOT EXISTS的子查询，如：  
+
+```sql
+SELECT Sname
+FROM Stu
+WHERE NOT EXISTS (
+  SELECT *
+  FROM Course
+  WHERE NOT EXISTS (
+    SELECT *
+    FROM SC
+    WHERE Sno = Stu.Sno 
+      AND Cno = Course.Cno
+  )
+);
+// 查询选了所有课的学生
+```
+
+查询过程：  
+
+1.  **外层查询 (针对每个 `Stu`)**:
+    *   从 `Stu` 表中选出一个学生，比如学号为 `S1`。
+
+2.  **外层 `NOT EXISTS` (检查“是否存在未选的课”)**:
+    *   开始执行其内部的子查询（中间层查询），目标是看这个子查询会不会返回 *任何* 结果。
+    *   如果中间层子查询 *没有返回任何行*，则外层的 `NOT EXISTS` 条件为 `TRUE`，学生 `S1` 被选中。
+    *   如果中间层子查询 *返回了至少一行*，则外层的 `NOT EXISTS` 条件为 `FALSE`，学生 `S1` 不被选中。
+
+3.  **中间层查询 (针对学生 `S1` 和所有 `Course`)**:
+    *   从 `Course` 表中选出一门课程，比如课程号为 `C1`。
+    *   **内层 `NOT EXISTS` (检查“是否 S1 *没有* 选 C1”)**:
+        *   开始执行其内部的子查询（最内层查询）。
+        *   **最内层查询 (检查 `SC` 表)**: 在 `SC` 表中查找是否存在 `Sno = S1` 且 `Cno = C1` 的记录。
+            *   **如果找到记录**: 说明 `S1` 选了 `C1`。最内层查询返回行，内层 `NOT EXISTS` 为 `FALSE`。
+            *   **如果没找到记录**: 说明 `S1` *没* 选 `C1`。最内层查询不返回行，内层 `NOT EXISTS` 为 `TRUE`。
+    *   **中间层 `WHERE` 条件**: 如果内层 `NOT EXISTS` 为 `TRUE`（即 `S1` 没选 `C1`），那么课程 `C1` 满足中间层查询的 `WHERE` 条件。
+    *   **中间层结果**: 这个查询会收集所有 `S1` *没有* 选修的课程。如果 `S1` 选了所有课，这个查询返回空集（零行）；如果 `S1` 缺了课，这个查询会返回那些缺了的课程。
+
+4.  **回到外层 `NOT EXISTS`**:
+    *   现在知道了中间层查询的结果（对于学生 `S1`，他没选的课程列表）。
+    *   如果这个列表是空的（中间层返回零行），说明 `S1` 没有“没选的课”，即选了所有课。外层 `NOT EXISTS` 为 `TRUE`，选中 `S1`。
+    *   如果这个列表非空（中间层返回至少一行），说明 `S1` 至少缺了一门课。外层 `NOT EXISTS` 为 `FALSE`，不选 `S1`。
+
+5.  **循环**: 重复步骤 1-4，对 `Stu` 表中的下一个学生进行判断，直到所有学生都被检查完毕。
+
+
+```sql
+SELECT Cname
+FROM Course
+WHERE NOT EXISTS (
+  SELECT *
+  FROM Stu
+  WHERE NOT EXISTS (
+    SELECT *
+    FROM SC
+    WHERE Sno=Stu.Sno
+      AND Cno=Course.Cno
+  )
+); // 查询所有学生都选修的课程
+```
+
+**问题的逻辑转换**
+
+*   **原始目标 (使用全称量词):** 找出所有课程 `c`，对于 *所有* 学生 `s`，`s` 都选修了 `c`。
+    *   $\{ c \in Course \mid \forall s \in Stu, \text{ s 选修了 c} \}$
+*   **第一次转换 (利用否定):** 找出所有课程 `c`，*不存在* 任何一个学生 `s`，使得 `s` *没有* 选修 `c`。
+    *   $\{ c \in Course \mid \neg \exists s \in Stu, \neg (\text{s 选修了 c}) \}$
+*   **`s 选修了 c` 的含义:** 在 `SC` 表中存在记录 `(s.Sno, c.Cno)`。
+*   **`s 没有选修 c` 的含义:** 在 `SC` 表中不存在记录 `(s.Sno, c.Cno)`。
+    *   $\neg (\text{s 选修了 c}) \equiv \neg \exists sc \in SC (sc.Sno = s.Sno \land sc.Cno = c.Cno)$
+
+也可以用聚集函数实现：
+
+```sql
+SELECT Cname
+FROM Course
+WHERE 
 ```
