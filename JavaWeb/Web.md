@@ -1229,6 +1229,1030 @@ left: 0;
 | `line-through`          | 删除线     |
 | `overline`              | 上划线     |
 
+## cursor属性 鼠标样式
+
+![alt text](imgs/cursor.png)
+
+eg.  
+
+```css
+<span style="cursor:move">移动</span>
+```
+
+## display属性 
+
+可以强制元素以某种方式显示，或使其消失。  
+
+| 值            | 描述                                                         |
+|---------------|--------------------------------------------------------------|
+| `none`        | 此元素不会被显示，且不会占用对应的空间。                                             |
+| `block`       | 此元素将显示为块级元素，此元素前后会带有换行符。               |
+| `inline`      | 默认。此元素会被显示为内联元素，元素前后没有换行符。           |  
+
+eg.  
+
+```css
+p {
+  display: inline;
+}
+div {
+  display: block;
+}
+span {
+  display: none;
+}
+```
+
+## visibility属性
+
+`visibility`属性可以控制元素是否可见，取值为`visible`或`hidden`（不显示但是占用空间）。  
+
+# JavaScript
+
+JavaScript是一种**通用的、跨平台的、基于对象和事件驱动并具有安全性**的客户端脚本语言，可以直接嵌入HTML页面之中。当用户在浏览器中预览该页面时，浏览器会解释并执行其中的JavaScript脚本。  
+
+## 基础知识
+
+特点：  
+
+- 解释性  
+- 嵌套在HTML中  
+- 弱数据类型  
+- 跨平台  
+- 基于对象  
+- 基于事件驱动  
+
+编写规范：  
+
+- 忽略运算符与标识符之间的空白字符  
+- 每条语句独占一行，以分号结束  
+
+在页面中使用js脚本的方法：行内、内部、外部（与CSS一样）  
+
+行内：  
+
+```html
+<body>
+  <h1>校园评选活动</h1>
+  <img src="images/girl1.jpg" onclick="alert('你选择了一号选手!')" />
+  <img src="images/girl2.jpg" onclick="alert('你选择了二号选手!')" />
+  <img src="images/girl3.jpg" onclick="alert('你选择了三号选手!')" />
+  <a href="javascript:alert('请等待评选结果');">查看评选结果</a>
+</body>
+```
+
+内部：  
+
+```html
+<head>
+  <!-- 首先解析head中的内容并执行这里的js代码 -->
+  <script type="text/javascript">
+    alert("head中的JavaScript");
+    // 弹窗显示文字
+  </script>
+</head>
+<body>
+  <!-- 然后解析body中的js代码 -->
+  <script type="text/javascript">
+    alert("body中的JavaScript");
+  </script>
+</body>
+```
+
+外部：   
+
+- `example.js`  
+
+```javascript
+alert ("外部JavaScript脚本，导入成功。");
+```
+
+- `example.html`    
+
+```html
+<head>
+  <script type="text/javascript" src="js/test.js"></script>
+</head>
+```
+
+解析到html的head中script的部分时，会先下载js文件，然后立即执行。  
+
+## 语法基础
+
+### 数据类型
+
+**基本数据类型**
+
+Javascript 是一种动态类型语言，这意味着不需要在声明变量时显式指定其数据类型，Javascript 会在运行时自动确定。
+
+| 类型名称      | 描述                                                                 | 示例                                     |
+| ----------- | -------------------------------------------------------------------- | ---------------------------------------- |
+| **String**  | 用于表示文本。                                                        | `"Hello, world!"`, `'Javascript is fun'` |
+| **Number**  | 用于表示数值，包括整数和浮点数。                                                | `10`, `3.14`, `-5`, `Infinity`, `NaN`     |
+| **Boolean** | 只有两个值：`true` (真) 和 `false` (假)，常用于条件判断。                       | `true`, `false`                           |
+| **Null**    | 表示一个空值或不存在的对象。                                                     | `null`                                   |
+| **Undefined**| 表示已声明但尚未赋值（初始化）的变量，或对象属性不存在。                                         | `undefined`                              |
 
 
+**引用数据类型**
 
+| 类型名称      | 描述                                                                 | 示例                                     |
+| ----------- | -------------------------------------------------------------------- | ---------------------------------------- |
+| **Object**  | 用于表示复杂的数据结构，由键值对组成。数组、函数等也属于对象。                       | `{ name: "Alice", age: 30 }`, `[1, 2, 3]` |
+| **Array**   | 一种特殊的对象，用于存储有序的数据集合。                                            | `[1, "apple", true]`                     |
+| **Function**| 也是对象，用于封装可重复使用的代码块。                                              | `function(){}`                           |
+| **Date**    | 用于表示日期和时间。                                                        | `new Date()`                             |
+| **RegExp**  | 用于进行模式匹配和文本搜索。                                                    | `/pattern/flags/`                       |
+
+
+### 对象
+
+**对象** 用于表示现实世界中的实体或概念，由属性和方法组成。
+- **属性：** 对象的特征或状态，以键值对形式存储。
+- **方法：** 对象可以执行的操作，本质上是存储在对象属性中的函数。
+
+```javascript
+// 对象字面量
+let person = {
+  name: "Bob",
+  age: 25,
+  city: "New York",
+  greet: function() { // 方法
+    console.log("Hello, my name is " + this.name);
+  }
+};
+
+// 构造函数
+function Person(name, age, city) {
+  this.name = name;
+  this.age = age;
+  this.city = city;
+  this.greet = function() {
+    console.log("Hello, my name is " + this.name);
+  };
+}
+
+let person1 = new Person("Alice", 30, "London");
+let person2 = new Person("Charlie", 28, "Paris");
+
+// Object.create() 方法
+let parentObject = {
+  greet: function() {
+    console.log("Greetings!");
+  }
+};
+
+let childObject = Object.create(parentObject);
+childObject.name = "David";
+childObject.greet(); // childObject 也会继承 parentObject 的 greet 方法
+```
+* **访问对象属性:**
+    * **点号表示法 (Dot Notation):** 使用点 `.` 访问属性。
+        ```javascript
+        console.log(person.name); // "Bob"
+        person.greet();         // 调用 greet 方法
+        ```
+    * **方括号表示法 (Bracket Notation):** 使用方括号 `[]` 和属性名字符串访问属性。
+        ```javascript
+        console.log(person["age"]); // 25
+        let propertyName = "city";
+        console.log(person[propertyName]); // "New York"  // 可以使用变量
+      ```
+* **修改和添加属性:**
+    * 直接赋值即可修改或添加属性。
+        ```javascript
+        person.age = 26;      // 修改 age 属性
+        person.job = "Engineer"; // 添加 job 属性
+        ```
+
+* **删除属性:**
+    * 使用 `delete` 运算符删除属性。
+        ```javascript
+        delete person.city;
+        console.log(person.city); // undefined
+        ```
+
+* **`this` 关键字:** 在对象的方法中，`this` 关键字指向当前对象。
+
+### 变量与常量，驼峰命名，保留字
+
+* **变量 (Variables):** 用于存储数据的容器。
+    * **声明变量:** 使用 `var`, `let`, 或 `const` 关键字声明变量。
+        * **`var`:** 较早期的变量声明方式，存在一些作用域和变量提升方面的问题，现在通常**不推荐**使用。
+        * **`let`:** ES6 新增的变量声明方式，**推荐使用**。具有块级作用域，不会变量提升，更符合现代 Javascript 编程习惯。
+        * **`const`:** ES6 新增的常量声明方式，**推荐使用**于声明值不会被修改的变量。也具有块级作用域，声明时必须赋值，且赋值后不能重新赋值。
+    * **变量命名规则:**
+        * 可以包含字母、数字、下划线 `_` 和美元符号 `$`.
+        * 不能以数字开头.
+        * 区分大小写 (`myVar` 和 `myvar` 是不同的变量).
+
+* **常量 (Constants):** 值在声明后不能被修改的变量。
+    * 使用 `const` 关键字声明常量。
+    * 声明时必须赋值。
+    * 尝试重新赋值常量会报错。
+
+* **驼峰命名 (Camel Case):** 一种常用的命名约定，用于提高代码可读性。
+    * **小驼峰命名法 (lowerCamelCase):** 第一个单词首字母小写，后续单词首字母大写，常用于变量名和函数名。
+        * 例如: `firstName`, `userAge`, `calculateTotalPrice`
+    * **大驼峰命名法 (UpperCamelCase 或 PascalCase):** 每个单词首字母都大写，常用于构造函数和类名。
+        * 例如: `Person`, `ShoppingCart`, `MyComponent`
+
+* **保留字 (Reserved Words):** Javascript 语言预先定义的具有特殊含义的单词，不能用作变量名、函数名等标识符。
+    * 例如: `var`, `let`, `const`, `function`, `if`, `else`, `for`, `while`, `return`, `class`, `this`, `new`, `true`, `false`, `null`, `undefined` 等。  
+
+### 运算符
+
+运算符用于对一个或多个值 (操作数) 执行运算，并返回一个结果值。
+
+* **运算符表格:**
+
+1. 算术运算符
+
+| 运算符 | 名称     | 描述                     | 示例       |
+| ------ | -------- | ------------------------ | -------- |
+| `+`    | 加法     | 两个数相加，或字符串连接     | `3 + 4`, `"Hello" + " " + "World"` |
+| `-`    | 减法     | 两个数相减                 | `7 - 2`  |
+| `*`    | 乘法     | 两个数相乘                 | `5 * 6`  |
+| `/`    | 除法     | 两个数相除                 | `10 / 2` |
+| `%`    | 取模     | 返回除法的余数             | `10 % 3` |
+| `**`   | 幂运算   | 返回底数的指数次幂         | `2 ** 3` |
+| `++`   | 自增     | 将变量的值加 1             | `x++`, `++x` |
+| `--`   | 自减     | 将变量的值减 1             | `y--`, `--y` |
+
+2. 赋值运算符
+
+| 运算符  | 名称       | 描述                 | 示例      | 等价于   |
+| ------- | ---------- | -------------------- | -------- | ------- |
+| `=`     | 赋值       | 将右侧的值赋给左侧变量   | `x = 5`  |         |
+| `+=`    | 加法赋值   | `x = x + y`          | `x += y` | `x = x + y` |
+| `-=`    | 减法赋值   | `x = x - y`          | `x -= y` | `x = x - y` |
+| `*=`    | 乘法赋值   | `x = x * y`          | `x *= y` | `x = x * y` |
+| `/=`    | 除法赋值   | `x = x / y`          | `x /= y` | `x = x / y` |
+| `%=`    | 取模赋值   | `x = x % y`          | `x %= y` | `x = x % y` |
+| `**=`   | 幂运算赋值 | `x = x ** y`         | `x **= y`| `x = x ** y`|
+
+3. 比较运算符
+
+| 运算符  | 名称       | 描述                               | 返回值类型 | 示例          |
+| ------- | ---------- | ---------------------------------- | -------- | ------------- |
+| `==`    | 相等       | 检查值是否相等 (会进行类型转换)        | Boolean  | `5 == "5"` (true) |
+| `!=`    | 不等       | 检查值是否不等 (会进行类型转换)        | Boolean  | `5 != "5"` (false)|
+| `===`   | 严格相等，即等值等型   | 检查值和类型是否都相等 (不进行类型转换) | Boolean  | `5 === "5"` (false)|
+| `!==`   | 严格不等   | 检查值或类型是否不等 (不进行类型转换) | Boolean  | `5 !== "5"` (true) |
+| `>`     | 大于       | 检查左侧值是否大于右侧值             | Boolean  | `10 > 5` (true)  |
+| `<`     | 小于       | 检查左侧值是否小于右侧值             | Boolean  | `5 < 10` (true)  |
+| `>=`    | 大于等于   | 检查左侧值是否大于或等于右侧值         | Boolean  | `10 >= 10` (true)|
+| `<=`    | 小于等于   | 检查左侧值是否小于或等于右侧值         | Boolean  | `5 <= 5` (true)  |
+
+4. 逻辑运算符
+
+| 运算符  | 名称     | 描述                               | 操作数类型 | 返回值类型 | 示例                     |
+| ------- | -------- | ---------------------------------- | -------- | -------- | ------------------------ |
+| `&&`    | 逻辑与   | 两个操作数都为 `true` 时返回 `true`   | Boolean  | Boolean  | `true && false` (false)   |
+| `\|\|` | 逻辑或   | 两个操作数至少有一个为 `true` 时返回 `true` | Boolean  | Boolean  | `true \|\| false` (true)    |
+| `!`     | 逻辑非   | 对操作数取反，`true` 变为 `false`，`false` 变为 `true` | Boolean  | Boolean  | `!true` (false)          |
+
+5. 字符串运算符
+
+| 运算符 | 名称       | 描述               | 示例                      |
+| ------ | ---------- | ------------------ | ------------------------- |
+| `+`    | 字符串连接 | 连接两个字符串       | `"Hello" + " " + "World"` |
+| `+=`   | 连接赋值   | 将字符串连接并赋值   | `str += " World"`          |
+
+6. 条件 (三元) 运算符
+
+| 运算符 | 语法                                  | 描述                                             | 示例                               |
+| ------ | ------------------------------------- | ------------------------------------------------ | ---------------------------------- |
+| `?:`   | `condition ? exprIfTrue : exprIfFalse` | 根据 `condition` 的真假，返回 `exprIfTrue` 或 `exprIfFalse` | `age >= 18 ? "成年人" : "未成年人"` |
+
+7. 逗号运算符
+
+| 运算符 | 语法         | 描述                                     | 示例               | 返回值           |
+| ------ | ------------ | ---------------------------------------- | ------------------ | --------------- |
+| `,`    | `expr1, expr2, expr3` | 依次执行多个表达式，并返回最后一个表达式的值 | `let a = (1, 2, 3);` | `a` 的值为 `3` |
+
+8. 位运算符
+
+| 运算符  | 名称       | 描述               |
+| ------- | ---------- | ------------------ |
+| `&`     | 按位与     | 对二进制位进行与操作 |
+| `\|`    | 按位或     | 对二进制位进行或操作 |
+| `^`     | 按位异或   | 对二进制位进行异或操作 |
+| `~`     | 按位非     | 对二进制位取反       |
+| `<<`    | 左移       | 将二进制位左移       |
+| `>>`    | 右移       | 将二进制位右移       |
+| `>>>`   | 无符号右移 | 无符号右移           |
+
+9. 类型运算符
+
+| 运算符     | 名称         | 描述                                  | 返回值                               | 示例                      |
+| -------- | ------------ | ------------------------------------- | ------------------------------------ | ------------------------- |
+| `typeof` | 类型检测     | 返回操作数的数据类型字符串              | 字符串，表示数据类型                   | `typeof 123` // "number" |
+| `instanceof` | 实例检测   | 检测对象是否是某个构造函数的实例       | Boolean，`true` 或 `false`             | `[] instanceof Array` // true|
+
+10. `void` 运算符
+
+| 运算符  | 语法       | 描述                   | 返回值      | 示例                     |
+| ------- | ---------- | ---------------------- | --------- | ------------------------ |
+| `void` | `void expression` | 计算表达式并返回 `undefined` | `undefined` | `void(0)`, `void myFunc()` |
+
+### 注释
+
+* **单行注释 (Single-line Comments):** 使用双斜线 `//` 开头，注释内容直到行末。
+```javascript
+// 这是一个单行注释
+let x = 10; // 这是对变量 x 的注释
+```
+
+* **多行注释 (Multi-line Comments):** 使用 `/*` 开头，`*/` 结尾，可以跨越多行。
+```javascript
+/*
+这是一个
+多行注释
+可以写很多行解释说明
+*/
+function myFunction() {
+  // ... 函数代码 ...
+}
+```
+
+### 函数
+
+* **函数定义**
+    * **函数声明：** 使用 `function` 关键字声明函数。
+        ```javascript
+        function greet(name) {
+          console.log("Hello, " + name + "!");
+        }
+        ```
+    * **函数表达式：** 将函数赋值给一个变量。
+        ```javascript
+        let greet = function(name) {
+          console.log("Hello, " + name + "!");
+        };
+        ```
+    * **箭头函数:** 更简洁的函数表达式语法。
+        ```javascript
+        let greet = (name) => {
+          console.log("Hello, " + name + "!");
+        };
+        // 如果函数体只有一行 return 语句，可以省略花括号和 return 关键字
+        let square = (number) => number * number;
+        ```
+
+* **函数调用:** 使用函数名后加括号 `()` 调用函数。
+    ```javascript
+    greet("Alice"); // 调用 greet 函数，输出 "Hello, Alice!"
+    let result = square(5); // 调用 square 函数，返回值赋值给 result
+    console.log(result);    // 输出 25
+    ```
+
+* **函数参数 (Parameters) 和 参数 (Arguments):**
+    * **参数 (Parameters):** 函数定义时，括号内的变量名，用于接收调用函数时传递的值。
+    * **参数 (Arguments):** 调用函数时，实际传递给函数的值。
+    * 函数可以没有参数，也可以有一个或多个参数。
+    * 参数在函数内部可以像变量一样使用。
+
+* **返回值 (Return Value):**
+    * 函数可以使用 `return` 语句返回一个值。
+    * 如果函数没有 `return` 语句，或 `return` 语句后没有值，则函数默认返回 `undefined`。
+
+### 句块
+
+* **概述:** 句块 (也称为代码块) 是由一对花括号 `{}` 包裹的一组 Javascript 语句。句块用于将多个语句组合成一个逻辑单元。
+
+* **句块的作用:**
+    * **分组语句:** 将多个语句组合在一起，形成一个代码块，例如函数体、循环体、条件语句块等。
+    * **控制作用域 (块级作用域):** 使用 `let` 和 `const` 声明的变量具有块级作用域，只在声明它们的代码块内部有效。 (`var` 声明的变量是函数作用域，不受块级作用域限制)
+
+* **常见的句块应用场景:**
+    * **函数体:** 函数的主体代码，定义函数的功能。
+        ```javascript
+        function myFunction() { // 函数体的句块开始
+          let localVar = "inside function";
+          console.log(localVar);
+        } // 函数体的句块结束
+        ```
+    * **条件语句块 (if, else if, else):** 根据条件执行不同的代码块。
+        ```javascript
+        if (age >= 18) { // if 语句的句块开始
+          console.log("成年人");
+        } else {        // else 语句的句块开始
+          console.log("未成年人");
+        } // else 语句的句块结束
+        ```
+    * **循环语句块 (for, while, do...while):** 重复执行代码块。
+        ```javascript
+        for (let i = 0; i < 5; i++) { // for 循环的句块开始
+          console.log(i);
+        } // for 循环的句块结束
+        ```
+    * **独立的代码块:** 可以使用花括号 `{}` 创建独立的块级作用域，用于限制变量的作用范围。
+        ```javascript
+        { // 独立代码块开始
+          let blockVar = "inside block";
+          console.log(blockVar);
+        } // 独立代码块结束
+        // console.log(blockVar); // 报错，blockVar 在块外部不可见
+        ```
+
+* **注意:** 句块本身不是语句，不需要以分号 `;` 结尾 (除非句块内的语句需要分号)。
+
+## 基于事件驱动
+
+在 HTML 的标签中，绝大部分都可以触发一些事件，例如鼠标单击、双击、鼠标经过、鼠标离开等。JavaScript 最主要的功能就是与用户的交互，而用户只能在表单中提交输入内容，所以表单的所有输入标签都可以触发鼠标事件、键盘事件等 JavaScript 所能响应的常见事件。  
+
+**HTML DOM 事件** 允许Javascript在HTML文档元素中注册不同事件处理程序。
+
+### 鼠标事件
+
+| 事件名称 | 触发时机 | 描述 |
+|---|---|---|
+| `onclick` | 鼠标单击元素时 | 最常用的事件，用于响应用户的点击操作，例如按钮点击、链接跳转等。 |
+| `onmousedown` | 鼠标按钮在元素上按下时 | 当鼠标按钮被按下时触发，不区分左右键。 |
+| `onmouseup` | 鼠标按钮在元素上释放时 | 当鼠标按钮被释放时触发，与 `onmousedown` 配对使用。 |
+| `onmousemove` | 鼠标指针在元素上移动时 | 鼠标在元素范围内移动时持续触发，可以用于实现鼠标跟随效果、拖拽等。 |
+| `onmouseover` | 鼠标指针移入元素时 | 当鼠标指针首次进入元素边界时触发一次。 |
+| `onmouseout` | 鼠标指针移出元素时 | 当鼠标指针离开元素边界时触发一次。 |
+| `onmouseenter` | 鼠标指针移入元素时 | 类似于 `onmouseover`，但不冒泡，只在鼠标指针直接进入元素时触发。 |
+| `onmouseleave` | 鼠标指针移出元素时 | 类似于 `onmouseout`，但不冒泡，只在鼠标指针直接离开元素时触发。 |
+| `ondblclick` | 鼠标双击元素时 | 用于响应用户的双击操作，例如双击选中文字、双击放大图片等。 |
+| `oncontextmenu` | 用户尝试打开上下文菜单时 | 通常是鼠标右键点击触发，可以用于自定义右键菜单。 |
+
+### 键盘事件
+
+| 事件名称 | 触发时机 | 描述 |
+|---|---|---|
+| `onkeydown` | 键盘按键被按下时 | 当任何按键被按下时触发，持续按下会持续触发（直到松开）。 |
+| `onkeyup` | 键盘按键被释放时 | 当任何按键被释放时触发。 |
+| `onkeypress` | 键盘按键被按下并释放时 (字符键) |  当按下字符键（字母、数字、符号）时触发，不包括功能键 (如 Shift, Ctrl, Alt, Esc)。 `onkeypress` 事件已被弃用，推荐使用 `onkeydown` 和 `onkeyup`。 |
+
+### 表单事件
+
+| 事件名称 | 触发时机 | 描述 |
+|---|---|---|
+| `onsubmit` | 表单被提交时 | 当用户点击提交按钮或以其他方式提交表单时触发。 |
+| `onreset` | 表单被重置时 | 当用户点击重置按钮或以其他方式重置表单时触发。 |
+| `onfocus` | 元素获得焦点时 | 当元素（如输入框、按钮等）获得焦点时触发。 |
+| `onblur` | 元素失去焦点时 | 当元素失去焦点时触发。 |
+| `onchange` | 表单元素的值发生改变且失去焦点时 | 通常用于 `<input>`, `<select>`, `<textarea>` 等元素，当值改变并且元素失去焦点时触发。 |
+| `oninput` | `<input>`, `<textarea>` 元素的值发生改变时 | 当 `<input>` 或 `<textarea>` 元素的值发生任何改变时立即触发，包括输入、删除等。 |
+
+### 窗口/文档事件
+
+| 事件名称 | 触发时机 | 描述 |
+|---|---|---|
+| `onload` | 页面 (或图片、框架等) 完成加载时 | 当整个页面（包括所有资源，如图片、CSS、JavaScript）加载完成后触发。 |
+| `onDOMContentLoaded` | HTML 文档被完全加载和解析完成时 | 当 HTML 文档被完全加载和解析完成，但外部资源（如图片、CSS、JavaScript）可能尚未加载完成时触发。比 `onload` 事件更早触发。 |
+| `onresize` | 浏览器窗口大小被调整时 | 当浏览器窗口大小被用户调整时触发。 |
+| `onscroll` | 文档或元素滚动条被滚动时 | 当文档或元素（如设置了 `overflow: scroll` 的 `div`）的滚动条被滚动时触发。 |
+| `onerror` | 在加载外部资源 (如图片、脚本) 或 JavaScript 运行时发生错误时 | 用于捕获页面加载或 JavaScript 执行过程中的错误。 |
+
+### 焦点事件
+
+| 事件名称 | 触发时机 | 描述 |
+|---|---|---|
+| `onfocus` | 元素获得焦点时 | 当元素获得焦点时触发。 |
+| `onblur` | 元素失去焦点时 | 当元素失去焦点时触发。 |
+| `onfocusin` | 元素或其后代元素获得焦点时 | 类似于 `onfocus`，但会冒泡，可以捕获后代元素的焦点事件。 |
+| `onfocusout` | 元素或其后代元素失去焦点时 | 类似于 `onblur`，但会冒泡，可以捕获后代元素的失焦事件。 |
+
+### 拖拽事件
+
+| 事件名称 | 触发时机 | 描述 |
+|---|---|---|
+| `ondragstart` | 开始拖动元素时 | 当用户开始拖动一个元素时触发。 |
+| `ondragover` | 被拖动的元素在目标区域上方移动时 | 当被拖动的元素在目标区域上方移动时持续触发。 |
+| `ondrop` | 被拖动的元素在目标区域释放时 | 当被拖动的元素在目标区域被释放时触发。 |
+| `ondragend` | 拖动操作完成时 (无论成功或取消) | 当拖动操作结束时触发，无论拖动是否成功完成。 |
+| `ondrag` | 元素正在被拖动时 | 当元素被拖动时持续触发。 |
+| `ondragenter` | 被拖动的元素进入目标区域时 | 当被拖动的元素进入目标区域时触发。 |
+| `ondragleave` | 被拖动的元素离开目标区域时 | 当被拖动的元素离开目标区域时触发。 |
+
+### 剪贴板事件
+
+| 事件名称 | 触发时机 | 描述 |
+|---|---|---|
+| `oncopy` | 用户复制内容时 | 当用户复制选中文本或元素内容时触发。 |
+| `oncut` | 用户剪切内容时 | 当用户剪切选中文本或元素内容时触发。 |
+| `onpaste` | 用户粘贴内容时 | 当用户粘贴内容到元素中时触发。 |
+
+### 触摸事件 (移动设备)
+
+| 事件名称 | 触发时机 | 描述 |
+|---|---|---|
+| `ontouchstart` | 手指触摸屏幕时 | 当手指触摸屏幕时触发。 |
+| `ontouchmove` | 手指在屏幕上移动时 | 当手指在屏幕上移动时持续触发。 |
+| `ontouchend` | 手指离开屏幕时 | 当手指离开屏幕时触发。 |
+| `ontouchcancel` | 触摸事件被中断时 | 当触摸事件被系统中断时触发，例如来电、系统提示等。 |
+
+### 动画事件 (CSS 动画)
+
+| 事件名称 | 触发时机 | 描述 |
+|---|---|---|
+| `onanimationstart` | CSS 动画开始播放时 | 当 CSS 动画开始播放时触发。 |
+| `onanimationiteration` | CSS 动画完成一次迭代时 | 当 CSS 动画完成一次迭代（循环）时触发。 |
+| `onanimationend` | CSS 动画播放结束时 | 当 CSS 动画播放结束时触发。 |
+
+### 过渡事件 (CSS 过渡)
+
+| 事件名称 | 触发时机 | 描述 |
+|---|---|---|
+| `ontransitionstart` | CSS 过渡效果开始时 | 当 CSS 过渡效果开始时触发。 |
+| `ontransitionend` | CSS 过渡效果完成时 | 当 CSS 过渡效果完成时触发。 |
+
+## 基于对象
+
+在JavaScript中，**对象** 是构成语言的基本单元。可以把对象看作是 **属性** (properties) 和 **方法** (methods) 的集合，用来描述和操作数据。
+
+* **属性 (Properties):** 对象的特性或状态，相当于对象的“名词”。例如，一个 `person` 对象可能拥有 `name`，`age`，`gender` 等属性。
+* **方法 (Methods):** 对象可以执行的操作或行为，相当于对象的“动词”。例如，一个 `person` 对象可能拥有 `sayHello()`，`walk()` 等方法。
+
+**创建对象的方式 (简单示例):**
+
+```javascript
+// 使用对象字面量 (Object Literal) 创建对象
+let person = {
+  name: "张三",
+  age: 30,
+  gender: "男",
+  sayHello: function() {
+    console.log("你好，我叫" + this.name);
+  }
+};
+
+// 访问对象属性
+console.log(person.name); // 输出: 张三
+console.log(person.age);  // 输出: 30
+
+// 调用对象方法
+person.sayHello(); // 输出: 你好，我叫张三
+```
+
+**总结:** JavaScript中的对象是键值对的集合，使用 `.` 运算符访问属性和方法。理解对象是学习JavaScript和DOM的基础。
+
+### 文档对象模型 DOM
+
+**DOM**，即 **文档对象模型** (Document Object Model)，将 **HTML文档** 表示成一个 **树状结构** (DOM树)，树的每个节点都代表 HTML 文档中的一部分 (例如，元素、属性、文本等)，并且 **每个节点都是一个对象**。
+
+**DOM 的核心思想:**  将整个 HTML 文档视为一个由各种对象组成的 **模型**，JavaScript 可以通过这个模型来 **访问和操作 HTML 文档的内容、结构和样式**。
+
+**DOM 树结构:**
+
+* **Document Object:**  DOM 树的根节点是 `document` 对象，它代表整个 HTML 文档。
+* **Element Nodes:**  HTML 标签 (例如 `<html>`, `<body>`, `<p>`, `<div>` 等) 在 DOM 树中被表示为 **元素节点** (Element Nodes)。
+* **Text Nodes:**  HTML 元素中的文本内容被表示为 **文本节点** (Text Nodes)。
+* **Attribute Nodes:**  HTML 元素的属性 (例如 `<p id="para">`) 被表示为 **属性节点** (Attribute Nodes)。 *(注意: 属性节点通常被认为是元素节点的一部分，而不是独立的子节点)*
+
+**简单 DOM 树示例 (对应简单的HTML结构):**
+
+**HTML:**
+
+```html
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>DOM 结构示例</title>
+</head>
+<body>
+  <div id="container">
+    <h1 class="title">欢迎访问我的网站</h1>
+    <p>这是一个 <strong>加粗</strong> 的段落。</p>
+    <ul>
+      <li>第一项</li>
+      <li>第二项</li>
+    </ul>
+  </div>
+</body>
+</html>
+
+```
+
+**DOM 树 (简化表示):**
+
+```
+document (Document)
+├── <!DOCTYPE html> (Document Type)
+├── <html lang="zh"> (Element)
+│   ├── <head> (Element)
+│   │   ├── <meta charset="UTF-8"> (Element)
+│   │   └── <title> (Element)
+│   │       └── "DOM 结构示例" (Text)
+│   └── <body> (Element)
+│       └── <div id="container"> (Element)
+│           ├── <h1 class="title"> (Element)
+│           │   └── "欢迎访问我的网站" (Text)
+│           ├── <p> (Element)
+│           │   ├── "这是一个 " (Text)
+│           │   └── <strong> (Element)
+│           │       └── "加粗" (Text)
+│           ├── <ul> (Element)
+│           │   ├── <li> (Element)
+│           │   │   └── "第一项" (Text)
+│           │   └── <li> (Element)
+│           │       └── "第二项" (Text)
+
+```
+
+**总结:** DOM 将 HTML 文档结构化为对象树，使得 JavaScript 可以方便地操作网页内容。 `document` 对象是访问 DOM 的入口。
+
+### window 对象
+
+**`window` 对象** 是 **浏览器窗口的全局对象**。 在浏览器环境中，**所有全局变量、函数和对象都默认成为 `window` 对象的属性和方法**。  `window` 对象代表了浏览器窗口本身，它包含了与浏览器窗口相关的信息和功能。
+
+![window](imgs/window.png)
+
+**`windows` 对象的成员：**  
+
+* **window：**  最顶层的对象，打开一个浏览器窗口时就在内存中定义了一个window对象  
+* **document：**  每个HTML文档被加载后都会在内存中初始化一个document对象  
+* **location：**  用于控制页面的跳转  
+* **history：**  用于控制页面的前进和后退  
+* **navigator：**  用于获取浏览器的信息   
+* **screen：**  用于获取屏幕的信息    
+
+**`window` 对象的主要作用:**
+
+* **全局作用域:**  提供全局作用域，所有全局定义的变量和函数都属于 `window` 对象。
+* **浏览器窗口信息:**  包含浏览器窗口的大小、位置、历史记录、导航信息等。
+* **浏览器内置功能:**  提供浏览器内置的功能，例如弹窗、定时器、滚动等。
+* **DOM 的入口:**  DOM树是 `document` 的结构，`document` 是 `window` 的一个属性 (`window.document`)，因此 `window` 对象也是访问 DOM 的入口   
+
+**总结:** `window` 对象是浏览器环境中的全局对象，是理解浏览器 JavaScript 环境的关键，也是访问 DOM 和使用浏览器内置功能的重要入口。
+
+### 示例
+
+#### 写入html文档流  
+
+```html
+<body>
+  <script>
+    document.write("Hello World");
+  </script>
+  <h2>你好，世界</h2>
+</body>
+```
+
+当浏览器解析这段 HTML 代码时，会执行 `<script>` 标签内的 JavaScript 代码。 `document.write("Hello World");`  会在 HTML 文档流中写入 "Hello World" 这个字符串。最终，在网页上你将会看到：
+*   **Hello World** (由 `document.write()` 输出)
+*   **你好，世界** (由 `<h2>` 标签输出)
+
+#### 访问表单元素的值
+
+```html
+<head>
+  <script type="text/javascript">
+    function clk() {
+      var a = document.login.upwd.value;
+      alert("Your password is " + a);
+    }
+  </script>
+</head>
+<body>
+  <form name="login">
+    用户名: <input type="text" name="uname"><br>
+    密码: <input type="password" name="upwd"><br>
+    <input type="submit" value="查看密码" onclick="clk()">
+  </form>
+</body>
+```
+
+* 当网页加载时，HTML 结构被解析，JavaScript 代码被加载但 **函数 `clk()` 此时不会立即执行**，它只是被定义。
+* 当用户在 "密码" 输入框中输入一些内容，然后 **点击 "查看密码" 按钮** 时，按钮的 `onclick="clk()"` 属性会触发，浏览器会 **执行 `clk()` 函数**。
+* 在 `clk()` 函数内部，`document.login.upwd.value`  会获取到用户在密码框中输入的密码。
+* `alert("Your password is " + a);`  会弹出一个警告对话框，显示类似 "Your password is your_entered_password" 的消息。
+
+#### 操作浏览器窗口
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>窗口的创建和关闭示例</title>
+  <script type="text/javascript">
+    var win; // 声明一个全局变量 win 用于存储新窗口的引用
+
+    function createWin() {
+      // 使用 window.open() 方法创建新窗口
+      win = window.open("", "", "width=300,height=200");
+      // "" 第一个参数是 URL，为空表示空白页
+      // "" 第二个参数是窗口名称，为空表示新窗口
+      // "width=300,height=200" 第三个参数是窗口特性，设置宽度和高度
+    }
+
+    function closeWin() {
+      // 使用 window.close() 方法关闭窗口
+      if (win) { // 检查 win 变量是否引用了一个窗口对象
+        win.close(); // 关闭 win 变量引用的窗口
+      }
+    }
+  </script>
+</head>
+<body>
+  <form>
+    <input type="button" value="创建新窗口" onclick="createWin()">
+    <input type="button" value="关闭新窗口" onclick="closeWin()">
+  </form>
+</body>
+</html>
+```
+
+* `var win;`:  在 `<script>` 标签的开始处声明了全局变量 `win`，用来存储新创建的窗口对象的引用。
+* `win = window.open("", "", "width=300,height=200");`:  这是创建新窗口的关键代码。
+    * `window.open()`:  是 `window` 对象的一个方法，用于打开一个新的浏览器窗口。
+    * 第一个参数 `""`:  是新窗口要加载的 URL。这里传入空字符串 `""` 表示打开一个空白页。
+    * 第二个参数 `""`:  是新窗口的名称或目标。传入空字符串 `""` 表示创建一个新的未命名的窗口。
+    * 第三个参数 `"width=300,height=200"`:  设置窗口的宽度为 300 像素，高度为 200 像素。可以设置多个特性，用逗号分隔。
+* `if (win) { ... }`:  在关闭窗口之前，首先检查 `win` 变量是否为真值 (truthy)，避免在 `win` 为 `null` 或 `undefined` 时尝试关闭窗口而导致错误。
+* `win.close();`:  关闭这个窗口。
+
+#### 常用的三种对话框
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>三种常用的对话框</title>
+  <script type="text/javascript">
+    function alertDialog() {
+      alert("您成功执行了这个操作。 "); // 显示警告对话框
+    }
+
+    function confirmDialog() {
+      // 显示确认对话框，用户点击 "确定" 返回 true，点击 "取消" 返回 false
+      if (window.confirm("您确认要进行这个操作吗？ ")) {
+        alert("您选择了确定！ "); // 用户点击了 "确定"
+      } else {
+        alert("您选择了取消");   // 用户点击了 "取消"
+      }
+    }
+
+    function promptDialog() {
+      // 显示输入对话框，用户输入内容后点击 "确定" 返回输入值，点击 "取消" 或为空时返回 null
+      var input = window.prompt("请输入内容： ", ""); // 第二个参数是输入框的默认值
+      if (input != null) { // 检查用户是否输入了内容 (点击了 "确定" 且有输入)
+        window.alert("您输入的内容为：" + input); // 显示用户输入的内容
+      }
+    }
+  </script>
+</head>
+<body>
+  <form>
+    <input type="button" value="警告对话框" onclick="alertDialog()">
+    <input type="button" value="确认对话框" onclick="confirmDialog()">
+    <input type="button" value="输入对话框" onclick="promptDialog()">
+  </form>
+</body>
+</html>
+```
+
+这段代码演示了 JavaScript 中 `window` 对象提供的三种常用对话框：**警告对话框 (alert)**, **确认对话框 (confirm)**, 和 **输入对话框 (prompt)**。
+
+* `window.alert()` 方法显示一个 **警告对话框**。它只有一个 "确定" 按钮，用于向用户显示一些信息，用户只能点击 "确定" 来关闭对话框。
+* `window.confirm()` 方法显示一个 **确认对话框**，它包含 "确定" 和 "取消" 两个按钮。
+    * 如果用户点击 **"确定"** 按钮，`window.confirm()` 返回 `true`， `if` 代码块中的代码会被执行 (`alert("您选择了确定！ ");`)。
+    * 如果用户点击 **"取消"** 按钮，`window.confirm()` 返回 `false`， `else` 代码块中的代码会被执行 (`alert("您选择了取消");`)。
+* `window.prompt()` 方法显示一个 **输入对话框**，它包含一个文本输入框、"确定" 按钮和 "取消" 按钮。
+    * 第一个参数 `"请输入内容： "` 是对话框中显示的提示文本。
+    * 第二个参数 `""` 是输入框的 **默认值**，这里设置为空字符串。
+    * `window.prompt()` 方法的返回值会赋给变量 `input`。
+        * 如果用户在输入框中输入内容并点击 **"确定"** 按钮，`window.prompt()` 返回用户输入的 **字符串**。
+        * 如果用户点击 **"取消"** 按钮，或者 **没有输入任何内容** 就点击 "确定"，`window.prompt()` 返回 `null`。
+    * `if (input != null) { ... }`:  检查 `input` 变量是否为 `null`。
+        * `if (input != null)` 条件成立，表示用户点击了 "确定" 按钮，并且可能输入了内容 (即使输入为空字符串也仍然不是 `null`)。  `window.alert("您输入的内容为：" + input);`  会弹出一个警告框显示用户输入的内容。
+        * 如果 `input == null`，表示用户点击了 "取消" 按钮，或者在没有输入任何内容的情况下点击了 "确定" (在某些浏览器中，没有输入内容直接确定也可能返回 `null`)，`if` 条件不成立，不会执行 `alert` 语句。
+
+#### 页面跳转
+
+```javascript
+window.location.href = "http://www.baidu.com";
+```
+
+这段代码演示了如何使用 `window.location` 对象的 `href` 属性来实现网页的重定向（跳转）。
+
+* **概念:**
+    * **`window.location` 对象:**  `window.location` 是 `window` 对象的一个属性，它本身也是一个对象，代表了 **当前窗口中加载的文档的 URL 信息**。  通过 `window.location` 对象，你可以获取当前页面的 URL 的各个部分（例如，主机名、路径、查询参数等），也可以 **修改 URL 来实现页面跳转**。
+
+    * **`href` 属性:**  `window.location` 对象有很多属性，其中 `href` 属性是最常用的之一。  `href` 属性 **完整地表示了当前页面的 URL**。  **修改 `window.location.href` 的值，会使浏览器立即加载新的 URL，从而实现页面跳转**。
+
+* **代码解释:**
+    * `window.location.href = "http://www.baidu.com";`:  这行代码将 `window.location.href` 属性的值设置为 `"http://www.baidu.com"` 这个字符串。
+        * 当 JavaScript 引擎执行到这行代码时，浏览器会立即开始加载 `"http://www.baidu.com"` 这个 URL 指向的页面。
+        * 效果就如同用户在浏览器的地址栏中输入 `"http://www.baidu.com"` 并按下回车键一样，或者点击了一个 `<a href="http://www.baidu.com">` 超链接。
+        * 当前页面会被卸载，浏览器会导航到 `http://www.baidu.com`，并加载新的页面内容。
+
+* **与 HTML 超链接 `<a>` 标签的对比:**
+    * 在 HTML 中，我们通常使用 `<a>` 标签来创建超链接，实现页面之间的跳转：
+      ```html
+      <a href="http://www.baidu.com">点击跳转到搜狐</a>
+      ```
+    * `window.location.href`  在 JavaScript 中的作用与 HTML `<a>` 标签类似，都是用来实现页面跳转。
+    * 使用 `window.location.href` 的优势在于，它 **允许你在 JavaScript 代码中动态地控制页面跳转**。 你可以根据用户的操作、程序逻辑或者其他条件，来决定跳转到哪个 URL。 例如，可以根据表单验证的结果来决定是否跳转到成功页面或错误页面。
+
+**总结:**
+
+`window.location.href = "URL"` 是 JavaScript 中实现页面跳转的最简单和常用的方法。 它通过修改当前窗口的 `location` 对象的 `href` 属性，使得浏览器加载新的 URL，从而达到页面重定向的效果，功能类似于 HTML 中的 `<a>` 超链接标签，但更加灵活，可以在 JavaScript 代码中动态控制跳转行为。
+
+### window 对象常用属性和方法
+
+**常用属性**
+
+
+| 属性        | 描述                                                    |
+| :-------------------- | :--------------------------------------------------------------------- |
+| closed              | 返回窗口是否已被关闭。                                                 |
+| defaultStatus       | 设置或返回窗口状态栏中的默认文本。                                         |
+| document            | 对 Document 对象的只读引用。      |
+| frames              | 返回窗口中所有命名的框架。该集合是 Window 对象的数组，每个 Window 对象在窗口中含有一个框架。 |
+| history             | 对 History 对象的只读引用。               |
+| innerHeight         | 返回窗口的文档显示区的高度。                                             |
+| innerWidth          | 返回窗口的文档显示区的宽度。                                             |
+| localStorage        | 在浏览器中存储 key/value 对。没有过期时间。                                |
+| length              | 设置或返回窗口中的框架数目。                                             |
+| location            | 用于窗口或框架的 Location 对象。 |
+| name                | 设置或返回窗口的名称。                                                   |
+| Navigator           | 对 Navigator 对象的只读引用。        |
+| opener              | 对创建此窗口的窗口的引用。                                               |
+| outerHeight         | 返回窗口的外部高度，包含工具条与滚动条。                                   |
+| outerWidth          | 返回窗口的外部宽度，包含工具条与滚动条。                                   |
+| pageXOffset         | 设置或返回当前页面相对于窗口显示区左上角的 X 位置。                         |
+| pageYOffset         | 设置或返回当前页面相对于窗口显示区左上角的 Y 位置。                         |
+| parent              | 返回父窗口。                                                             |
+| screen              | 对 Screen 对象的只读引用。                 |
+| screenLeft          | 返回相对于屏幕窗口的X坐标                                                |
+| screenTop           | 返回相对于屏幕窗口的Y坐标                                                |
+| screenX             | 返回相对于屏幕窗口的X坐标                                                |
+| sessionStorage      | 在浏览器中存储 key/value 对。在关闭窗口或标签页之后将会删除这些数据。           |
+| screenY             | 返回相对于屏幕窗口的Y坐标                                                |
+| self                | 返回当前窗口。 等价于 Window 属性。                                        |
+| status              | 设置状态栏的文本。                                                       |
+| top                 | 返回最顶层的父窗口。                                                     |
+
+
+**常用方法：**
+
+| 方法        | 描述                                                     |
+| :--------------------- | :--------------------------------------------------------------------- |
+| alert()               | 显示带有一定消息和一个确认按钮的警告框。                                   |
+| atob()                | 解码一个 base-64 编码的字符串。                                         |
+| btoa()                | 创建一个 base-64 编码的字符串。                                         |
+| blur()                | 把键盘焦点从顶层窗口移开。                                               |
+| clearInterval()       | 取消由 setInterval() 设置的 timeout。                                   |
+| clearTimeout()        | 取消由 setTimeout() 方法设置的 timeout。                                  |
+| close()               | 关闭浏览器窗口。                                                         |
+| confirm()             | 显示带有一定消息以及确认按钮和取消按钮的对话框。                             |
+| createPopup()         | 创建一个 pop-up 窗口。                                                    |
+| focus()               | 把键盘焦点给予一个窗口。                                                 |
+| getSelection()        | 返回一个 Selection 对象，表示用户选择的文本范围或光标的当前位置。             |
+| getComputedStyle()    | 获取指定元素的 CSS 样式。                                                 |
+| matchMedia()          | 该方法用来检查 media query 语句，它返回一个 MediaQueryList 对象。          |
+| moveBy()              | 可相对窗口的当前坐标把窗口移动指定的像素。                                 |
+| moveTo()              | 把窗口的左上角移动到一个指定的坐标。                                       |
+| open()                | 打开一个新的浏览器窗口或查找一个已命名的窗口。                             |
+| print()               | 打印当前窗口的内容。                                                     |
+| prompt()              | 显示可提示用户输入的对话框。                                             |
+| resizeBy()            | 按照指定的像素调整窗口的大小。                                           |
+| resizeTo()            | 把窗口的大小调整到指定的宽度和高度。                                       |
+| scroll()              | **已废弃。** 该方法已经使用了 `scrollTo()` 方法来替代。                       |
+| scrollBy(x,y)         | 按照指定的像素值来滚动内容。                                             |
+| scrollTo()            | 把内容滚动到指定的坐标。                                                 |
+| setInterval()         | 按照指定的时间周期 (以毫秒计) 来调用函数或计算表达式。                       |
+| setTimeout(timer)     | 在指定的毫秒数后调用函数或计算表达式。                                   |
+| stop()                | 停止页面载入。                                                           |
+| postMessage()         | 安全地实现跨源通信。                                                     |
+
+### document 对象常用API
+
+#### 获取元素
+
+`document` 对象提供了多种方法来选取 HTML 文档中的元素，这些方法是 DOM 操作的基础。以下是为列出的常用 API，用于获取任意 HTML 元素：
+
+| 方法                                  | 作用                               | 返回值/特点                                                                 |
+| :------------------------------------ | :--------------------------------- | :-------------------------------------------------------------------------- |
+| `document.getElementById('id')`       | 通过 **ID** 获取 **单个元素**        | 返回元素对象或 `null` (ID 唯一)                                             |
+| `document.getElementsByTagName('tag')[0]` | 通过 **标签名** 获取 **元素集合**     | 返回 HTMLCollection (类数组)，`[0]` 取第一个元素                                |
+| `document.getElementsByClassName('class')[0]` | 通过 **类名** 获取 **元素集合**     | 返回 HTMLCollection (类数组)，`[0]` 取第一个元素，匹配 class 属性包含类名的元素                         |
+| `document.querySelector('selector')`    | CSS **选择器** 获取 **首个元素**     | 返回匹配选择器的第一个元素或 `null`                                        |
+| `document.querySelectorAll('selector')[0]` | CSS **选择器** 获取 **所有元素集合** | 返回 NodeList (类数组)，`[0]` 取第一个元素，返回所有匹配选择器的元素集合的第一个元素（通常只有一个或零个，因为ID唯一） |
+
+**总结 - 元素获取方法:**
+
+* `getElementById`:  通过 ID 快速获取 **单个** 元素 (最高效，如果知道 ID)。
+* `getElementsByTagName`, `getElementsByClassName`:  通过标签名或类名获取 **一组** 元素 (返回 HTMLCollection，动态集合)。
+* `querySelector`: 使用 **CSS 选择器** 获取 **第一个** 匹配的元素 (更灵活的选择器，但性能可能略低于 `getElementById`)。
+* `querySelectorAll`: 使用 **CSS 选择器** 获取 **所有** 匹配的元素 (返回 NodeList，静态集合)。
+
+示例：  
+
+```javascript
+function show(menu) {
+  var submenus = document.getElementsByClassName("submenu"); // 获取所有 class 为 "submenu" 的元素集合
+  for (var i = 0; i < submenus.length; i++) { // 遍历 submenus 集合中的每个元素
+    if (submenus[i].id == menu) { // 检查当前元素的 id 是否与传入的 'menu' 参数相同
+      submenus[i].style.visibility = "visible"; // 如果 id 匹配，设置元素的 visibility 样式为 "visible" (显示元素)
+    } else {
+      submenus[i].style.visibility = "hidden";  // 如果 id 不匹配，设置元素的 visibility 样式为 "hidden" (隐藏元素)
+    }
+  }
+}
+```
+
+* **`function show(menu) { ... }`**: 定义了一个名为 `show` 的 JavaScript 函数，它接受一个参数 `menu`。  `menu` 参数预期是一个字符串，代表要显示的子菜单的 ID。
+
+* **`var submenus = document.getElementsByClassName("submenu");`**:
+   * 使用 `document.getElementsByClassName("submenu")` 方法获取 **所有** HTML 元素，它们的 `class` 属性值中包含了 "submenu"。
+   * 返回的结果是一个 **HTMLCollection** (类数组对象)，存储在变量 `submenus` 中。 假设这些元素代表网页上的所有子菜单。
+
+* **`for (var i = 0; i < submenus.length; i++) { ... }`**:
+   * 使用 `for` 循环遍历 `submenus` HTMLCollection 中的每一个元素。
+   * `i` 从 0 循环到 `submenus.length - 1`，`submenus.length` 表示 `submenus` 集合中元素的数量。
+
+* **`if (submenus[i].id == menu) { ... } else { ... }`**:
+   * 在循环的每次迭代中，`submenus[i]` 代表当前遍历到的子菜单元素。
+   * `submenus[i].id`:  获取当前子菜单元素的 `id` 属性值。
+   * `submenus[i].id == menu`:  将当前子菜单元素的 `id` 与函数参数 `menu` 进行比较。
+     * 如果 **相等** ( `id` 匹配传入的 `menu` 参数)，说明当前子菜单是要显示的子菜单，执行 `if` 代码块。
+     * 如果 **不相等** ( `id` 不匹配)，说明当前子菜单不是要显示的子菜单，执行 `else` 代码块。
+
+* **`submenus[i].style.visibility = "visible";` (if 代码块)**:
+   * 如果 `id` 匹配，将当前子菜单元素的 `style.visibility` 属性设置为 `"visible"`。
+   * `style.visibility = "visible"`  会 **显示** HTML 元素 (使其可见)。
+
+* **`submenus[i].style.visibility = "hidden";` (else 代码块)**:
+   * 如果 `id` 不匹配，将当前子菜单元素的 `style.visibility` 属性设置为 `"hidden"`。
+   * `style.visibility = "hidden"` 会 **隐藏** HTML 元素 (使其不可见，但元素仍然占据页面空间)。
+
+```html
+<table>
+  <tr bgcolor="#9999FF">
+    <td width="80" onMouseMove="show('menu1')">蒸菜菜单</td>
+    <td width="80" onMouseMove="show('menu2')">烧制菜单</td>
+    <td width="80" onMouseMove="show('menu3')">馏制菜单</td>
+  </tr>
+</table>
+```
+
+* **`<table> ... </table>`**:  定义一个 HTML 表格。
+* **`<tr bgcolor="#9999FF"> ... </tr>`**: 定义表格中的一行 (`<tr>` - table row)，并设置背景颜色 `bgcolor` 为 `#9999FF`。
+* **`<td width="80" onMouseMove="show('menu1')">蒸菜菜单</td>`**: 定义表格中的一个单元格 (`<td>` - table data cell)。
+    * `width="80"`: 设置单元格宽度为 80 像素。
+    * `onMouseMove="show('menu1')"`:  **事件处理属性**。 当 **鼠标指针移动到这个单元格上方时**，会触发 `onMouseMove` 事件，并执行 JavaScript 代码 `show('menu1')`。
+        * `show('menu1')`:  调用之前定义的 `show` 函数，并传递字符串 `'menu1'` 作为参数。
+    * `蒸菜菜单`:  单元格中显示的文本内容。
+
+* **`<td width="80" onMouseMove="show('menu2')">烧制菜单</td>`**:  第二个单元格，与第一个类似，鼠标移动到上方时调用 `show('menu2')`。
+* **`<td width="80" onMouseMove="show('menu3')">馏制菜单</td>`**:  第三个单元格，鼠标移动到上方时调用 `show('menu3')`。
+
+**代码整体行为:**
+
+这段 HTML 和 JavaScript 代码实现了一个简单的 **鼠标悬停显示子菜单** 的效果。
+
+1.  **假设存在一些 HTML 元素，它们的 `class` 属性都设置为 `"submenu"`，并且每个子菜单元素都有一个唯一的 `id` (例如 "menu1", "menu2", "menu3" 等)。**  *(这段 HTML 代码片段中没有子菜单的具体 HTML 结构，需要假设存在)*
+2.  当鼠标指针移动到 "蒸菜菜单"、"烧制菜单" 或 "馏制菜单" 这些表格单元格上方时，会分别调用 `show('menu1')`, `show('menu2')`, `show('menu3')` 函数。
+3.  `show(menu)` 函数会遍历所有 `class="submenu"` 的元素，然后：
+    * **显示**  `id` 与传入的 `menu` 参数 (例如 'menu1') **匹配** 的子菜单元素 (`visibility = "visible"`)。
+    * **隐藏**  `id` 与传入的 `menu` 参数 **不匹配** 的所有其他子菜单元素 (`visibility = "hidden"`)。
+
+
+#### 创建节点
+
+| API                                 | 作用                       | 示例                                  |
+| :---------------------------------- | :------------------------- | :------------------------------------ |
+| `document.createElement('tagName')`  | 创建 **元素节点**           | `document.createElement('div')`       |
+| `document.createTextNode('text')`   | 创建 **文本节点**           | `document.createTextNode('你好')`    |
+| `element.appendChild(childNode)`    | 将节点 **添加为子节点**     | `div1.appendChild(text1)`             |
+| `element.innerText = 'text'`       | 设置/获取 **元素文本内容**  | `div1.innerText = '你好'`            |
+| `element.textContent = 'text'`     | 设置/获取 **元素文本内容** (推荐) | `div1.textContent = '你好'`          |
+
+#### 删除节点
+
+| API                                 | 作用                       | 示例                                   |
+| :---------------------------------- | :------------------------- | :------------------------------------- |
+| `parentNode.removeChild(childNode)` | 从父节点 **删除子节点**     | `div1.parentNode.removeChild(div1)`   |
+| `element.remove()`                  | **移除元素自身**           | `div2.remove()`                        |
+| `element = null`                    | **解除引用，利于垃圾回收**   | `div2 = null`                          |
+
+#### 修改 HTML 属性 & CSS 样式
+
+| API                             | 作用                         | 示例                                     |
+| :------------------------------ | :--------------------------- | :--------------------------------------- |
+| `element.className = 'className'` | 修改 **`class` 属性**         | `div1.className = 'red'`                 |
+| `element.style.styleProperty = 'value'` | 修改 **`style` 属性 (CSS)** | `div1.style.width = '200px'; div1.style.color = 'blue'` |
+
+#### 获取 HTML 元素父代和子代
+
+| API                       | 作用                 | 示例                                |
+| :------------------------ | :------------------- | :---------------------------------- |
+| `node.parentNode`         | 获取 **父元素节点**   | `div1.parentNode`                   |
+| `node.parentElement`      | 获取 **父元素节点** (推荐) | `div1.parentElement`                |
+| `node.children`           | 获取 **子元素节点集合** | `div0.children`                     |
+
+#### 获取特殊子代及兄弟节点
+
+| API                     | 作用                     |
+| :---------------------- | :----------------------- |
+| `node.firstChild`       | 获取 **第一个子节点** (可能包含文本节点) |
+| `node.lastChild`        | 获取 **最后一个子节点** (可能包含文本节点) |
+| `node.previousSibling`  | 获取 **前一个兄弟节点** (可能包含文本节点) |
+| `node.nextSibling`      | 获取 **后一个兄弟节点** (可能包含文本节点) |
