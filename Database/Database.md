@@ -1,3 +1,5 @@
+<!-- markdownlint-disable -->
+
 # 数据库系统概论
 
 ## SQL语句
@@ -622,10 +624,132 @@ WHERE NOT EXISTS (
 *   **`s 没有选修 c` 的含义:** 在 `SC` 表中不存在记录 `(s.Sno, c.Cno)`。
     *   $\neg (\text{s 选修了 c}) \equiv \neg \exists sc \in SC (sc.Sno = s.Sno \land sc.Cno = c.Cno)$
 
-也可以用聚集函数实现：
+#### 使用 EXISTS 实现逻辑蕴涵
+
+eg. 查询至少选修了学生114514选修的全部课程的学生号码
+
+转为逻辑蕴涵：查询学号为x的学生，对所有课程y，只要114514选修了y，则x也选修了y，即：  
+
+$$(\forall y) p \rightarrow q$$
+
+等价为不存在课程y，满足学生114514选修了y，但是x没有选，即：  
+
+$$\neg \exist y (p \land \neg q) $$
 
 ```sql
-SELECT Cname
-FROM Course
-WHERE 
+SELECT DISTINCT Sno
+FROM SC SCX
+WHERE NOT EXISTS (
+  SELECT *
+  FROM SC SCY
+  WHERE SCY.Sno = '114514'
+    AND NOT EXISTS (
+      SELECT *
+      FROM SC SCZ
+      WHERE SCZ.Sno = SCX.Sno
+        AND SCZ.Cno = SCY.Cno
+    )
+);
+```
+
+### 集合查询
+
+参加集合查询的各查询结果的**列数和数据类型**必须相同。  
+
+#### 并 UNION
+
+选择计科系和年龄不大于19岁的学生  
+
+```sql
+SELECT *
+FROM Stu
+WHERE Sdept='CS'
+UNION
+SELECT *
+FROM Stu
+WHERE Sage<=19;
+```
+
+#### 交 INTERSECT
+
+查询选修了1和2号课程的学生学号
+
+```sql
+SELECT Sno
+FROM SC
+WHERE Cno='1'
+INTERSECT
+SELECT Sno
+FROM SC
+WHERE Cno='2';
+```
+
+#### 差 EXCEPT
+
+查询计科系年龄大于19岁的学生
+
+```sql
+SELECT *
+FROM Stu
+WHERE Sdept='CS'
+EXCEPT
+SELECT *
+FROM Stu
+WHERE Sage<=19;
+```
+
+### 数据更新
+
+#### 插入
+
+语法：`INSERT INTO 表名 [(列名1, 列名2, ...)] VALUES (值1, 值2, ...);`
+
+```sql
+INSERT INTO Stu (Sno, Sname, Ssex, Sage, Sdept)
+VALUES ('20230001', '张三', '男', 20, 'IS');
+```
+
+```sql
+INSERT INTO Dept_age(Sdept, Savg_Age)
+SELECT Sdept, AVG(Sage)
+FROM Stu
+GROUP BY Sdept;
+```
+
+#### 修改
+
+语法：`UPDATE 表名 SET 列名1=值1, 列名2=值2, ... [WHERE 条件];`
+
+```sql
+UPDATE Stu
+SET Sage = 21
+WHERE Sno = '20230001';
+```
+
+```sql
+UPDATE SC
+SET Grade=0
+WHERE Sno IN (
+  SELECT Sno
+  FROM Stu
+  WHERE Sdept='CS'
+);
+```
+
+#### 删除
+
+语法： `DELETE FROM 表名 [WHERE 条件];`  
+
+```sql
+DELETE FROM Stu
+WHERE Sno = '20230001';
+```
+
+```sql
+DELETE FROM SC
+WHERE Sno IN (
+  SELECT Sno
+  FROM Stu
+  WHERE Sdept='CS'
+);
 ```
