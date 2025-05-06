@@ -1,3 +1,5 @@
+<!-- markdownlint-disable -->
+
 # Web标准  
 
 组成部分：  
@@ -2256,3 +2258,325 @@ function show(menu) {
 | `node.lastChild`        | 获取 **最后一个子节点** (可能包含文本节点) |
 | `node.previousSibling`  | 获取 **前一个兄弟节点** (可能包含文本节点) |
 | `node.nextSibling`      | 获取 **后一个兄弟节点** (可能包含文本节点) |
+
+# Vue.js
+
+## 概述
+
+Vue.js 是一个用于**构建用户界面**的 JavaScript 框架，提供了一套**声明式**、**组件化**的编程模型，用于高效开发用户界面。
+
+### 环境配置
+
+1. 安装node.js
+2. 创建项目
+   - cmd进入工作目录
+   - `npm create vue@latest`  
+   - 或 `npm init vue@latest`
+3. 安装依赖
+   - `cd <project-name>`
+   - `npm install`
+4. 启动项目  
+   - `npm run dev`
+
+### 项目结构
+
+```
+vue-project           // 项目根目录
+├─node_modules        // 第三方库依赖库
+├─public              // 静态资源
+├─src                 // 源代码
+│   ├─assets          // 静态资源，如图片、字体、CSS预处理器文件
+│   ├─components      // Vue组件
+│   ├─router          // 路由配置
+│   ├─App.vue         // 应用的入口组件
+│   └─main.js         // 项目的入口文件
+├── index.html        // HTML入口文件模板
+├── jsconfig.json     // JavaScript 项目配置文件
+├── package.json      // 项目包管理文件
+├── package-lock.json // 锁定项目依赖的版本
+└── vue.config.js     // Vue CLI 项目的可选配置文件
+```
+
+## 模板语法
+
+Vue.js 使用基于 HTML 的模板语法，可以将组件实例的数据绑定到 DOM 中。
+
+### 文本插值
+
+文本插值是最基本的数据绑定形式，使用 `Mustache` 语法。
+
+`Mustache` 语法用于将数据填充到预定义的模板中，其中使用 `{{}}` 来表示被替换的变量。  
+
+#### Mustache 语法
+
+```html
+<template>
+  <p>{{msg}}</p>
+</template>
+
+<script>
+export default {
+  data() {
+    return { msg: 'Hello, Vue!' }
+  }
+}
+</script>
+```
+
+1. 基本文本插值
+
+模板：
+
+```mustache
+Hello, {{name}}!
+Your message is: {{message}}
+```
+
+数据：
+
+```json
+{
+  "name": "John",
+  "message": "Hello, Vue!"
+}
+```
+
+输出：
+
+```html
+Hello, World!
+Your message is: &lt;b&gt;Bold Text&lt;/b&gt;
+```
+
+注意，`{{variable_name}}` 会对插入的值进行 HTML 转义。即值中的 HTML 特殊字符，如 `<` `>`, `&`, `"`, `'`，会被转换成相应的 HTML 实体，如 `&lt;`, `&gt;`, `&amp;`, `&quot;`, `&apos;`。
+
+2. 不转义的文本插值
+
+使用 `{{{variable_name}}}` 或 `{{& variable_name}}` 以插入原始的 HTML 或者其他不希望被转义的内容。
+
+模板：
+
+```mustache
+Hello, {{{name}}}!
+Your message is: {{& message}}
+```
+
+数据：
+
+```json
+{
+  "name": "<b>Alice</b>",
+  "message": "<i>Italic Text</i>"
+}
+```
+
+输出：
+
+```html
+Hello, <b>Alice</b>!
+Your message is: <i>Italic Text</i>
+```
+
+3. 访问嵌套数据
+
+使用点号 `.` 访问嵌套数据。
+
+模板：
+
+```mustache
+User Name: {{user.name}}
+User Age: {{user.details.age}}
+```
+
+数据：
+
+```json
+{
+  "user": {
+    "name": "Bob",
+    "details": {
+      "age": 25
+    }
+  }
+}
+```
+
+输出：
+
+```html
+User Name: Bob
+User Age: 25
+```
+
+#### JavaScript 表达式
+
+```html
+<template>
+  <p>{{ num + 1 }}</p>
+  <p>{{ isActive ? 'Active' : 'Inactive' }}</p>
+  <p>{{ message.split('').reverse().join('') }}</p>
+</template>
+
+<script>
+export default {
+  data() {
+    return { 
+      num: 1, 
+      isActive: true, 
+      message: 'Hello, Vue!' 
+    }
+  }
+}
+</script>
+```
+
+注意，其中必须为一个**可求值的单一表达式**，即可以return结果的表达式，并且不可以使用 `if` `for` `while` 等控制语句。  
+
+`<template>` 中只应该实现内容的赋值，具体计算的复杂逻辑应该在 `<script>` 中实现。
+
+#### 原始html值
+
+插入原始 HTML 值可以通过 `v-html`。
+
+```html
+<template>
+  <p><span v-html='rawHtml'></span></p>
+</template>
+
+<script>
+export default {
+  data() {
+    return { 
+      rawHtml: "<a href='https://www.baidu.com'>百度</a>" 
+    }
+  }
+}
+</script>
+```
+
+### 属性绑定
+
+在html attributes中不能使用mustache语法实现文本插值，而是需要使用 `v-bind` 实现：  
+
+```html
+<template>
+  <div v-bind:class="dynamicClass" v-bind:id="dynamicId">
+    测试
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return { 
+      dynamicClass: 'class1',
+      dynamicId: 'id1'
+    }
+  }
+}
+</script>
+```
+
+```html
+<div class="class1" id="id1">测试</div>
+```
+
+也可以省略 `v-bind`，仅保留引号，如：
+
+```html
+<template>
+  <div :class="dynamicClass" :id="dynamicId">
+    测试
+  </div>
+</template>
+```
+
+可以通过对象一次性绑定多个属性，如：  
+
+```html
+<template>
+  <div v-bind="ObjAttrs">测试</div>
+</template>
+
+<script>
+export default {
+  data() {
+    return { 
+      ObjAttrs: {
+        id: 'id1',
+        class: 'class1'
+      }
+    }
+  }
+}
+</script>
+```
+
+```html
+<div id="id1" class="class1">测试</div>
+```
+
+
+注意，若通过 `v-bind` 传入的值为 `null` 或 `undefined`，则该属性会被移除，如：
+
+```html
+<template>
+  <div v-bind:class="dynamicClass" v-bind:id="dynamicId" v-bind:title="dynamicTitle">测试</div>
+</template>
+
+<script>
+export default {
+  data() {
+    return { 
+      dynamicClass: 'class1',
+      dynamicId: undefined,
+      dynamicTitle: null
+    }
+  }
+}
+</script>
+```
+
+```html
+<div class="class1">测试</div>
+```
+
+### 条件渲染
+
+- `v-if`，仅当值为真值时才被渲染  
+- `v-else`，当 `v-if` 的值为假值时，渲染 `v-else` 的内容  
+- `v-else-if`，字面意思的else if    
+- `v-show`，仅当值为真值时才被显示
+
+示例：
+
+```html
+<template>
+  <div v-if="type === 'A'">A</div>
+  <div v-else-if="type === 'B'">B</div>
+  <div v-else-if="type === 'C'">C</div>
+  <div v-else>Not A/B/C</div>
+</template>
+
+<script>
+export default {
+  data() {
+    return { 
+      type: 'A'
+    }
+  }
+}
+</script>
+```
+
+注意：虽然 `v-if` 和 `v-show` 都可以实现条件渲染，但是 `v-if` 是真正的“条件渲染”，仅当值首次为真值时才会进行渲染，且切换值时，条件区块内事件监听器和子组件会被销毁并重建，而 `v-show` 无论取值如何都会渲染指定元素，值的真假只会影响是否显示。
+
+- 频繁切换状态：使用 `v-show`  
+- 条件不经常改变：使用 `v-if`  
+
+### 列表渲染
+
+可以使用 `v-for` 指令基于数组来渲染列表。
+
+
+
