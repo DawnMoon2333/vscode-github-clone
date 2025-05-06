@@ -2578,5 +2578,482 @@ export default {
 
 可以使用 `v-for` 指令基于数组来渲染列表。
 
+```html
+<template>
+  <div>
+    <p v-for="item in items">{{ item }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return { 
+      items: ['A', 'B', 'C']
+    }
+  }
+}
+</script>
+```
+
+```html
+<div>
+  <p>A</p>
+  <p>B</p>
+  <p>C</p>
+</div>
+```
+
+对于复杂的json格式：  
+
+```html
+<template>
+  <div v-for="result in results">
+    <p>{{ result.title }}</p>    
+    <img v-bind:src="result.avatar" alt="avatar">
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return { 
+      results: [
+        {
+          "id": 1234567,
+          "title": "京都之秋 | 漫步在红叶纷飞的哲学之道，感受宁静之美",
+          "avatar": "https://pic.example.com/avatar/001/23/45/67/200?v=1623456789"
+        },
+        {
+          "id": 1234568,
+          "title": "冰岛奇遇 | 极光下的露营之夜，体验极地的浪漫和神秘",
+          "avatar": "https://pic.example.com/avatar/008/99/77/66/200?v=1629876543"
+        },
+        {
+          "id": 1234569,
+          "title": "摩洛哥色彩 | 穿梭于马拉喀什老城的巷弄之间，感受异域魅力",
+          "avatar": "https://pic.example.com/avatar/004/56/78/90/200?v=1634567890"
+        }
+      ]
+    }
+  }
+}
+</script>
+```
+
+```html
+<div id="app" data-v-app="">
+  <div>
+    <p>京都之秋 | 漫步在红叶纷飞的哲学之道，感受宁静之美</p>
+    <img src="https://pic.example.com/avatar/001/23/45/67/200?v=1623456789" alt="avatar"></div>
+  <div>
+    <p>冰岛奇遇 | 极光下的露营之夜，体验极地的浪漫和神秘</p>
+    <img src="https://pic.example.com/avatar/008/99/77/66/200?v=1629876543" alt="avatar"></div>
+  <div>
+    <p>摩洛哥色彩 | 穿梭于马拉喀什老城的巷弄之间，感受异域魅力</p>
+    <img src="https://pic.example.com/avatar/004/56/78/90/200?v=1634567890" alt="avatar"></div>
+</div>
+```
+
+也可以遍历对象属性：  
+
+```html
+<template>
+  <div>
+    <p v-for="info in userInfo">{{ info }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return { 
+      userInfo: {
+        name: '张三',
+        age: 20,
+        gender: '男'
+      }
+    }
+  }
+}
+</script>
+```
+
+```html
+<div>
+  <p>张三</p>
+  <p>20</p>
+  <p>男</p>
+</div>
+```
+
+遍历时，除了可以显示每个键的值，还可以显示索引和键名：  
+
+```html
+<template>
+  <div>
+    <p v-for="(value, key, index) in userInfo">{{ index }} - {{ key }} - {{ value }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return { 
+      userInfo: {
+        name: '张三',
+        age: 20,
+        gender: '男'
+      }
+    }
+  }
+}
+</script>
+```
+
+```html
+<div>
+  <p>0 - name - 张三</p>
+  <p>1 - age - 20</p>
+  <p>2 - gender - 男</p>
+</div>
+```
+
+#### 使用 `key` 管理可复用的元素
+
+不使用 `key` 时，vue会**按位置**复用已有的元素。此时如果实际元素不变，只是位置变化，vue会认为元素没有变化，从而不会重新渲染，导致内容错位、动画/状态异常等。
+
+可以使用唯一标识 `key` 来追踪并移动元素：  
+
+```html
+<template>
+  <div>
+    <p v-for="result in results" v-bind:key="result.id">{{ result.title }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return { 
+      results: [
+        {
+          "id": 1234567,
+          "title": "京都之秋 | 漫步在红叶纷飞的哲学之道，感受宁静之美",
+          "avatar": "https://pic.example.com/avatar/001/23/45/67/200?v=1623456789"
+        },
+        {
+          "id": 1234568,
+          "title": "冰岛奇遇 | 极光下的露营之夜，体验极地的浪漫和神秘",
+          "avatar": "https://pic.example.com/avatar/008/99/77/66/200?v=1629876543"
+        },
+        {
+          "id": 1234569,
+          "title": "摩洛哥色彩 | 穿梭于马拉喀什老城的巷弄之间，感受异域魅力",
+          "avatar": "https://pic.example.com/avatar/004/56/78/90/200?v=1634567890"
+        }
+      ]
+    }
+  }
+}
+</script>
+```
+
+**注意**：不应该使用 `index` 作为 `key`，因为 `index` 在列表变化时会发生变化，导致元素被错误地复用。
+
+## 事件
+
+### 事件处理
+
+使用 `v-on` 或 `@` 来监听DOM事件，并在事件触发时执行指定的JavaScript  
+
+```html
+<template>
+  <button @click="handleClick">+1</button>
+  <button v-on:click="count--">-1</button>
+  <p>count={{ count }}</p>
+</template>
+
+<script>
+export default {
+  data() {
+    return { 
+      count: 0
+    }
+  },
+  methods: {
+    handleClick() {
+      this.count++
+    }
+  }
+}
+</script>
+```
+
+### 事件传参
+
+在触发事件时可以传递参数：  
+
+```html
+<template>
+  <div>
+    <p @click="getNameHandler(item)" v-for="(item, index) in items">{{ item }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return { 
+      items: ['A', 'B', 'C']
+    }
+  },
+  methods: {
+    getNameHandler(item) {
+      // 输出被点击的元素名到控制台
+      console.log(item)
+    }
+  }
+}
+</script>
+```
+
+不传递参数时会默认传递一个 `event` 对象：  
+
+```html
+<template>
+  <div>
+    <button @click="handleClick">点击</button>
+  </div>
+</template>
+
+<script>
+export default {
+  methods: {
+    handleClick(event) {
+      console.log(event)
+    }
+  }
+}
+</script>
+```
+
+若已经传入了其他参数，就必须用 `$event` 显式传递：  
+
+```html
+<template>
+  <div>
+    <p @click="getNameHandler(item, $event)" v-for="(item, index) in items">{{ item }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return { 
+      items: ['A', 'B', 'C']
+    }
+  },
+  methods: {
+    getNameHandler(item, e) {
+      // 输出被点击的元素名到控制台
+      console.log(item)
+      console.log(e)
+    }
+  }
+}
+</script>
+```
+
+### 事件修饰符
+
+用于简化代码，详见 <https://cn.vuejs.org/guide/essentials/event-handling.html#event-modifiers>
+
+直接使用event阻止默认事件：
+
+```html
+<template>
+  <div>
+    <a href="https://www.baidu.com" @click="handleClick">百度</a>
+  </div>
+</template>
+
+<script>
+export default {
+  methods: {
+    handleClick(e) {
+      e.preventDefault()
+      console.log('点击了')
+    }
+  }
+}
+</script>
+```
+
+使用事件修饰符：
+
+```html
+<template>
+  <div>
+    <a href="https://www.baidu.com" @click.prevent="handleClick">百度</a>
+  </div>
+</template>
+
+<script>
+export default {
+  methods: {
+    handleClick() {
+      console.log('点击了')
+    }
+  }
+}
+</script>
+```
+
+### 数组变化侦测
+
+vue能侦听响应式数组的并更方法，在被调用时自动更新UI，包括：  
+
+- `push()`
+- `pop()`
+- `shift()`
+- `unshift()`
+- `splice()`
+- `sort()`
+- `reverse()`
+
+```html
+<template>
+  <button @click="addListHandler">增加名字</button>
+  <ul>
+    <li v-for="name in names" :key="name">{{ name }}</li>
+  </ul>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      names: ['chara', 'tom', 'jerry']
+    }
+  },
+  methods: {
+    addListHandler() {
+      this.names.push("frisk")
+    }
+  }
+}
+</script>
+```
+
+但是下面的方法不会触发界面更新：
+
+- `filter()`
+- `concat()`
+- `slice()`
+
+> 这些方法不会修改原数组，会返回一个新的数组，应该把这个新的数组赋值给原先的变量才会更新UI
+
+需要使用新数组替换旧数组：
+
+```html
+<template>
+  <button @click="addListHandler">增加名字</button>
+  <ul>
+    <li v-for="name in names" :key="name">{{ name }}</li>
+  </ul>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      names: ['chara', 'tom', 'jerry']
+    }
+  },
+  methods: {
+    addListHandler() {
+      this.names = this.names.concat(["frisk"])
+    }
+  }
+}
+</script>
+```
+
+## 计算属性
+
+将模板中表达式的计算移动到计算属性中，简化模板代码
+
+模板中的表达式：
+
+```html
+<template>
+  <p>{{ names.length > 0 ? "Yes" : "No" }}</p>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      names: ['chara', 'tom', 'jerry']
+    }
+  }
+}
+</script>
+```
+
+移动到计算属性 `computed` 中：  
+
+```html
+<template>
+  <p>{{ namesLength }}</p>
+  <!-- 这里不加括号，因为他是一个值 -->
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      names: ['chara', 'tom', 'jerry']
+    }
+  },
+  computed: {
+    namesLength() {
+      return this.names.length > 0 ? "Yes" : "No"
+    }
+  }
+}
+</script>
+```
+
+同理也可以移动到方法中：  
+
+```html
+<template>
+  <p>{{ namesLength() }}</p>
+  <!-- 这里需要加括号，因为这是个函数 -->
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      names: ['chara', 'tom', 'jerry']
+    }
+  },
+  methods: {
+    namesLength() {
+      return this.names.length > 0 ? "Yes" : "No"
+    }
+  }
+}
+</script>
+```
+
+但是计算属性的结果会基于其响应式依赖被**缓存**，仅当依赖更新时才重新计算，而方法则每次调用都会执行。
+
+## 绑定
+
+### Class绑定
 
 
