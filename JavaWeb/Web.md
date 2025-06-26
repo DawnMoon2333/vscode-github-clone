@@ -39,22 +39,6 @@
 - title：鼠标悬停时显示的文本  
 - style：行内样式  
 
-
-
-# Head
-
-## title
-
-## meta
-
-## base
-
-## link
-
-## style
-
-## script
-
 # Body
 
 ## 全局属性
@@ -886,8 +870,8 @@ p span { ... }
 
 ### 行内/内嵌  
 - 写在标签的 `style` 属性中  
-- <h4 style="color: red;">Hello World</h1>  
-- <span style="color: gray;">2025年1月1日</span>  
+- `<h4 style="color: red;">Hello World</h1>`  
+- `<span style="color: gray;">2025年1月1日</span>`  
 - 注意，`<span>` 可以用于给元素添加样式，但是 `<span>` 本身没有特殊含义  
 
 ### 内部  
@@ -3055,5 +3039,1135 @@ export default {
 ## 绑定
 
 ### Class绑定
+
+做class的属性绑定时，除了传入一个属性，也可以传入数组：  
+
+```html
+ <template>
+  <p :class="{ 'active': isActive, 'text-danger': isError}">class属性绑定</p>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      isActive: true,
+      isError: true,
+    }
+  }
+}
+</script>
+
+<style>
+.active {
+  font-size: 30px;
+}
+
+.text-danger {
+  color: red;
+}
+</style>
+```
+
+```html
+<p class="active text-danger">
+  class属性绑定
+</p>
+```
+
+也可以改成传入一个对象：
+
+```html
+ <template>
+  <p :class="ClassObject">class属性绑定</p>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      ClassObject:{
+        isActive: true,
+        isError: true
+      }
+    }
+  }
+}
+</script>
+
+<style>
+.active {
+  font-size: 30px;
+}
+
+.text-danger {
+  color: red;
+}
+</style>
+```
+
+也可以传入数组：
+
+```html
+ <template>
+  <p :class="[arrActive, arrHasError]">class属性绑定</p>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      arrActive: "active",
+      arrHasError: "text-danger"
+    }
+  }
+}
+</script>
+
+<style>
+.active {
+  font-size: 30px;
+}
+
+.text-danger {
+  color: red;
+}
+</style>
+```
+
+还有三元运算符：
+
+```html
+ <template>
+  <p :class="[isActive ? 'active' : 'text-danger']">class属性绑定</p>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      isActive: false,
+      arrActive: "active",
+      arrHasError: "text-danger"
+    }
+  }
+}
+</script>
+
+<style>
+.active {
+  font-size: 30px;
+}
+
+.text-danger {
+  color: red;
+}
+</style>
+```
+
+### Style绑定
+
+与class绑定类似，  
+
+```html
+<template>
+  <p :style="{ color: activeColor, fontSize: fontSize + 'px' }">
+    Style绑定
+  </p>
+  <p :style="styleObject">
+    对象
+  </p>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      activeColor: "red",
+      fontSize: 30,
+      styleObject:{
+        color: 'green',
+        fontSize: '20px'
+      }
+    }
+  }
+}
+</script>
+
+<style>
+.active {
+  font-size: 30px;
+}
+
+.text-danger {
+  color: red;
+}
+</style>
+```
+
+## 侦听器
+
+用于监听页面中的数据变化，当数据变化时执行指定的操作。  
+
+```html
+<template>
+  <h3>这个写死的监听不了，下面这个使用双大括号插值的，也称为响应式数据，可以监听</h3>
+  <p>{{ message }}</p>
+  <button @click="updateHandler">修改数据</button>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      message: "Hello World!"
+    }
+  },
+  methods: {
+    updateHandler() {
+      this.message = "message updated"
+    }
+  },
+  watch:{
+    message(newValue, oldValue) {
+      // 函数名称为要监听的属性名
+      // 会传入两个默认的参数：newValue, oldValue
+      // message发生变化时自动执行这个函数
+      console.log("new:", newValue, "\nold:", oldValue)
+    }
+  }
+}
+</script>
+```
+
+## 表单输入绑定
+
+使用 `v-model` 指令实现表单输入框中内容与数据的绑定同步  
+
+```html
+<template>
+  <form>
+    <input type="text" v-model="message">
+    <!-- input中的值更新时，v-model自动更新到message中 -->
+    <p>{{message}}</p>
+    <input type="checkbox" id="checkbox" v-model="checked">
+    <label for="checkbox">{{checked}}</label>
+  </form>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      message: '',
+      checked: false
+    }
+  }
+}
+</script>
+```
+
+`v-model` 也提供了修饰符：
+
+- `.lazy`：仅在失去焦点或按回车时更新  
+- `.number`：将输入值转换为数字类型  
+- `.trim`：去除值两端的空白字符  
+
+## 模板引用
+
+虽然Vue的声明式渲染使得我们不需要直接操作DOM，但是某些情况下还是需要直接访问DOM元素，此时可以使用 `ref` attribute
+
+引用会被暴露在 `this.$refs` 中
+
+```html
+<template>
+<div ref="containerRef" class="container">{{content}}</div>
+<input type="text" ref="username">
+<button @click="getElemHandler">获取元素</button>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      content: 'Hello Vue'
+    }
+  },
+  methods: {
+    getElemHandler() {
+      console.log(this.$refs.containerRef.innerHTML = 'updated')
+    //   innerHTML是原生js的属性
+      console.log(this.$refs.username.value);
+    }
+  }
+}
+</script>
+```
+
+## 组件组成
+
+vue中所有内容由 `组件` 组成，具有可复用性，每个组件都定义在一个 `.vue` 文件中，称为 `单文件组件` 或 `SFC`
+
+### 组件的结构
+
+```html
+<template>
+<!-- 承载htmk标签 -->
+</template>
+
+<script>
+// 承载业务逻辑
+</script>
+
+<style>
+/* 承载样式 */
+</style>
+```
+
+### 在App.vue中引用组件
+
+假设有目录结构
+
+```
+vuetest
+└─src
+    ├─assets
+    ├─components
+    │  └─subComp.vue
+    └─App.vue
+```
+
+在 `App.vue` 中引用 `subComp.vue` 组件：
+
+```html
+<template>
+<!--第三步：显示组件-->
+  <subComp />
+</template>
+
+<script>
+// 第一步：引入组件
+import subComp from "./components/subComp.vue"
+
+export default {
+  // 第二步：注入组件
+  components: {
+    subComp
+  }
+}
+</script>
+
+<style scoped>
+/* scoped属性表示样式只作用于当前组件 */
+</style>
+```
+
+
+
+
+ 
+
+## template
+
+```html
+<template>
+
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+
+    }
+  },
+  methods: {
+
+  },
+  watch: {
+    
+  }
+}
+</script>
+
+<style>
+
+</style>
+```
+
+
+
+
+好的，我们进入最后也是最关键的Vue和Element Plus部分。这部分内容是现代前端开发的核心，我会为你整理得非常系统和详尽。
+
+---
+
+### **Web期末复习 - 第四部分：Vue.js 知识点详解**
+
+#### **一、 Vue 概述与核心概念**
+
+##### **1. 概述**
+Vue (发音 /vjuː/，类似于 view) 是一套用于构建用户界面的**渐进式框架**。
+
+- **渐进式 (Progressive)**: 你可以只用Vue的核心库来做简单的页面渲染，也可以配合官方的路由、状态管理等插件来构建复杂的单页面应用 (SPA)。
+- **核心思想**:
+  - **声明式渲染**: 你只需要告诉Vue你想要什么样的DOM状态，Vue会根据你的数据自动高效地更新DOM。
+  - **组件化开发**: 将UI拆分成一个个独立、可复用的组件，像搭积木一样构建整个应用。
+
+##### **2. 环境准备**
+现代Vue开发依赖于Node.js环境。
+- **安装Node.js**: 从官网下载并安装。安装后，会自动包含 `npm` (Node Package Manager)。
+- **创建项目 (Vite)**: Vue官方推荐使用Vite作为构建工具。
+  ```bash
+  # 使用 npm 创建一个新的Vue项目 (会有一个交互式引导)
+  npm create vue@latest
+  ```
+- **启动项目**:
+  ```bash
+  cd <your-project-name>
+  npm install   # 安装依赖
+  npm run dev   # 启动开发服务器
+  ```
+
+##### **3. 单文件组件 (Single File Component - SFC)**
+这是Vue的标志性特性。一个 `.vue` 文件就是一个完整的组件，它将组件的 **HTML结构、JS逻辑、CSS样式** 封装在一起。
+
+- **结构**:
+  ```vue
+  <template>
+    <!-- HTML 结构 -->
+    <div class="greeting">{{ message }}</div>
+  </template>
+
+  <script setup>
+    // JS 逻辑 (Composition API)
+    import { ref } from 'vue';
+    const message = ref('Hello, Vue!');
+  </script>
+
+  <style scoped>
+    /* CSS 样式 */
+    .greeting {
+      color: red;
+    }
+  </style>
+  ```
+- **`<template>`**: 组件的模板，定义了DOM结构。
+- **`<script>`**: 组件的逻辑。可以是**选项式API**或**组合式API**。
+- **`<script setup>`**: 一个语法糖，让使用**组合式API**更简洁。是目前推荐的写法。
+- **`<style scoped>`**: 组件的样式。`scoped`属性确保这里的样式**只对当前组件生效**，不会污染全局样式。
+
+##### **4. 选项式API (Options API) vs 组合式API (Composition API)**
+
+| 特性 | 选项式 API (Vue 2 风格) | 组合式 API (Vue 3 推荐) |
+| :--- | :--- | :--- |
+| **组织方式** | 通过`data`, `methods`, `computed`等选项来组织代码。 | 围绕**逻辑功能**来组织代码，相关代码可以写在一起。 |
+| **代码复用** | 主要通过 Mixins，但有命名冲突、数据来源不清晰等问题。 | 通过**组合式函数 (Composables)**，代码逻辑更清晰、灵活、无冲突。 |
+| **写法** | 在一个 `<script>` 标签内 `export default { ... }` | 通常在 `<script setup>` 标签内直接编写。 |
+
+- **选项式 API 示例**:
+  ```vue
+  <script>
+  export default {
+    data() {
+      return {
+        count: 0
+      }
+    },
+    methods: {
+      increment() {
+        this.count++;
+      }
+    },
+    mounted() {
+      console.log('组件已挂载');
+    }
+  }
+  </script>
+  ```
+- **组合式 API (`<script setup>`) 示例**:
+  ```vue
+  <script setup>
+  import { ref, onMounted } from 'vue';
+
+  // 响应式状态
+  const count = ref(0);
+
+  // 方法
+  function increment() {
+    count.value++; // ref创建的变量需要通过 .value 访问
+  }
+
+  // 生命周期钩子
+  onMounted(() => {
+    console.log('组件已挂载');
+  });
+  </script>
+  ```
+**结论**: **组合式API (`<script setup>`) 是未来的趋势，也是官方推荐的写法**，它在大型项目中代码组织和逻辑复用方面优势明显。
+
+---
+
+#### **二、 模板语法与核心指令**
+
+##### **1. 文本插值 (Mustache 语法)**
+使用双大括号 `{{ }}` 将数据显示在模板中。
+- **格式**: `{{ javascript表达式 }}`
+- **示例**:
+  ```vue
+  <template>
+    <p>Message: {{ message }}</p>
+    <p>Calculation: {{ 1 + 1 }}</p>
+  </template>
+  <script setup>
+    const message = 'Hello Vue!';
+  </script>
+  ```
+
+##### **2. 属性绑定 (`v-bind`)**
+用于动态地绑定一个或多个HTML属性。
+- **完整语法**: `v-bind:href="url"`
+- **简写 (常用)**: `:href="url"`
+- **示例**:
+  ```vue
+  <template>
+    <a :href="linkUrl">Visit my site</a>
+    <img :src="imagePath" :alt="imageDesc">
+    <!-- 动态绑定class -->
+    <div :class="{ active: isActive, 'text-danger': hasError }"></div>
+  </template>
+  <script setup>
+    const linkUrl = 'https://vuejs.org';
+    const imagePath = './logo.png';
+    const imageDesc = 'Vue Logo';
+    const isActive = true;
+    const hasError = false;
+  </script>
+  ```
+
+##### **3. 条件渲染 (`v-if` vs `v-show`)**
+- **`v-if`, `v-else-if`, `v-else`**:
+  - **作用**: 根据表达式的真假值，**真正地创建或销毁**DOM元素。
+  - **适用场景**: 条件不经常改变时，因为它有更高的切换开销。
+- **`v-show`**:
+  - **作用**: 根据表达式的真假值，通过CSS的 `display` 属性来**显示或隐藏**元素。元素始终存在于DOM中。
+  - **适用场景**: 需要非常频繁地切换显示/隐藏状态时，因为它有更高的初始渲染开销。
+- **示例**:
+  ```vue
+  <template>
+    <button @click="toggle">Toggle</button>
+    <h1 v-if="isVisible">This is v-if</h1>
+    <h1 v-show="isVisible">This is v-show</h1>
+  </template>
+  <script setup>
+    import { ref } from 'vue';
+    const isVisible = ref(true);
+    const toggle = () => isVisible.value = !isVisible.value;
+  </script>
+  ```
+
+##### **4. 列表渲染 (`v-for`)**
+用于基于一个数组来渲染一个列表。
+- **格式**: `v-for="(item, index) in items"`
+- **`key`**: 必须为 `v-for` 提供一个唯一的 `key` 属性（通常是 `item.id`）。这能帮助Vue高效地更新DOM，避免不必要的重新渲染。
+- **示例**:
+  ```vue
+  <template>
+    <ul>
+      <li v-for="todo in todos" :key="todo.id">
+        {{ todo.text }}
+      </li>
+    </ul>
+  </template>
+  <script setup>
+    import { ref } from 'vue';
+    const todos = ref([
+      { id: 1, text: '学习HTML' },
+      { id: 2, text: '学习CSS' },
+      { id: 3, text: '学习JavaScript' }
+    ]);
+  </script>
+  ```
+
+##### **5. 事件处理 (`v-on`)**
+用于监听DOM事件，并在事件触发时执行一些JavaScript代码。
+- **完整语法**: `v-on:click="handler"`
+- **简写 (常用)**: `@click="handler"`
+- **事件参数**:
+  - 如果不传参数，默认第一个参数是原生的 `event` 对象。
+  - 如果需要传递自定义参数，同时又需要 `event` 对象，可以使用特殊变量 `$event`。
+- **事件修饰符**:
+  - `.stop`: 阻止事件冒泡。
+  - `.prevent`: 阻止元素的默认行为 (如 `<a>` 的跳转)。
+  - `.once`: 事件只触发一次。
+  - `.self`: 只有当事件是从侦听器绑定的元素本身触发时才触发。
+- **示例**:
+  ```vue
+  <template>
+    <button @click="count++">Add 1</button>
+    <p>Count is: {{ count }}</p>
+    
+    <!-- 带参数和$event -->
+    <button @click="greet('Hello', $event)">Greet</button>
+
+    <!-- 使用修饰符 -->
+    <a @click.prevent="doSomething" href="/foo">Link with prevent</a>
+  </template>
+  <script setup>
+    import { ref } from 'vue';
+    const count = ref(0);
+    function greet(message, event) {
+      alert(message);
+      console.log(event.target.tagName); // "BUTTON"
+    }
+    function doSomething() {
+      // ...
+    }
+  </script>
+  ```
+
+##### **6. 计算属性 (`computed`)**
+用于声明一个依赖其他响应式数据计算得来的新数据。
+- **特点**:
+  - **缓存**: 结果会被缓存。只要依赖的数据没有改变，多次访问计算属性会立即返回之前缓存的结果，而不会重新执行计算。
+  - **依赖性**: 当依赖的响应式数据改变时，它会自动重新计算。
+- **适用场景**: 对于任何包含响应式数据的复杂逻辑，都应该使用计算属性。
+- **示例**:
+  ```vue
+  <template>
+    <p>Has published books: {{ publishedBooksMessage }}</p>
+  </template>
+  <script setup>
+    import { ref, computed } from 'vue';
+    const author = ref({
+      name: 'John Doe',
+      books: ['Vue 2', 'Vue 3']
+    });
+
+    const publishedBooksMessage = computed(() => {
+      // 当 author.value.books 改变时，这里会自动重新计算
+      return author.value.books.length > 0 ? 'Yes' : 'No';
+    });
+  </script>
+  ```
+
+##### **7. 侦听器 (`watch`)**
+用于“侦听”一个或多个响应式数据源，并在数据源变化时执行一个**副作用**（如发起网络请求、操作DOM等）。
+- **`watch` vs `computed`**:
+  - `computed`: 计算并返回一个新值（有返回值，同步）。
+  - `watch`: 观察数据变化并执行操作（无返回值，可以执行异步操作）。
+- **示例**:
+  ```vue
+  <template>
+    <input v-model="question" />
+    <p>{{ answer }}</p>
+  </template>
+  <script setup>
+    import { ref, watch } from 'vue';
+    const question = ref('');
+    const answer = ref('Questions usually contain a question mark. ;-)');
+
+    // 侦听 question 的变化
+    watch(question, async (newQuestion, oldQuestion) => {
+      if (newQuestion.includes('?')) {
+        answer.value = 'Thinking...';
+        // 模拟API调用
+        await new Promise(res => setTimeout(res, 1000));
+        answer.value = 'This is a mock answer.';
+      }
+    });
+  </script>
+  ```
+
+##### **8. 表单输入绑定 (`v-model`)**
+用于在表单的 `<input>`, `<textarea>`, `<select>` 元素上创建双向数据绑定。
+- **原理**: 它是 `v-bind:value` 和 `v-on:input` 的语法糖。
+- **示例**:
+  ```vue
+  <template>
+    <!-- 文本输入 -->
+    <input v-model="text" />
+    <p>{{ text }}</p>
+
+    <!-- 复选框 -->
+    <input type="checkbox" id="checkbox" v-model="checked" />
+    <label for="checkbox">{{ checked }}</label>
+
+    <!-- 单选按钮 -->
+    <input type="radio" id="one" value="One" v-model="picked" />
+    <input type="radio" id="two" value="Two" v-model="picked" />
+    <p>Picked: {{ picked }}</p>
+
+    <!-- 下拉列表 -->
+    <select v-model="selected">
+      <option>A</option>
+      <option>B</option>
+    </select>
+  </template>
+  <script setup>
+    import { ref } from 'vue';
+    const text = ref('');
+    const checked = ref(true);
+    const picked = ref('One');
+    const selected = ref('A');
+  </script>
+  ```
+
+##### **9. 模板引用 (`ref`)**
+用于获取对DOM元素或子组件实例的直接引用。
+- **用法**:
+  1.  在 `<script setup>` 中声明一个 `ref`，初始值为 `null`。
+  2.  在模板中，给元素添加 `ref="你声明的ref名字"` 属性。
+- **示例**:
+  ```vue
+  <template>
+    <input ref="inputRef" />
+  </template>
+  <script setup>
+    import { ref, onMounted } from 'vue';
+    
+    // 1. 声明一个 ref 来存放该元素的引用
+    const inputRef = ref(null);
+
+    onMounted(() => {
+      // DOM 渲染后，ref 会被赋值为该 DOM 元素
+      inputRef.value.focus();
+    });
+  </script>
+  ```
+
+---
+
+#### **三、 组件化开发**
+
+##### **1. 组件组成与嵌套**
+一个Vue应用由一个根组件和若干个嵌套的子组件构成。
+
+##### **2. 组件注册**
+- **全局注册 (不常用)**: 在 `main.js` 中使用 `app.component()`。
+- **局部注册 (推荐)**: 在父组件的 `<script setup>` 中直接 `import` 即可使用。
+  ```vue
+  <!-- ParentComponent.vue -->
+  <template>
+    <ChildComponent />
+  </template>
+  <script setup>
+    import ChildComponent from './ChildComponent.vue';
+  </script>
+  ```
+
+##### **3. 父子组件通信**
+
+- **`props`: 父 -> 子**
+  父组件通过 `props` 向子组件传递数据。
+  - **父组件 (`Parent.vue`)**:
+    ```vue
+    <template>
+      <ChildComponent :message="greeting" :user-age="age" />
+    </template>
+    <script setup>
+      import { ref } from 'vue';
+      import ChildComponent from './Child.vue';
+      const greeting = ref('Hello from parent');
+      const age = ref(20);
+    </script>
+    ```
+  - **子组件 (`Child.vue`)**:
+    ```vue
+    <template>
+      <p>{{ message }}</p>
+      <p>Age: {{ userAge }}</p>
+    </template>
+    <script setup>
+      // 使用 defineProps 宏来声明 props
+      const props = defineProps({
+        message: String, // 定义类型
+        userAge: {       // 详细定义
+          type: Number,
+          required: true // 设为必填项
+        }
+      });
+    </script>
+    ```
+
+- **`$emit`: 子 -> 父**
+  子组件通过触发（`emit`）一个自定义事件来向父组件发送消息。
+  - **子组件 (`Child.vue`)**:
+    ```vue
+    <template>
+      <button @click="sendDataToParent">Send Data</button>
+    </template>
+    <script setup>
+      // 使用 defineEmits 宏来声明要触发的事件
+      const emit = defineEmits(['response']);
+
+      function sendDataToParent() {
+        // 触发 response 事件，并附带数据
+        emit('response', 'This is a message from child!');
+      }
+    </script>
+    ```
+  - **父组件 (`Parent.vue`)**:
+    ```vue
+    <template>
+      <!-- 监听子组件的 response 事件 -->
+      <ChildComponent @response="handleResponse" />
+      <p>Message from child: {{ childMessage }}</p>
+    </template>
+    <script setup>
+      import { ref } from 'vue';
+      import ChildComponent from './Child.vue';
+      const childMessage = ref('');
+      
+      function handleResponse(payload) {
+        childMessage.value = payload;
+      }
+    </script>
+    ```
+
+##### **4. 透传属性 (Fallthrough Attributes)**
+一个未被子组件声明为 `props` 或 `emits` 的属性，会默认被添加到子组件的根元素上。
+
+##### **5. 插槽 (`<slot>`)**
+允许父组件向子组件的特定区域**插入内容**。
+- **默认插槽**:
+  - **子组件 (`Card.vue`)**:
+    ```vue
+    <template>
+      <div class="card">
+        <slot></slot> <!-- 默认插槽出口 -->
+      </div>
+    </template>
+    ```
+  - **父组件 (`Parent.vue`)**:
+    ```vue
+    <Card>
+      <!-- 这部分内容会插入到 Card 组件的 <slot> 位置 -->
+      <h1>This is the card content</h1>
+    </Card>
+    ```
+- **具名插槽**:
+  - **子组件 (`BaseLayout.vue`)**:
+    ```vue
+    <template>
+      <header><slot name="header"></slot></header>
+      <main><slot></slot></main> <!-- 默认插槽 -->
+      <footer><slot name="footer"></slot></footer>
+    </template>
+    ```
+  - **父组件 (`Parent.vue`)**:
+    ```vue
+    <BaseLayout>
+      <template v-slot:header> <!-- 简写 #header -->
+        <h1>My Page Title</h1>
+      </template>
+      <p>Main content here.</p>
+      <template #footer> <!-- v-slot 的简写是 # -->
+        <p>Copyright info</p>
+      </template>
+    </BaseLayout>
+    ```
+- **作用域插槽 (插槽数据传递)**:
+  子组件可以在插槽上绑定属性，让父组件可以访问这些数据。
+  - **子组件 (`SlotDemo.vue`)**:
+    ```vue
+    <template>
+      <slot :user="userData"></slot>
+    </template>
+    <script setup>
+      import { reactive } from 'vue';
+      const userData = reactive({ name: 'Alice', age: 30 });
+    </script>
+    ```
+  - **父组件 (`Parent.vue`)**:
+    ```vue
+    <SlotDemo>
+      <!-- 使用 v-slot 接收子组件传来的数据 -->
+      <template v-slot:default="slotProps">
+        User Name: {{ slotProps.user.name }}
+      </template>
+    </SlotDemo>
+    ```
+
+##### **6. 组件生命周期**
+组件从创建到销毁的整个过程中会触发的一系列函数，称为生命周期钩子。
+- **常用钩子 (Composition API)**:
+  - `onMounted()`: 组件挂载到DOM后调用。常用于发起网络请求、初始化第三方库。
+  - `onUpdated()`: 组件因响应式数据变化而更新DOM后调用。
+  - `onUnmounted()`: 组件从DOM中卸载后调用。常用于清理定时器、解绑事件监听器。
+- **示例**:
+  ```vue
+  <script setup>
+  import { onMounted, onUnmounted } from 'vue';
+  
+  let intervalId;
+  onMounted(() => {
+    console.log('Component is mounted!');
+    intervalId = setInterval(() => { /* ... */ }, 1000);
+  });
+
+  onUnmounted(() => {
+    console.log('Component is unmounted!');
+    clearInterval(intervalId); // 清理定时器
+  });
+  </script>
+  ```
+
+---
+
+#### **四、 Vue Router**
+
+Vue Router 是 Vue.js 的官方路由管理器。
+
+##### **1. 导入和使用**
+- **安装**: `npm install vue-router`
+- **配置 (`src/router/index.js`)**:
+  ```javascript
+  import { createRouter, createWebHistory } from 'vue-router';
+  import HomeView from '../views/HomeView.vue';
+
+  const routes = [
+    {
+      path: '/',
+      name: 'home',
+      component: HomeView
+    },
+    // ... 其他路由
+  ];
+
+  const router = createRouter({
+    history: createWebHistory(), // 使用 History 模式
+    routes
+  });
+
+  export default router;
+  ```
+- **在 `main.js` 中注册**:
+  ```javascript
+  import { createApp } from 'vue';
+  import App from './App.vue';
+  import router from './router'; // 引入路由
+
+  const app = createApp(App);
+  app.use(router); // 使用路由
+  app.mount('#app');
+  ```
+- **在组件中使用**:
+  - `<router-link>`: 用于声明式导航，会被渲染成 `<a>` 标签。
+  - `<router-view>`: 路由匹配到的组件将在这里被渲染。
+  ```vue
+  <router-link to="/">Home</router-link>
+  <router-link to="/about">About</router-link>
+  <router-view></router-view>
+  ```
+
+##### **2. 参数传递**
+- **动态路由参数 (Params)**:
+  - **路由配置**: `/user/:id`
+  - **导航**: `<router-link :to="'/user/123'">User 123</router-link>`
+  - **获取参数**: 在目标组件中，使用 `useRoute`。
+    ```javascript
+    import { useRoute } from 'vue-router';
+    const route = useRoute();
+    const userId = route.params.id; // '123'
+    ```
+- **查询参数 (Query)**:
+  - **导航**: `<router-link to="/search?q=vue">Search</router-link>`
+  - **获取参数**:
+    ```javascript
+    import { useRoute } from 'vue-router';
+    const route = useRoute();
+    const query = route.query.q; // 'vue'
+    ```
+
+##### **3. 嵌套路由**
+通过 `children` 属性实现路由的嵌套。
+```javascript
+const routes = [
+  {
+    path: '/user/:id',
+    component: User,
+    children: [
+      {
+        path: 'profile', // 匹配 /user/:id/profile
+        component: UserProfile,
+      },
+    ],
+  },
+];
+```
+父组件 `User.vue` 中必须包含一个 `<router-view>` 来显示子路由组件。
+
+##### **4. 命名路由 & 命名视图**
+- **命名路由**: 给路由一个 `name`，可以通过名字来导航，避免硬编码URL。
+  `router.push({ name: 'user', params: { id: 123 } })`
+- **命名视图**: 如果你想在同一级显示多个视图，而不是嵌套显示，可以使用命名视图。
+  - **路由配置**:
+    ```javascript
+    {
+      path: '/',
+      components: { // 注意是 components (复数)
+        default: Home,
+        sidebar: Sidebar,
+        header: Header
+      }
+    }
+    ```
+  - **模板**:
+    ```vue
+    <router-view name="header"></router-view>
+    <router-view></router-view> <!-- 默认视图 -->
+    <router-view name="sidebar"></router-view>
+    ```
+
+##### **5. 路由守卫**
+用于在导航发生时执行逻辑，如权限检查。
+- **全局前置守卫 (`router.beforeEach`)**: 最常用，在每次路由切换前调用。
+- **参数**: `to` (目标路由), `from` (来源路由), `next` (一个必须被调用的函数)。
+- **示例：登录验证**:
+  ```javascript
+  // 在 src/router/index.js 中
+  router.beforeEach((to, from, next) => {
+    const isAuthenticated = localStorage.getItem('token'); // 假设token存在表示已登录
+    
+    if (to.name !== 'Login' && !isAuthenticated) {
+      // 如果用户未登录且访问的不是登录页，则重定向到登录页
+      next({ name: 'Login' });
+    } else {
+      // 否则，正常放行
+      next();
+    }
+  });
+  ```
+
+---
+
+### **五、 Element Plus**
+
+Element Plus 是一套为 Vue 3 准备的桌面端组件库。
+
+#### **1. 安装与使用**
+- **安装**:
+  ```bash
+  npm install element-plus --save
+  ```
+- **完整引入 (在 `main.js`)**:
+  ```javascript
+  import { createApp } from 'vue';
+  import App from './App.vue';
+  import ElementPlus from 'element-plus';
+  import 'element-plus/dist/index.css'; // 引入样式
+
+  const app = createApp(App);
+  app.use(ElementPlus);
+  app.mount('#app');
+  ```
+
+#### **2. 常用组件示例**
+
+##### **基础组件 (Layout, Button)**
+```vue
+<template>
+  <el-row :gutter="20">
+    <el-col :span="12"><div>col-12</div></el-col>
+    <el-col :span="12"><div>col-12</div></el-col>
+  </el-row>
+  <el-button type="primary">Primary Button</el-button>
+  <el-button type="success" :icon="Check">Success</el-button>
+</template>
+<script setup>
+  import { Check } from '@element-plus/icons-vue'
+</script>
+```
+
+##### **表单组件 (Form, Input, Select)**
+```vue
+<template>
+  <el-form :model="form" label-width="120px">
+    <el-form-item label="Activity name">
+      <el-input v-model="form.name" />
+    </el-form-item>
+    <el-form-item label="Activity zone">
+      <el-select v-model="form.region" placeholder="please select your zone">
+        <el-option label="Zone one" value="shanghai" />
+        <el-option label="Zone two" value="beijing" />
+      </el-select>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="onSubmit">Create</el-button>
+    </el-form-item>
+  </el-form>
+</template>
+<script setup>
+  import { reactive } from 'vue'
+  const form = reactive({ name: '', region: '' });
+  const onSubmit = () => { console.log('submit!', form) };
+</script>
+```
+
+##### **表格组件 (Table)**
+```vue
+<template>
+  <el-table :data="tableData" style="width: 100%">
+    <el-table-column prop="date" label="Date" width="180" />
+    <el-table-column prop="name" label="Name" width="180" />
+    <el-table-column prop="address" label="Address" />
+  </el-table>
+</template>
+<script setup>
+const tableData = [
+  { date: '2023-01-01', name: 'Tom', address: 'No. 189, Grove St, Los Angeles' },
+  { date: '2023-01-02', name: 'Jack', address: 'No. 189, Grove St, Los Angeles' },
+]
+</script>
+```
+
+##### **反馈组件 (Dialog, Message)**
+```vue
+<template>
+  <!-- Dialog -->
+  <el-button @click="dialogVisible = true">Open Dialog</el-button>
+  <el-dialog v-model="dialogVisible" title="Tips" width="30%">
+    <span>This is a message</span>
+    <template #footer>
+      <el-button @click="dialogVisible = false">Cancel</el-button>
+      <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
+    </template>
+  </el-dialog>
+
+  <!-- Message -->
+  <el-button @click="openMessage">Show Message</el-button>
+</template>
+<script setup>
+  import { ref } from 'vue';
+  import { ElMessage } from 'element-plus';
+  const dialogVisible = ref(false);
+  const openMessage = () => { ElMessage.success('This is a success message.') };
+</script>
+```
+
+##### **导航组件 (Menu, Tabs)**
+```vue
+<template>
+  <el-tabs v-model="activeName" class="demo-tabs">
+    <el-tab-pane label="User" name="first">User Content</el-tab-pane>
+    <el-tab-pane label="Config" name="second">Config Content</el-tab-pane>
+  </el-tabs>
+</template>
+<script setup>
+  import { ref } from 'vue'
+  const activeName = ref('first')
+</script>
+```
+
+---
+
+**复习建议：**
+1.  **动手实践是王道**：Vue和Element Plus的学习，看再多不如自己动手写。用`npm create vue@latest`创建一个新项目，把上面的例子一个个实现一遍。
+2.  **理解API设计思想**：重点理解 **Props向下传递，Events向上传递** 这一核心组件通信原则。
+3.  **区分`computed`和`watch`**: 这是面试和考试的高频考点，务必搞清楚它们的适用场景。
+4.  **熟悉官方文档**：Vue和Element Plus的官方文档写得非常好，是你最好的学习资料。
+
+这份详尽的复习资料应该能覆盖你期末考试的绝大部分内容了。祝你复习顺利，取得优异的成绩！
 
 
